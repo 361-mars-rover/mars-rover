@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Xml;
 
 public class MarsGlobalTerrain : MonoBehaviour {
 
@@ -13,7 +14,10 @@ public class MarsGlobalTerrain : MonoBehaviour {
     public TerrainData terrainData;
 
     // mars API url (in future make x and y variables to change depending on cars location)
+    private string wmtsURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/WMTSCapabilities.xml";
     private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm/8/102/214.jpg";
+    // private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/0/0/0.jpg";
+
     
     [Header("Terrain Settings")]
 
@@ -57,16 +61,62 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
     // z, x, y currently usuless (for rendering later)
     IEnumerator DownloadHeightmap(int z, int x, int y) {
+        UnityWebRequest xmlRequest = UnityWebRequest.Get(wmtsURL);
+        yield return xmlRequest.SendWebRequest();
+
+        if (xmlRequest.result == UnityWebRequest.Result.Success) {
+            Debug.Log("WMTS Capabilities downloaded successfully!");
+        } else {
+            Debug.LogError("Failed to get WMTS: " + xmlRequest.error);
+        }
+
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xmlRequest.downloadHandler.text);
+        XmlNamespaceManager nsManager = new XmlNamespaceManager(xmlDoc.NameTable);
+        nsManager.AddNamespace("wmts", "http://www.opengis.net/wmts/1.0");
+        nsManager.AddNamespace("ows", "http://www.opengis.net/ows/1.1");
+
+
+        int targetId = 0;
+
+        XmlNode tileMatrix = xmlDoc.SelectSingleNode($"//wmts:TileMatrix[ows:Identifier='{targetId}']", nsManager);
+
+        if (tileMatrix != null)
+        {
+            Debug.Log($"Found TileMatrix {targetId}");
+            Debug.Log("ScaleDenominator: " + tileMatrix.SelectSingleNode("wmts:ScaleDenominator", nsManager)?.InnerText);
+            Debug.Log("TopLeftCorner: " + tileMatrix.SelectSingleNode("wmts:TopLeftCorner", nsManager)?.InnerText);
+            Debug.Log("TileWidth: " + tileMatrix.SelectSingleNode("wmts:TileWidth", nsManager)?.InnerText);
+            Debug.Log("TileHeight: " + tileMatrix.SelectSingleNode("wmts:TileHeight", nsManager)?.InnerText);
+        }
+        else
+        {
+            Debug.LogWarning($"TileMatrix with ID {targetId} not found.");
+        }
+
+        // XmlNamespaceManager nsManager = new XmlNamespaceManager(xmlDoc.NameTable);
+        // nsManager.AddNamespace("wmts", "http://www.opengis.net/wmts/1.0");
+        // nsManager.AddNamespace("ows", "http://www.opengis.net/ows/1.1");
+
+        // // Read TileMatrixSet
+        // XmlNodeList tileMatrixSetNodes = xmlDoc.SelectNodes("//wmts:TileMatrixSet/TileMatrix", nsManager);
+        // foreach (XmlNode tileMatrixSet in tileMatrixSetNodes)
+        // {
+        //     string tileMatrixSetId = tileMatrixSet.SelectSingleNode("ows:Identifier", nsManager)?.InnerText;
+        //     Debug.Log("Tile Matrix Set: " + tileMatrixSetId);
+        // }
+        
+
         string url = string.Format(baseURL, z, x, y);
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-        yield return request.SendWebRequest();
+        UnityWebRequest dataRequest = UnityWebRequestTexture.GetTexture(url);
+        yield return dataRequest.SendWebRequest();
 
         //applies API texture to terrain
-        if (request.result == UnityWebRequest.Result.Success) {
-            Texture2D texture = DownloadHandlerTexture.GetContent(request);
+        if (dataRequest.result == UnityWebRequest.Result.Success) {
+            Texture2D texture = DownloadHandlerTexture.GetContent(dataRequest);
             ApplyHeightmap(texture);
         } else {
-            Debug.LogError("Failed to download heightmap: " + request.error);
+            Debug.LogError("Failed to download heightmap: " + dataRequest.error);
         }
     }
 
