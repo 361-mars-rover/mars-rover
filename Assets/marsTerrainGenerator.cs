@@ -6,6 +6,12 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
     //terrain type input
     public Terrain terrain;
+
+    // terrainCollider
+    public TerrainCollider terrainCollider;
+
+    public TerrainData terrainData;
+
     // mars API url (in future make x and y variables to change depending on cars location)
     private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm/8/102/214.jpg";
     
@@ -21,11 +27,20 @@ public class MarsGlobalTerrain : MonoBehaviour {
     private const float ELEVATION_RANGE = MAX_ELEVATION - MIN_ELEVATION;
 
     // start function, checks terrain input and calls other functions
+    void Awake()
+    {
+        terrainData = new TerrainData();
+        terrainData.heightmapResolution = 513;
+    }
+
     void Start() {
         if (terrain == null) {
             Debug.LogError("Terrain reference not set!");
             return;
         }
+        Debug.Log("Terrain Data: " + terrain.terrainData);
+        // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
+
         ConfigureTerrainSize();
         StartCoroutine(DownloadHeightmap(0, 0, 0));
     }
@@ -37,7 +52,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
         float sizeMeters = TILE_SIZE_KM * 1000f;
 
         // Set terrain size to match real Mars dimensions
-        terrain.terrainData.size = new Vector3(sizeMeters, ELEVATION_RANGE, sizeMeters);
+       terrainData.size = new Vector3(sizeMeters, ELEVATION_RANGE, sizeMeters);
     }
 
     // z, x, y currently usuless (for rendering later)
@@ -58,7 +73,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
     
     void ApplyHeightmap(Texture2D texture) {
         // This block of code gets our terrain inputs current data
-        TerrainData terrainData = terrain.terrainData;
+        // TerrainData terrainData = terrain.terrainData;
         int resolution = terrainData.heightmapResolution;
         float[,] heights = new float[resolution, resolution];
         //each pixel color represents the height
@@ -81,6 +96,10 @@ public class MarsGlobalTerrain : MonoBehaviour {
         heights = SmoothHeights(heights, resolution, blurIterations);
 
         terrainData.SetHeights(0, 0, heights);
+
+        terrain.terrainData = terrainData;
+        terrainCollider.terrainData = terrainData;
+
     }
 
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations) {
