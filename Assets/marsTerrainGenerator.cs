@@ -35,7 +35,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
     private const float TILE_SIZE_KM = 100;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
-    private const float ELEVATION_RANGE = 10000f;
+    private const float ELEVATION_RANGE = 5000f;
 
     [Header("Tile Settings")]
 
