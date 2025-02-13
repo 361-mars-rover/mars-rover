@@ -26,7 +26,7 @@ public class CarControl : MonoBehaviour
         // Wait until the terrain is loaded
         while (marsTerrain.terrainData == null)
         {
-            marsTerrain = Terrain.activeTerrain; // Try to find the terrain
+            // marsTerrain = Terrain.activeTerrain; // Try to find the terrain
             yield return null; // Wait for the next frame
         }
         Debug.Log("terrain loaded!");

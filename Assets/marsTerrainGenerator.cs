@@ -154,6 +154,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
         float[,] heights = new float[resolution, resolution];
         //each pixel color represents the height
         Color[] pixels = texture.GetPixels();
+        //comment
 
         // loop through the resolution grid pixel by pixel
         for (int y = 0; y < resolution; y++) {
