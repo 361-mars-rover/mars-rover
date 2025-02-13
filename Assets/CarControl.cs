@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CarControl : MonoBehaviour
@@ -12,21 +13,40 @@ public class CarControl : MonoBehaviour
     WheelControl[] wheels;
     Rigidbody rigidBody;
 
+    public Terrain marsTerrain;
+
     // Start is called before the first frame update
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody>();
+        StartCoroutine(WaitForTerrainAndSpawn());
+    }
 
+    IEnumerator WaitForTerrainAndSpawn()
+    {
+        // Wait until the terrain is loaded
+        while (marsTerrain.terrainData == null)
+        {
+            // marsTerrain = Terrain.activeTerrain; // Try to find the terrain
+            yield return null; // Wait for the next frame
+        }
+        Debug.Log("terrain loaded!");
+
+        rigidBody = GetComponent<Rigidbody>();
         // Adjust center of mass vertically, to help prevent the car from rolling
         rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
-
         // Find all child GameObjects that have the WheelControl script attached
         wheels = GetComponentsInChildren<WheelControl>();
+
+        // transform.position = new Vector3(27421, 5600, 26325);
+        float terrainHeight = marsTerrain.SampleHeight(new Vector3(27421, 0, 26325));
+        Vector3 newPosition = new Vector3(27421, terrainHeight + 1f, 26325);
+        transform.position = newPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (marsTerrain == null) return;
 
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");

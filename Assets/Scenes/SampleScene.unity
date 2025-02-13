@@ -613,11 +613,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 898442928}
-  car: {fileID: 1625381595}
   heightScale: 0.2
   blurIterations: 2
-  startX: 0
-  startZ: 0
 --- !u!154 &898442927
 TerrainCollider:
   m_ObjectHideFlags: 0
