@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.Xml;
+using System;
 
 public class MarsGlobalTerrain : MonoBehaviour {
 
@@ -20,6 +21,8 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
     public bool isLoaded = false;
 
+    private float WMS_PIXEL_SIZE = 0.28e-3f;
+
     Dictionary<string, string> tileData = new Dictionary<string, string>();
 
     
@@ -32,7 +35,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
     private const float TILE_SIZE_KM = 100;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
-    private const float ELEVATION_RANGE = MAX_ELEVATION - MIN_ELEVATION;
+    private const float ELEVATION_RANGE = 10000f;
 
     [Header("Tile Settings")]
 
@@ -55,7 +58,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
         Debug.Log("Terrain Data: " + terrain.terrainData);
         // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
 
-        ConfigureTerrainSize();
+        // ConfigureTerrainSize();
         StartCoroutine(DownloadHeightmap(0, 0, 0));
     }
 
@@ -120,6 +123,34 @@ public class MarsGlobalTerrain : MonoBehaviour {
         {
             Debug.LogWarning($"TileMatrix with ID {tileMatrixSet} not found.");
         }
+
+        Debug.Log($"Pixel Span: {GetPixelSpan()}");
+        Debug.Log($"Tile Span: {GetTileSpan()}");
+        Debug.Log($"Grid Width: {GetGridWidth()}");
+
+
+       terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
+    //    terrainData.size = new Vector3(100000f, ELEVATION_RANGE, 100000f);
+
+
+    }
+
+    float GetPixelSpan()
+    {
+        float scaleDenominator = (float) Convert.ToDouble(tileData["ScaleDenominator"]);
+        return  scaleDenominator * WMS_PIXEL_SIZE;
+    }
+
+    float GetTileSpan()
+    {
+        float tileWidth = (float) Convert.ToInt32(tileData["TileWidth"]);
+        return tileWidth * GetPixelSpan();
+    }
+
+    float GetGridWidth()
+    {
+        float nRows = (float) Convert.ToDouble(tileData["MatrixHeight"]);
+        return GetTileSpan() * nRows;
     }
 
     string GetDownloadURL(int tileRow, int tileCol)
@@ -161,12 +192,19 @@ public class MarsGlobalTerrain : MonoBehaviour {
             int texY = (int)((y / (float)resolution) * texture.height);
             for (int x = 0; x < resolution; x++) {
                 int texX = (int)((x / (float)resolution) * texture.width);
+
                 Color pixel = pixels[texY * texture.width + texX];
 
                 float heightValue = pixel.r * ELEVATION_RANGE + MIN_ELEVATION;
 
                 // Normalize to Unity terrain height range
                 heights[y, x] = Mathf.Clamp01((heightValue - MIN_ELEVATION) / ELEVATION_RANGE * heightScale);
+
+                if (x == 0 && y == 0) { // Only print for one pixel to avoid spam
+                    Debug.Log($"Pixel[{x}, {y}]: {pixel.r}, Computed Height: {heightValue}");
+                    Debug.Log($"Pixel Value (Red): {pixel.r}");
+
+                }
             }
         }
 

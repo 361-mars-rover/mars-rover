@@ -15,7 +15,17 @@ public class CarControl : MonoBehaviour
 
     public Terrain marsTerrain;
 
+    void Awake()
+    {
+        rigidBody = GetComponent<Rigidbody>();
+        // Adjust center of mass vertically, to help prevent the car from rolling
+        rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
+        // Find all child GameObjects that have the WheelControl script attached
+        wheels = GetComponentsInChildren<WheelControl>();     
+    }
+
     // Start is called before the first frame update
+
     void Start()
     {
         StartCoroutine(WaitForTerrainAndSpawn());
@@ -31,12 +41,6 @@ public class CarControl : MonoBehaviour
         }
         Debug.Log("terrain loaded!");
 
-        rigidBody = GetComponent<Rigidbody>();
-        // Adjust center of mass vertically, to help prevent the car from rolling
-        rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
-        // Find all child GameObjects that have the WheelControl script attached
-        wheels = GetComponentsInChildren<WheelControl>();
-
         // transform.position = new Vector3(27421, 5600, 26325);
         float terrainHeight = marsTerrain.SampleHeight(new Vector3(27421, 0, 26325));
         Vector3 newPosition = new Vector3(27421, terrainHeight + 1f, 26325);
@@ -46,7 +50,7 @@ public class CarControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (marsTerrain == null) return;
+        if (marsTerrain.terrainData == null) return;
 
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
