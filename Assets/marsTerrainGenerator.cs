@@ -18,6 +18,8 @@ public class MarsGlobalTerrain : MonoBehaviour {
     private string wmtsURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/WMTSCapabilities.xml";
     private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
 
+    public bool isLoaded = false;
+
     Dictionary<string, string> tileData = new Dictionary<string, string>();
 
     
@@ -173,7 +175,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
         terrain.terrainData = terrainData;
         terrainCollider.terrainData = terrainData;
-
+        isLoaded = true;
     }
 
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations) {
