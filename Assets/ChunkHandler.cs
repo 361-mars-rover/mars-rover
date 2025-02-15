@@ -120,6 +120,10 @@ public class ChunkHandler : MonoBehaviour
                 loadedChunks.Remove(deletePos);
             }
 
+            float h = loadedChunks[Vector3.zero].GetComponent<Terrain>().SampleHeight(new Vector3(39091.87f, 0, 39091.87f));
+
+            Debug.Log($"height at zero: {h}");
+
 
 
             yield return new WaitForSeconds(checkInterval);

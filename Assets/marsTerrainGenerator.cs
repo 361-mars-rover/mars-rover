@@ -60,7 +60,17 @@ public class MarsGlobalTerrain : MonoBehaviour {
         // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
 
         // ConfigureTerrainSize();
-        StartCoroutine(DownloadHeightmap(0, 0, 0));
+        StartCoroutine(DownloadHeightmap());
+    }
+
+    (int, int) GetRowColFromPosition(Vector3 position)
+    {
+        return (0,0);
+    }
+
+    void Inititialize()
+    {
+
     }
 
 
@@ -98,7 +108,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
         yield return xmlRequest.SendWebRequest();
 
         if (xmlRequest.result == UnityWebRequest.Result.Success) {
-            Debug.Log("WMTS Capabilities downloaded successfully!");
+            // Debug.Log("WMTS Capabilities downloaded successfully!");
         } else {
             Debug.LogError("Failed to get WMTS: " + xmlRequest.error);
         }
@@ -160,7 +170,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
     }
 
     // z, x, y currently usuless (for rendering later)
-    IEnumerator DownloadHeightmap(int z, int x, int y) 
+    IEnumerator DownloadHeightmap() 
     {        
         yield return GetTileData();
         // string url = string.Format(baseURL, z, x, y);
