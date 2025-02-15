@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,17 @@ public class ChunkHandler : MonoBehaviour
         // currentChunks[0] = Instantiate(terrainPrefab, prevChunkPosition, Quaternion.identity);
         foreach(Vector3 chunkPos in chunksToLoad)
         {
-            loadedChunks[chunkPos] = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
+            var (row, col) = GetRowColFromPosition(chunkPos);
+            if (row < 0 || col < 0) continue;
+            Debug.Log($"Position: {chunkPos}");
+            Debug.Log($"row: {row} col: {col}");
+
+            GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
+            chunk.GetComponent<MarsGlobalTerrain>().Inititialize(row, col);
+            loadedChunks[chunkPos] = chunk;
+            
+            // Debug.Log($"Position: {chunkPos}");
+            GetRowColFromPosition(chunkPos);
         }
 
         StartCoroutine(CheckChunkDistance());
@@ -60,6 +71,15 @@ public class ChunkHandler : MonoBehaviour
         chunksToLoad[7] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.left * terrainWidth;
         chunksToLoad[8] = nearestChunkPositon;
         return chunksToLoad;
+    }
+
+    (int, int) GetRowColFromPosition(Vector3 position)
+    {
+        int row = (int) Math.Round((position.z - (terrainHeight / 2)) / terrainHeight);
+        int col = (int) Math.Round((position.x - (terrainHeight / 2)) / terrainHeight);
+        // Debug.Log($"row: {row} col: {col}");
+
+        return (row,col);
     }
 
     IEnumerator CheckChunkDistance()
@@ -114,8 +134,12 @@ public class ChunkHandler : MonoBehaviour
             HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositions.Except(chunksToLoad));
 
             foreach (Vector3 newChunkPos in newChunkPositions)
-            {
-                loadedChunks[newChunkPos] = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);  
+            { 
+                var (row, col) = GetRowColFromPosition(newChunkPos);
+                if (row < 0 || col < 0) continue;
+                GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
+                chunk.GetComponent<MarsGlobalTerrain>().Inititialize(row, col);
+                loadedChunks[newChunkPos] = chunk;
             }
 
             foreach (Vector3 deletePos in chunksToDelete)

@@ -51,7 +51,10 @@ public class MarsGlobalTerrain : MonoBehaviour {
         terrainData.heightmapResolution = 513;
     }
 
-    void Start() {
+    void Start() {}
+
+    public void Inititialize(int row, int col)
+    {
         if (terrain == null) {
             Debug.LogError("Terrain reference not set!");
             return;
@@ -60,27 +63,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
         // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
 
         // ConfigureTerrainSize();
-        StartCoroutine(DownloadHeightmap());
-    }
-
-    (int, int) GetRowColFromPosition(Vector3 position)
-    {
-        return (0,0);
-    }
-
-    void Inititialize()
-    {
-
-    }
-
-
-    // this changes the terrain size to map the mars real size
-    void ConfigureTerrainSize() {
-        // Convert tile size from km to meters (1 km = 1000 meters)
-        float sizeMeters = TILE_SIZE_KM * 1000f;
-
-        // Set terrain size to match real Mars dimensions
-       terrainData.size = new Vector3(sizeMeters, ELEVATION_RANGE, sizeMeters);
+        StartCoroutine(DownloadHeightmap(row,col));
     }
 
     /// <summary>
@@ -170,11 +153,11 @@ public class MarsGlobalTerrain : MonoBehaviour {
     }
 
     // z, x, y currently usuless (for rendering later)
-    IEnumerator DownloadHeightmap() 
+    IEnumerator DownloadHeightmap(int row, int col) 
     {        
         yield return GetTileData();
         // string url = string.Format(baseURL, z, x, y);
-        string url = GetDownloadURL(tileRow, tileCol);
+        string url = GetDownloadURL(row, col);
 
         UnityWebRequest dataRequest = UnityWebRequestTexture.GetTexture(url);
         yield return dataRequest.SendWebRequest();
