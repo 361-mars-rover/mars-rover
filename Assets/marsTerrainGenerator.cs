@@ -46,6 +46,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
     // start function, checks terrain input and calls other functions
     void Awake()
     {
+        // Debug.Log("Mars terrain being awoken");
         terrainData = new TerrainData();
         terrainData.heightmapResolution = 513;
     }
@@ -55,7 +56,7 @@ public class MarsGlobalTerrain : MonoBehaviour {
             Debug.LogError("Terrain reference not set!");
             return;
         }
-        Debug.Log("Terrain Data: " + terrain.terrainData);
+        // Debug.Log("Terrain Data: " + terrain.terrainData);
         // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
 
         // ConfigureTerrainSize();
@@ -113,20 +114,20 @@ public class MarsGlobalTerrain : MonoBehaviour {
         if (tileMatrix != null)
         {
             foreach (XmlNode childNode in tileMatrix.ChildNodes){
-                Debug.Log(childNode?.Name);
-                Debug.Log(childNode?.InnerText);
+                // Debug.Log(childNode?.Name);
+                // Debug.Log(childNode?.InnerText);
                 tileData[childNode.Name] = childNode.InnerText;
             }
 
         }
         else
         {
-            Debug.LogWarning($"TileMatrix with ID {tileMatrixSet} not found.");
+            // Debug.LogWarning($"TileMatrix with ID {tileMatrixSet} not found.");
         }
 
-        Debug.Log($"Pixel Span: {GetPixelSpan()}");
-        Debug.Log($"Tile Span: {GetTileSpan()}");
-        Debug.Log($"Grid Width: {GetGridWidth()}");
+        // Debug.Log($"Pixel Span: {GetPixelSpan()}");
+        // Debug.Log($"Tile Span: {GetTileSpan()}");
+        // Debug.Log($"Grid Width: {GetGridWidth()}");
 
 
        terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
@@ -201,9 +202,8 @@ public class MarsGlobalTerrain : MonoBehaviour {
                 heights[y, x] = Mathf.Clamp01((heightValue - MIN_ELEVATION) / ELEVATION_RANGE * heightScale);
 
                 if (x == 0 && y == 0) { // Only print for one pixel to avoid spam
-                    Debug.Log($"Pixel[{x}, {y}]: {pixel.r}, Computed Height: {heightValue}");
-                    Debug.Log($"Pixel Value (Red): {pixel.r}");
-
+                    // Debug.Log($"Pixel[{x}, {y}]: {pixel.r}, Computed Height: {heightValue}");
+                    // Debug.Log($"Pixel Value (Red): {pixel.r}");
                 }
             }
         }

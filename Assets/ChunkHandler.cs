@@ -16,8 +16,8 @@ public class ChunkHandler : MonoBehaviour
     public float checkInterval = 0.1f;
     public GameObject terrainPrefab;
     
-    public float terrainWidth = 1000f;
-    public float terrainHeight = 1000f;
+    public float terrainWidth = 78183.74f;
+    public float terrainHeight = 78183.74f;
 
     void Start()
     {
@@ -91,13 +91,13 @@ public class ChunkHandler : MonoBehaviour
             // }
 
             Vector3 currentChunkPosition = getClosestChunkPosition(car.transform.position);
-            Debug.Log("Position data!");
-            Debug.Log(currentChunkPosition);
-            Debug.Log(prevChunkPosition);
+            // Debug.Log("Position data!");
+            // Debug.Log(currentChunkPosition);
+            // Debug.Log(prevChunkPosition);
 
             if (currentChunkPosition != prevChunkPosition)
             {
-                Debug.Log("Position updated!");
+                // Debug.Log("Position updated!");
                 prevChunkPosition = currentChunkPosition;
                 // Vector3[] nearestNeighbours = getChunksToLoad(car.transform.position);
                 
