@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using System.Xml;
 using System;
 
-public class MarsGlobalTerrain : MonoBehaviour {
+public class TerrainChunk : MonoBehaviour {
 
     //terrain type input
     public Terrain terrain;
@@ -15,16 +15,9 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
     public TerrainData terrainData;
 
-    // mars API url (in future make x and y variables to change depending on cars location)
-    private string wmtsURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/WMTSCapabilities.xml";
     private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
 
-    public bool isLoaded = false;
-
     private float WMS_PIXEL_SIZE = 0.28e-3f;
-
-    Dictionary<string, string> tileData = new Dictionary<string, string>();
-
     
     [Header("Terrain Settings")]
 
@@ -37,126 +30,43 @@ public class MarsGlobalTerrain : MonoBehaviour {
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
     private const float ELEVATION_RANGE = 5000f;
 
+    private const float SCALE_DENOMINATOR = 1.0907329542893544E+06f;
+
+    private const float TILE_WIDTH = 256f;
+
     [Header("Tile Settings")]
 
     public int tileMatrixSet;
     public int tileRow;
     public int tileCol;
-
-    // start function, checks terrain input and calls other functions
     void Awake()
     {
-        // Debug.Log("Mars terrain being awoken");
         terrainData = new TerrainData();
         terrainData.heightmapResolution = 513;
     }
-
-    void Start() {}
-
     public void Inititialize(int row, int col)
     {
         if (terrain == null) {
             Debug.LogError("Terrain reference not set!");
             return;
         }
-        // Debug.Log("Terrain Data: " + terrain.terrainData);
-        // Debug.Log("Terrain Collider Data: " + terrainCollider.terrainData);
 
-        // ConfigureTerrainSize();
+        terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
         StartCoroutine(DownloadHeightmap(row,col));
     }
 
-    /// <summary>
-    /// Gets XML data from wmtsURL for the tileMatrix selected in tileMatrixSet
-    /// This data is added to tileData and is used afterwards to call the API
-    /// The following is an example of tileMatrix data:
-    /// 
-    /// <example>
-    /// Identifier: 4
-    /// ScaleDenominator: 1.7451727268629670E+07
-    /// TopLeftCorner: -180.0 90.0
-    /// TileWidth: 256
-    /// TileHeight: 256
-    /// MatrixWidth: 32.0
-    /// MatrixHeight: 16.0
-    ///  </example>
-    /// 
-    /// This means that the data with Identifier 4 has 32 rows and 4 columns,
-    /// where each tile has shape 256x256
-    /// 
-    /// </summary>
-    IEnumerator GetTileData()
-    {
-        UnityWebRequest xmlRequest = UnityWebRequest.Get(wmtsURL);
-        yield return xmlRequest.SendWebRequest();
-
-        if (xmlRequest.result == UnityWebRequest.Result.Success) {
-            // Debug.Log("WMTS Capabilities downloaded successfully!");
-        } else {
-            Debug.LogError("Failed to get WMTS: " + xmlRequest.error);
-        }
-
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(xmlRequest.downloadHandler.text);
-        XmlNamespaceManager nsManager = new XmlNamespaceManager(xmlDoc.NameTable);
-        nsManager.AddNamespace("wmts", "http://www.opengis.net/wmts/1.0");
-        nsManager.AddNamespace("ows", "http://www.opengis.net/ows/1.1");
-
-        XmlNode tileMatrix = xmlDoc.SelectSingleNode($"//wmts:TileMatrix[ows:Identifier='{tileMatrixSet}']", nsManager);
-
-        if (tileMatrix != null)
-        {
-            foreach (XmlNode childNode in tileMatrix.ChildNodes){
-                // Debug.Log(childNode?.Name);
-                // Debug.Log(childNode?.InnerText);
-                tileData[childNode.Name] = childNode.InnerText;
-            }
-
-        }
-        else
-        {
-            // Debug.LogWarning($"TileMatrix with ID {tileMatrixSet} not found.");
-        }
-
-        // Debug.Log($"Pixel Span: {GetPixelSpan()}");
-        // Debug.Log($"Tile Span: {GetTileSpan()}");
-        // Debug.Log($"Grid Width: {GetGridWidth()}");
-
-
-       terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
-    //    terrainData.size = new Vector3(100000f, ELEVATION_RANGE, 100000f);
-
-
-    }
-
-    float GetPixelSpan()
-    {
-        float scaleDenominator = (float) Convert.ToDouble(tileData["ScaleDenominator"]);
-        return  scaleDenominator * WMS_PIXEL_SIZE;
-    }
+    float GetPixelSpan(){return  SCALE_DENOMINATOR * WMS_PIXEL_SIZE;}
 
     float GetTileSpan()
+    {return TILE_WIDTH * GetPixelSpan();}
+
+    string GetDownloadURL(int row, int col)
     {
-        float tileWidth = (float) Convert.ToInt32(tileData["TileWidth"]);
-        return tileWidth * GetPixelSpan();
+        return $"{baseURL}/{tileMatrixSet}/{row}/{col}.jpg";
     }
 
-    float GetGridWidth()
-    {
-        float nRows = (float) Convert.ToDouble(tileData["MatrixHeight"]);
-        return GetTileSpan() * nRows;
-    }
-
-    string GetDownloadURL(int tileRow, int tileCol)
-    {
-        return $"{baseURL}/{tileMatrixSet}/{tileRow}/{tileCol}.jpg";
-    }
-
-    // z, x, y currently usuless (for rendering later)
     IEnumerator DownloadHeightmap(int row, int col) 
     {        
-        yield return GetTileData();
-        // string url = string.Format(baseURL, z, x, y);
         string url = GetDownloadURL(row, col);
 
         UnityWebRequest dataRequest = UnityWebRequestTexture.GetTexture(url);
@@ -207,7 +117,6 @@ public class MarsGlobalTerrain : MonoBehaviour {
 
         terrain.terrainData = terrainData;
         terrainCollider.terrainData = terrainData;
-        isLoaded = true;
     }
 
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations) {

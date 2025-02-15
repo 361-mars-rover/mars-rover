@@ -35,7 +35,7 @@ public class ChunkHandler : MonoBehaviour
             Debug.Log($"row: {row} col: {col}");
 
             GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
-            chunk.GetComponent<MarsGlobalTerrain>().Inititialize(row, col);
+            chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
             loadedChunks[chunkPos] = chunk;
             
             // Debug.Log($"Position: {chunkPos}");
@@ -138,7 +138,7 @@ public class ChunkHandler : MonoBehaviour
                 var (row, col) = GetRowColFromPosition(newChunkPos);
                 if (row < 0 || col < 0) continue;
                 GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
-                chunk.GetComponent<MarsGlobalTerrain>().Inititialize(row, col);
+                chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
                 loadedChunks[newChunkPos] = chunk;
             }
 
