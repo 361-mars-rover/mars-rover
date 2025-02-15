@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChunkHandler : MonoBehaviour
@@ -104,6 +105,21 @@ public class ChunkHandler : MonoBehaviour
 
             HashSet<Vector3> currentChunkPositions = new HashSet<Vector3>(loadedChunks.Keys);
             HashSet<Vector3> chunksToLoad = new HashSet<Vector3>(getChunksToLoad(car.transform.position));
+
+            HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoad.Except(currentChunkPositions));
+            HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositions.Except(chunksToLoad));
+
+            foreach (Vector3 newChunkPos in newChunkPositions)
+            {
+                loadedChunks[newChunkPos] = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);  
+            }
+
+            foreach (Vector3 deletePos in chunksToDelete)
+            {
+                Destroy(loadedChunks[deletePos]);
+                loadedChunks.Remove(deletePos);
+            }
+
 
 
             yield return new WaitForSeconds(checkInterval);
