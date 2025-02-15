@@ -17,7 +17,6 @@ public class CarControl : MonoBehaviour
 
     void Awake()
     {
-        // transform.position = new Vector3(10,10,10);
         rigidBody = GetComponent<Rigidbody>();
         // Adjust center of mass vertically, to help prevent the car from rolling
         rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;

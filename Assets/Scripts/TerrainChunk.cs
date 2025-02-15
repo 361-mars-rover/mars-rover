@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.Networking;
-using System.Xml;
-using System;
 
 public class TerrainChunk : MonoBehaviour {
 
@@ -28,7 +25,7 @@ public class TerrainChunk : MonoBehaviour {
     private const float TILE_SIZE_KM = 100;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
-    private const float ELEVATION_RANGE = 5000f;
+    private const float ELEVATION_RANGE = MAX_ELEVATION - MIN_ELEVATION;
 
     private const float SCALE_DENOMINATOR = 1.0907329542893544E+06f;
 
@@ -39,11 +36,15 @@ public class TerrainChunk : MonoBehaviour {
     public int tileMatrixSet;
     public int tileRow;
     public int tileCol;
+
+    // Initializes size of terrain data
     void Awake()
     {
         terrainData = new TerrainData();
         terrainData.heightmapResolution = 513;
     }
+    // Generates the terrain from NASA data
+    // This is called in ChunkHandler, which specifies the row and col
     public void Inititialize(int row, int col)
     {
         if (terrain == null) {
@@ -55,16 +56,18 @@ public class TerrainChunk : MonoBehaviour {
         StartCoroutine(DownloadHeightmap(row,col));
     }
 
+    // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
     float GetPixelSpan(){return  SCALE_DENOMINATOR * WMS_PIXEL_SIZE;}
 
+    // Gets tile span in meters ()
     float GetTileSpan()
     {return TILE_WIDTH * GetPixelSpan();}
-
+    // Fills URL for API request
     string GetDownloadURL(int row, int col)
     {
         return $"{baseURL}/{tileMatrixSet}/{row}/{col}.jpg";
     }
-
+    // Downloads heightmap
     IEnumerator DownloadHeightmap(int row, int col) 
     {        
         string url = GetDownloadURL(row, col);
@@ -81,15 +84,13 @@ public class TerrainChunk : MonoBehaviour {
         }
     }
 
-    
+    // Sets heights based on texture data
     void ApplyHeightmap(Texture2D texture) {
         // This block of code gets our terrain inputs current data
-        // TerrainData terrainData = terrain.terrainData;
         int resolution = terrainData.heightmapResolution;
         float[,] heights = new float[resolution, resolution];
         //each pixel color represents the height
         Color[] pixels = texture.GetPixels();
-        //comment
 
         // loop through the resolution grid pixel by pixel
         for (int y = 0; y < resolution; y++) {
@@ -103,11 +104,6 @@ public class TerrainChunk : MonoBehaviour {
 
                 // Normalize to Unity terrain height range
                 heights[y, x] = Mathf.Clamp01((heightValue - MIN_ELEVATION) / ELEVATION_RANGE * heightScale);
-
-                if (x == 0 && y == 0) { // Only print for one pixel to avoid spam
-                    // Debug.Log($"Pixel[{x}, {y}]: {pixel.r}, Computed Height: {heightValue}");
-                    // Debug.Log($"Pixel Value (Red): {pixel.r}");
-                }
             }
         }
 
@@ -119,6 +115,7 @@ public class TerrainChunk : MonoBehaviour {
         terrainCollider.terrainData = terrainData;
     }
 
+    // Smooths heights to avoid sharp edges
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations) {
         for (int i = 0; i < iterations; i++) {
             for (int y = 1; y < resolution - 1; y++) {
