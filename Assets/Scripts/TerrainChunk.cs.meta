@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 503e0dba4f0344390b646055b049d0e2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - terrain: {instanceID: 0}
+  - terrainCollider: {instanceID: 0}
+  - terrainData: {instanceID: 0}
+  - marsTexture: {fileID: 2800000, guid: 53052d258c93f488a998276e3bb1773b, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

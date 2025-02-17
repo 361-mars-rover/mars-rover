@@ -1464,6 +1464,10 @@ PrefabInstance:
       propertyPath: tileRow
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2027017430909772624, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
+      propertyPath: marsTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 12ef00ea07ca24e93ace01f39ca68870, type: 3}
     - target: {fileID: 2525931244784360066, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
       propertyPath: m_Name
       value: marsTerrain

@@ -37,6 +37,8 @@ public class TerrainChunk : MonoBehaviour {
     public int tileRow;
     public int tileCol;
 
+    public Texture2D marsTexture;
+
     // Initializes size of terrain data
     void Awake()
     {
@@ -54,6 +56,7 @@ public class TerrainChunk : MonoBehaviour {
 
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
         StartCoroutine(DownloadHeightmap(row,col));
+        ApplyTexture();
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
@@ -139,5 +142,17 @@ public class TerrainChunk : MonoBehaviour {
             }
         }
         return heights;
+    }
+
+    void ApplyTexture() {
+        if(marsTexture == null) {
+            Debug.LogError("Mars texture not set!");
+            return;
+        }
+
+        TerrainLayer terrainLayer = new TerrainLayer();
+        terrainLayer.diffuseTexture = marsTexture;
+        terrainLayer.tileSize = new Vector2(terrainData.size.x, terrainData.size.z);
+        terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
     }
 }

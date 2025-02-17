@@ -109,9 +109,9 @@ MonoBehaviour:
   terrain: {fileID: 250662670795585593}
   terrainCollider: {fileID: 1747900832165015746}
   terrainData: {fileID: 0}
-  isLoaded: 0
   heightScale: 0.2
   blurIterations: 2
   tileMatrixSet: 8
   tileRow: 102
   tileCol: 214
+  marsTexture: {fileID: 2800000, guid: 53052d258c93f488a998276e3bb1773b, type: 3}
