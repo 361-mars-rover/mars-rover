@@ -82,6 +82,12 @@ public class TerrainChunk : MonoBehaviour {
         } else {
             Debug.LogError("Failed to download heightmap: " + dataRequest.error);
         }
+
+        if (row == 0 && col == 0)
+        {
+            Debug.Log("Logging heihgt");
+            Debug.Log(terrain.SampleHeight(new Vector3(39091.87f, 0f, 39091.87f)));
+        }
     }
 
     // Sets heights based on texture data

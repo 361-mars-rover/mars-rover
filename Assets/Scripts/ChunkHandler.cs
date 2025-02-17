@@ -36,11 +36,10 @@ public class ChunkHandler : MonoBehaviour
             Debug.Log($"row: {row} col: {col}");
 
             GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
+
             chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
+
             loadedChunks[chunkPos] = chunk;
-            
-            // Debug.Log($"Position: {chunkPos}");
-            GetRowColFromPosition(chunkPos);
         }
 
         StartCoroutine(CheckChunkDistance());
