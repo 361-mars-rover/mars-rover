@@ -679,7 +679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 647
+      value: 3731
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1596,7 +1596,7 @@ Transform:
   m_GameObject: {fileID: 532242580}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 3.7365112, z: -9.8515625}
+  m_LocalPosition: {x: 0, y: 3.7363281, z: -9.8515625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3898,7 +3898,7 @@ Transform:
   m_GameObject: {fileID: 1504693230}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 39095, y: 650.7365, z: 39085.15}
+  m_LocalPosition: {x: 39095, y: 3734.7363, z: 39085.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4209,7 +4209,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
