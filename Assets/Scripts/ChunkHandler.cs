@@ -23,6 +23,8 @@ public class ChunkHandler : MonoBehaviour
     // Loads initial chunks based on car position
     void Start()
     {
+
+        Debug.Log("Chunk script started");
         prevChunkPosition = GetClosestChunkCenter(car.transform.position);
         Vector3[] chunksToLoad = GetChunksToLoad(car.transform.position);
         
