@@ -2020,6 +2020,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 1
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &678191974
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -2156,11 +2161,6 @@ Transform:
 --- !u!1 &898442925 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2525931244784360066, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
-  m_PrefabInstance: {fileID: 7003715329865121356}
-  m_PrefabAsset: {fileID: 0}
---- !u!218 &898442928 stripped
-Terrain:
-  m_CorrespondingSourceObject: {fileID: 250662670795585593, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
   m_PrefabInstance: {fileID: 7003715329865121356}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &898442929 stripped
@@ -3000,6 +3000,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1268290334
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -3354,6 +3359,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 0
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1370114692
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -3779,6 +3789,7 @@ GameObject:
   - component: {fileID: 1504693232}
   - component: {fileID: 1504693231}
   - component: {fileID: 1504693235}
+  - component: {fileID: 1504693236}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -3938,6 +3949,22 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1504693236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504693230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e5853830c4b74ffc9259a63df8e029c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  followSpeed: 10
+  rotationSpeed: 5
 --- !u!1 &1522554429
 GameObject:
   m_ObjectHideFlags: 0
@@ -4186,7 +4213,32 @@ MonoBehaviour:
   steeringRange: 30
   steeringRangeAtMaxSpeed: 10
   centreOfGravityOffset: -1
-  marsTerrain: {fileID: 898442928}
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  accelerationSmoothness: 0.3
+  brakingSmoothness: 0.5
 --- !u!54 &1625381594
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4744,6 +4796,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1868839355
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -4878,6 +4935,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 1
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1884022419
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -5122,6 +5184,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 0
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &2094522299
 WheelCollider:
   m_ObjectHideFlags: 0
