@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 1905277}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.30598602, z: 0, w: 0.952036}
-  m_LocalPosition: {x: 0.972, y: -0.010009766, z: -0.282}
+  m_LocalPosition: {x: 0.886, y: -0.010009766, z: -0.223}
   m_LocalScale: {x: 0.4657571, y: 0.02, z: 1.3653897}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1669,13 +1669,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 551624839}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.297, y: 0.8436, z: -0.71556}
+  m_LocalRotation: {x: -0, y: 0.9999984, z: -0, w: 0.0017958373}
+  m_LocalPosition: {x: 0.30078125, y: 0.84350586, z: 0.8671875}
   m_LocalScale: {x: 0.49893484, y: 0.12830295, z: 0.28354895}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 179.794, z: 0}
 --- !u!65 &551624841
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2020,6 +2020,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 1
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &678191974
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -2156,11 +2161,6 @@ Transform:
 --- !u!1 &898442925 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2525931244784360066, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
-  m_PrefabInstance: {fileID: 7003715329865121356}
-  m_PrefabAsset: {fileID: 0}
---- !u!218 &898442928 stripped
-Terrain:
-  m_CorrespondingSourceObject: {fileID: 250662670795585593, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
   m_PrefabInstance: {fileID: 7003715329865121356}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &898442929 stripped
@@ -2429,13 +2429,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1089360083}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.297, y: 0.70525, z: -0.71556}
+  m_LocalRotation: {x: -0, y: 0.9999984, z: -0, w: 0.0017958373}
+  m_LocalPosition: {x: 0.30078125, y: 0.70532227, z: 0.8671875}
   m_LocalScale: {x: 0.39527148, y: 0.1888947, z: 0.3952618}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 179.794, z: 0}
 --- !u!65 &1089360085
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2537,13 +2537,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126338133}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.43316, y: 0.82951, z: -0.90278}
+  m_LocalRotation: {x: 0.0012708456, y: 0.70710564, z: -0.70710564, w: 0.0012708456}
+  m_LocalPosition: {x: 0.152, y: 0.82958984, z: 1.0078125}
   m_LocalScale: {x: 0.09912841, y: 0.06115234, z: 0.11498942}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -179.794}
 --- !u!136 &1126338135
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3000,6 +3000,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1268290334
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -3353,7 +3358,12 @@ MonoBehaviour:
   wheelModel: {fileID: 1690867317}
   WheelCollider: {fileID: 0}
   steerable: 0
-  motorized: 0
+  motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1370114692
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -3576,7 +3586,7 @@ Transform:
   m_GameObject: {fileID: 1461351437}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.30598778, z: -0, w: 0.9520355}
-  m_LocalPosition: {x: -0.383, y: -0.010009766, z: -0.305}
+  m_LocalPosition: {x: -0.301, y: -0.010009766, z: -0.246}
   m_LocalScale: {x: 0.4657571, y: 0.02, z: 1.3653897}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3683,13 +3693,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479853816}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.30598602, z: -0, w: 0.952036}
-  m_LocalPosition: {x: 0.30078125, y: 0.27197266, z: -0.78515625}
+  m_LocalRotation: {x: -0, y: 0.95258397, z: -0, w: -0.3042759}
+  m_LocalPosition: {x: 0.28125, y: 0.27197266, z: 0.80078125}
   m_LocalScale: {x: 0.1742421, y: 0.39999998, z: 0.18671569}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 215.429, z: 0}
 --- !u!136 &1479853818
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3779,6 +3789,7 @@ GameObject:
   - component: {fileID: 1504693232}
   - component: {fileID: 1504693231}
   - component: {fileID: 1504693235}
+  - component: {fileID: 1504693236}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -3920,7 +3931,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -3938,6 +3949,23 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1504693236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504693230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e5853830c4b74ffc9259a63df8e029c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  followSpeed: 10
+  rotationSpeed: 5
+  speedThreshold: 0.1
 --- !u!1 &1522554429
 GameObject:
   m_ObjectHideFlags: 0
@@ -3965,13 +3993,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522554429}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.17175, y: 0.82951, z: -0.90278}
+  m_LocalRotation: {x: 0.0012708456, y: 0.70710564, z: -0.70710564, w: 0.0012708456}
+  m_LocalPosition: {x: 0.43, y: 0.82958984, z: 1.008}
   m_LocalScale: {x: 0.09912841, y: 0.06115234, z: 0.11498942}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -179.794}
 --- !u!136 &1522554431
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4186,7 +4214,32 @@ MonoBehaviour:
   steeringRange: 30
   steeringRangeAtMaxSpeed: 10
   centreOfGravityOffset: -1
-  marsTerrain: {fileID: 898442928}
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  accelerationSmoothness: 0.3
+  brakingSmoothness: 0.5
 --- !u!54 &1625381594
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4501,13 +4554,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1785625518}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.296, y: 0.67137, z: -0.9305}
+  m_LocalRotation: {x: 0.5008972, y: 0.49910116, z: -0.49910116, w: 0.5008972}
+  m_LocalPosition: {x: 0.293, y: 0.6713867, z: 1.047}
   m_LocalScale: {x: 0.12903613, y: 0.2346024, z: 0.11498942}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1625381595}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -89.794}
 --- !u!136 &1785625520
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4744,6 +4797,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 0
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1868839355
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -4878,6 +4936,11 @@ MonoBehaviour:
   WheelCollider: {fileID: 0}
   steerable: 1
   motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &1884022419
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -5121,7 +5184,12 @@ MonoBehaviour:
   wheelModel: {fileID: 429807348}
   WheelCollider: {fileID: 0}
   steerable: 0
-  motorized: 0
+  motorized: 1
+  motorTorque: 2000
+  steerAngle: 30
+  brakeTorque: 3000
+  rollingResistance: 5
+  dragCoefficient: 0.3
 --- !u!146 &2094522299
 WheelCollider:
   m_ObjectHideFlags: 0
