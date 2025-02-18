@@ -3358,7 +3358,7 @@ MonoBehaviour:
   wheelModel: {fileID: 1690867317}
   WheelCollider: {fileID: 0}
   steerable: 0
-  motorized: 0
+  motorized: 1
   motorTorque: 2000
   steerAngle: 30
   brakeTorque: 3000
@@ -3931,7 +3931,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -3965,6 +3965,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   followSpeed: 10
   rotationSpeed: 5
+  speedThreshold: 0.1
 --- !u!1 &1522554429
 GameObject:
   m_ObjectHideFlags: 0
@@ -5183,7 +5184,7 @@ MonoBehaviour:
   wheelModel: {fileID: 429807348}
   WheelCollider: {fileID: 0}
   steerable: 0
-  motorized: 0
+  motorized: 1
   motorTorque: 2000
   steerAngle: 30
   brakeTorque: 3000
