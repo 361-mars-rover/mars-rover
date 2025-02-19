@@ -67,6 +67,8 @@ public class TerrainChunk : MonoBehaviour {
     {
         return $"{baseURL}/{tileMatrixSet}/{row}/{col}.jpg";
     }
+
+
     // Downloads heightmap
     IEnumerator DownloadHeightmap(int row, int col) 
     {        
