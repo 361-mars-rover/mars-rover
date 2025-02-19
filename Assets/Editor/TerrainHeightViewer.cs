@@ -25,8 +25,9 @@ public class TerrainHeightViewer
 
         if (Physics.Raycast(ray, out hit))
         {
-            Handles.Label(hit.point, $"Position: {hit.point}");
-            Handles.color = Color.red;
+            GUIStyle style = new GUIStyle();
+            style.normal.textColor = Color.red;
+            Handles.Label(hit.point, $"Position: {hit.point}", style);
             Handles.DrawWireCube(hit.point, Vector3.one * 0.5f);
         }
 
@@ -34,7 +35,7 @@ public class TerrainHeightViewer
         {
             Debug.Log($"Click position: {hit.point}");
             Undo.RecordObject(targetObject.transform, "Move Object");  // Allows for undo
-            targetObject.transform.position = hit.point;
+            targetObject.transform.position = hit.point + Vector3.up * 5;
             Debug.Log($"Moved object to position: {hit.point}");
         }
     }
