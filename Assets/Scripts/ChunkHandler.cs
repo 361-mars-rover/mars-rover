@@ -50,12 +50,10 @@ public class ChunkHandler : MonoBehaviour
     // Find the position of the nearest chunk center relative to the car's position
     Vector3 GetClosestChunkCenter(Vector3 position)
     {
-        // This gets bottom left corner
+        // This gets bottom left corner of the tile
         float x = Mathf.Floor(position.x / terrainWidth) * terrainWidth;
         float z = Mathf.Floor(position.z / terrainHeight) * terrainHeight;
-        // Now get center
-        x += terrainWidth / 2;
-        z += terrainHeight / 2;
+
         return new Vector3(x, 0, z);
     }
     // Gets the surrounding 8 chunk positions
@@ -63,15 +61,15 @@ public class ChunkHandler : MonoBehaviour
     {
         Vector3 nearestChunkPositon = GetClosestChunkCenter(position);
         Vector3[] chunksToLoad = new Vector3[9];
-        chunksToLoad[0] = nearestChunkPositon + Vector3.forward * terrainHeight;
-        chunksToLoad[1] = nearestChunkPositon + Vector3.back * terrainHeight;
-        chunksToLoad[2] = nearestChunkPositon + Vector3.right * terrainWidth;
-        chunksToLoad[3] = nearestChunkPositon + Vector3.left * terrainWidth;
-        chunksToLoad[4] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.right * terrainWidth; 
-        chunksToLoad[5] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.left * terrainWidth;
-        chunksToLoad[6] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.right * terrainWidth;
-        chunksToLoad[7] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.left * terrainWidth;
-        chunksToLoad[8] = nearestChunkPositon;
+        chunksToLoad[0] = nearestChunkPositon + Vector3.forward * terrainHeight; // Above
+        chunksToLoad[1] = nearestChunkPositon + Vector3.back * terrainHeight; // Below
+        chunksToLoad[2] = nearestChunkPositon + Vector3.right * terrainWidth; // Right
+        chunksToLoad[3] = nearestChunkPositon + Vector3.left * terrainWidth; // Left
+        chunksToLoad[4] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.right * terrainWidth;  //  Top right
+        chunksToLoad[5] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.left * terrainWidth; // Top left
+        chunksToLoad[6] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.right * terrainWidth; // Back right
+        chunksToLoad[7] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.left * terrainWidth; // Back left
+        chunksToLoad[8] = nearestChunkPositon; // Current chunk
         return chunksToLoad;
     }
 
@@ -92,34 +90,35 @@ public class ChunkHandler : MonoBehaviour
         {
             Vector3 currentChunkPosition = GetClosestChunkCenter(car.transform.position);
 
-            // Check to see if new chunks need to be loaded
+            // Only do updates if we need new chunks
             if (currentChunkPosition != prevChunkPosition)
             {
-                // Debug.Log("Position updated!");
-                prevChunkPosition = currentChunkPosition;
-                // Vector3[] nearestNeighbours = getChunksToLoad(car.transform.position);
+                Debug.Log($"Current chunk center: {GetRowColFromPosition(currentChunkPosition)}");
+
+                HashSet<Vector3> currentChunkPositions = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
+                HashSet<Vector3> chunksToLoad = new HashSet<Vector3>(GetChunksToLoad(car.transform.position)); // Positions of all the chunks that must be loaded given car position
+
+                HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoad.Except(currentChunkPositions)); // Only the positions of new chunks
+                HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositions.Except(chunksToLoad)); // Only positions of chunks to be deleted
+
+                foreach (Vector3 newChunkPos in newChunkPositions) // Load in all the new chunks
+                { 
+                    var (row, col) = GetRowColFromPosition(newChunkPos);
+                    if (row < 0 || col < 0) continue;
+                    GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
+                    chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
+                    loadedChunks[newChunkPos] = chunk;
+                }
+
+                foreach (Vector3 deletePos in chunksToDelete) // Delete all the old chunks
+                {
+                    Destroy(loadedChunks[deletePos]);
+                    loadedChunks.Remove(deletePos);
+                }
             }
 
-            HashSet<Vector3> currentChunkPositions = new HashSet<Vector3>(loadedChunks.Keys);
-            HashSet<Vector3> chunksToLoad = new HashSet<Vector3>(GetChunksToLoad(car.transform.position));
+            prevChunkPosition = currentChunkPosition;
 
-            HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoad.Except(currentChunkPositions));
-            HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositions.Except(chunksToLoad));
-
-            foreach (Vector3 newChunkPos in newChunkPositions)
-            { 
-                var (row, col) = GetRowColFromPosition(newChunkPos);
-                if (row < 0 || col < 0) continue;
-                GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
-                chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
-                loadedChunks[newChunkPos] = chunk;
-            }
-
-            foreach (Vector3 deletePos in chunksToDelete)
-            {
-                Destroy(loadedChunks[deletePos]);
-                loadedChunks.Remove(deletePos);
-            }
 
             // float h = loadedChunks[Vector3.zero].GetComponent<Terrain>().SampleHeight(new Vector3(39091.87f, 0, 39091.87f));
 

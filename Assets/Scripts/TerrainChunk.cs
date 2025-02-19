@@ -53,6 +53,8 @@ public class TerrainChunk : MonoBehaviour {
         }
 
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
+        tileCol = col;
+        tileRow = row;
         StartCoroutine(DownloadHeightmap(row,col));
     }
 
@@ -83,12 +85,6 @@ public class TerrainChunk : MonoBehaviour {
             ApplyHeightmap(texture);
         } else {
             Debug.LogError("Failed to download heightmap: " + dataRequest.error);
-        }
-
-        if (row == 0 && col == 0)
-        {
-            Debug.Log("Logging heihgt");
-            Debug.Log(terrain.SampleHeight(new Vector3(39091.87f, 0f, 39091.87f)));
         }
     }
 
