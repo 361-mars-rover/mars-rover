@@ -41,7 +41,9 @@ public class TerrainChunk : MonoBehaviour {
     void Awake()
     {
         terrainData = new TerrainData();
-        terrainData.heightmapResolution = 513;
+        // this means the texture is represented in game by 513x513 points
+        // this is not the same as the number of pixels in the image, which is 256x256
+        terrainData.heightmapResolution = 513; 
     }
     // Generates the terrain from NASA data
     // This is called in ChunkHandler, which specifies the row and col
@@ -90,24 +92,35 @@ public class TerrainChunk : MonoBehaviour {
 
     // Sets heights based on texture data
     void ApplyHeightmap(Texture2D texture) {
-        // This block of code gets our terrain inputs current data
-        int resolution = terrainData.heightmapResolution;
+        /*
+        To understand this function it's first important to distinguish between the resolution of the heightmap and
+        the texture. The heightmap is the actual terrain used in game, which is a set of points (x,y,z) representing
+        the points of the terrain. The texture is the image we're using to generate the heightmaps. Notably, the heightmap
+        and image DO NOT HAVE THE SAME RESOLUTION ((513x513) and (256x256) respectively). 
+        
+        This function takes points in the heightmap, maps them to points on the texture, and then computes the height.
+        This function is a surjection, since many points on the heightmap map to a single point on the texture.
+        */
+        int resolution = terrainData.heightmapResolution; // number of pixels in the *height map* is resolution x resolution
         float[,] heights = new float[resolution, resolution];
-        //each pixel color represents the height
+
+        // Each pixel’s color represents elevation data, typically encoded in the red channel.
+        // This is a flattened matrix (ie. [[r1],[r2]] -> [r1,r2])
         Color[] pixels = texture.GetPixels();
 
         // loop through the resolution grid pixel by pixel
-        for (int y = 0; y < resolution; y++) {
-            int texY = (int)((y / (float)resolution) * texture.height);
-            for (int x = 0; x < resolution; x++) {
-                int texX = (int)((x / (float)resolution) * texture.width);
+        for (int row = 0; row < resolution; row++) {
+            int texRow = (int)((row / (float)resolution) * texture.height); // get corresponding row in texture
+            for (int col = 0; col < resolution; col++) {
+                int texCol = (int)((col / (float)resolution) * texture.width); // get corresponding col in texture
+                Color pixel = pixels[texRow * texture.width + texCol]; // get pixel data from the image
 
-                Color pixel = pixels[texY * texture.width + texX];
-
-                float heightValue = pixel.r * ELEVATION_RANGE + MIN_ELEVATION;
+                // compute height based on the red channel
+                // since the image is grayscale, this is simply in the range [0,1], where lighter point are higher
+                float heightValue = pixel.r * ELEVATION_RANGE + MIN_ELEVATION; 
 
                 // Normalize to Unity terrain height range
-                heights[y, x] = Mathf.Clamp01((heightValue - MIN_ELEVATION) / ELEVATION_RANGE * heightScale);
+                heights[row, col] = Mathf.Clamp01((heightValue - MIN_ELEVATION) / ELEVATION_RANGE * heightScale);
             }
         }
 
@@ -121,6 +134,8 @@ public class TerrainChunk : MonoBehaviour {
 
     // Smooths heights to avoid sharp edges
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations) {
+        // Moves a cross along the terrain and sets the height of each pixel to the average of its neighbours
+        // to generate smoother terrain
         for (int i = 0; i < iterations; i++) {
             for (int y = 1; y < resolution - 1; y++) {
                 for (int x = 1; x < resolution - 1; x++) {
