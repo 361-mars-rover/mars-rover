@@ -6,8 +6,8 @@ public class RoverAI : MonoBehaviour
 {
     public Transform mainBase;
     public ExplorationTracker tracker;
-    public float baseRadius = 100f;
-    public float searchStep = 10f;
+    public float baseRadius = 100f; // Size of temporary base
+    public float searchStep = 10f; // Distance between each mineral check
     public float mineralDetectionRadius = 50f;
     public int maxMinerals = 10;
     public float maxTime = 1800f; // 30 minutes
@@ -17,6 +17,7 @@ public class RoverAI : MonoBehaviour
     private int collectedMinerals = 0;
     private Vector3 currentBase;
     private float currentSearchRadius = 10f;
+    private float currentAngle = 0f; // Angle for circular movement
 
     void Start()
     {
@@ -30,58 +31,57 @@ public class RoverAI : MonoBehaviour
     {
         while (true)
         {
-            // If we reach max minerals, return to main base, drop off, then continue from the same base
+            // If minerals are full, return to main base to deposit before continuing
             if (collectedMinerals >= maxMinerals)
             {
                 yield return ReturnToMainBase();
             }
 
-            // If the current base is fully explored, move to a new adjacent base
+            // If we complete the full circle, expand it and restart
+            if (currentAngle >= 360f)
+            {
+                currentSearchRadius += searchStep; // Move to next outer circle
+                currentAngle = 0f; // Reset angle for new loop
+            }
+
+            // If we reach the base radius limit, move to a new base
             if (currentSearchRadius > baseRadius)
             {
                 MoveToNewTemporaryBase();
                 continue;
             }
 
-            // Move in concentric circles
-            Vector3 targetLocation = FindCircularSearchPoint();
+            // Move to the next point along the current circle
+            Vector3 targetLocation = GetNextCirclePoint();
             agent.SetDestination(targetLocation);
 
+            // Wait until we reach the destination
             while (Vector3.Distance(transform.position, targetLocation) > 2f)
                 yield return null;
 
-            // Mark circle as explored
+            // Mark this area as explored
             tracker.MarkCircleAsExplored(targetLocation, currentSearchRadius);
 
-            // Check for minerals
-            if (Random.Range(0, 100) < 30) // 30% chance of finding minerals
+            // Check for minerals with 5% probability
+            if (Random.Range(0, 100) < 5)
             {
-                Debug.Log("Minerals found! Prioritizing search in this area.");
                 tracker.SaveMineral(transform.position);
                 collectedMinerals++;
-
-                // Search within Y radius of minerals
                 yield return SearchMineralRegion(transform.position, mineralDetectionRadius);
             }
-            else
-            {
-                currentSearchRadius += searchStep;
-            }
+
+            // Move to the next angle in the circle
+            currentAngle += Mathf.Rad2Deg * (searchStep / currentSearchRadius); // Adjust angle step based on radius
         }
     }
 
     IEnumerator ReturnToMainBase()
     {
-        Debug.Log("Returning to Main Base to deposit minerals...");
         agent.SetDestination(mainBase.position);
         while (Vector3.Distance(transform.position, mainBase.position) > 2f)
             yield return null;
 
-        Debug.Log($"Deposited {collectedMinerals} minerals at the base.");
         collectedMinerals = 0;
-
-        // Resume exploration from the same temporary base
-        Debug.Log("Resuming exploration at previous temporary base...");
     }
 
     IEnumerator SearchMineralRegion(Vector3 mineralPos, float radius)
@@ -103,11 +103,10 @@ public class RoverAI : MonoBehaviour
         }
     }
 
-    Vector3 FindCircularSearchPoint()
+    Vector3 GetNextCirclePoint()
     {
-        float angle = Random.Range(0, 360);
-        float x = currentBase.x + currentSearchRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
-        float z = currentBase.z + currentSearchRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
+        float x = currentBase.x + currentSearchRadius * Mathf.Cos(currentAngle * Mathf.Deg2Rad);
+        float z = currentBase.z + currentSearchRadius * Mathf.Sin(currentAngle * Mathf.Deg2Rad);
         return new Vector3(x, transform.position.y, z);
     }
 
@@ -116,7 +115,7 @@ public class RoverAI : MonoBehaviour
         Vector3 newBase = FindNewBasePosition();
         currentBase = newBase;
         currentSearchRadius = searchStep;
-        Debug.Log($"Moving to new temporary base at {currentBase}");
+        currentAngle = 0f;
     }
 
     Vector3 FindNewBasePosition()
@@ -124,10 +123,8 @@ public class RoverAI : MonoBehaviour
         float angle = Random.Range(0, 360);
         float newX = currentBase.x + baseRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
         float newZ = currentBase.z + baseRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
-        
-        Vector3 newBase = new Vector3(newX, transform.position.y, newZ);
 
-        // Ensure we are not revisiting an explored base
+        Vector3 newBase = new Vector3(newX, transform.position.y, newZ);
         while (tracker.IsBaseExplored(newBase))
         {
             angle = Random.Range(0, 360);
