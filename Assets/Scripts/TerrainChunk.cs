@@ -54,8 +54,9 @@ public class TerrainChunk : MonoBehaviour {
         }
 
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
-        StartCoroutine(DownloadHeightmapAndColor(row,col));
-
+        tileCol = col;
+        tileRow = row;
+        StartCoroutine(DownloadHeightmap(row,col));
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
@@ -69,6 +70,8 @@ public class TerrainChunk : MonoBehaviour {
     {
         return $"{baseURL}/{tileMatrixSet}/{row}/{col}.jpg";
     }
+
+
     // Downloads heightmap
     IEnumerator DownloadHeightmapAndColor(int row, int col) 
     {        
@@ -88,12 +91,6 @@ public class TerrainChunk : MonoBehaviour {
             ApplyColorMap(colorTexture);
         } else {
             Debug.LogError("Failed to download heightmap: " + heightRequest.error);
-        }
-
-        if (row == 0 && col == 0)
-        {
-            Debug.Log("Logging heihgt");
-            Debug.Log(terrain.SampleHeight(new Vector3(39091.87f, 0f, 39091.87f)));
         }
     }
 
