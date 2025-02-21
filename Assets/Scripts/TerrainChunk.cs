@@ -43,7 +43,7 @@ public class TerrainChunk : MonoBehaviour {
     {
         terrainData = new TerrainData();
         terrainData.heightmapResolution = 513;
-        Debug.Log($"Tile span: {GetTileSpan()}");
+        // Debug.Log($"Tile span: {GetTileSpan()}");
     }
     // Generates the terrain from NASA data
     // This is called in ChunkHandler, which specifies the row and col

@@ -34,6 +34,7 @@ public class ChunkHandler : MonoBehaviour
         
 
         // currentChunks[0] = Instantiate(terrainPrefab, prevChunkPosition, Quaternion.identity);
+        Debug.Log("Getting initial tiles");
         foreach(Vector3 chunkPos in chunksToLoad)
         {
             var (row, col) = GetRowColFromPosition(chunkPos);
@@ -77,11 +78,13 @@ public class ChunkHandler : MonoBehaviour
         return chunksToLoad;
     }
 
-    // Takes a chunk center position and returns the corresponding row and column of the tile
+    // Takes a chunk corner position and returns the corresponding row and column of the tile
     (int, int) GetRowColFromPosition(Vector3 position)
     {
-        int row = (int) Math.Round((position.z - (terrainHeight / 2)) / terrainHeight);
-        int col = (int) Math.Round((position.x - (terrainHeight / 2)) / terrainHeight);
+        // int row = (int) Math.Round((position.z - (terrainHeight / 2)) / terrainHeight);
+        // int col = (int) Math.Round((position.x - (terrainHeight / 2)) / terrainHeight);
+        int row = (int) Math.Round(position.z / terrainHeight);
+        int col = (int) Math.Round(position.x  / terrainWidth);
         // Debug.Log($"row: {row} col: {col}");
 
         return (row,col);
