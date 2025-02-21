@@ -56,7 +56,7 @@ public class TerrainChunk : MonoBehaviour {
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
         tileCol = col;
         tileRow = row;
-        StartCoroutine(DownloadHeightmap(row,col));
+        StartCoroutine(DownloadHeightmapAndColor(row,col));
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
