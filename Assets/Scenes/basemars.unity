@@ -4317,8 +4317,8 @@ MonoBehaviour:
   activationDistance: 1500
   checkInterval: 1
   terrainPrefab: {fileID: 898442925}
-  terrainWidth: 78183.74
-  terrainHeight: 78183.74
+  terrainWidth: 156367.5
+  terrainHeight: 156367.5
 --- !u!4 &1661480751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6886066687445569438, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
@@ -5311,6 +5311,14 @@ PrefabInstance:
     - target: {fileID: 2027017430909772624, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
       propertyPath: tileRow
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2027017430909772624, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
+      propertyPath: marsTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: e80788f6029214602bf390a2ece8f443, type: 3}
+    - target: {fileID: 2027017430909772624, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
+      propertyPath: tileMatrixSet
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2525931244784360066, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
       propertyPath: m_Name

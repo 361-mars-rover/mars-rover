@@ -22,7 +22,7 @@ public class CarControl : MonoBehaviour
         rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
         wheels = GetComponentsInChildren<WheelControl>();
     }
-    
+
     void Update()
     {
         float vInput = Input.GetAxis("Vertical");
