@@ -19,6 +19,18 @@ public class ChunkHandler : MonoBehaviour
     
     public float terrainWidth = 78183.74f;
     public float terrainHeight = 78183.74f;
+
+    public class ChunkData
+    {
+        public Vector3 gamePosition;
+        public Vector2 tilePosition;
+
+        public ChunkData(Vector3 pGamePosition, Vector2 pTilePosition)
+        {
+            gamePosition = pGamePosition;
+            tilePosition = pTilePosition;
+        }
+    }
     
     // Loads initial chunks based on car position
     void Start()
@@ -73,6 +85,7 @@ public class ChunkHandler : MonoBehaviour
         return chunksToLoad;
     }
 
+    
     // Takes a chunk center position and returns the corresponding row and column of the tile
     (int, int) GetRowColFromPosition(Vector3 position)
     {
@@ -82,6 +95,9 @@ public class ChunkHandler : MonoBehaviour
 
         return (row,col);
     }
+
+
+
 
     // Infinitely loops to check car position and load new chunks when needed
     IEnumerator CheckChunkDistance()
@@ -95,11 +111,16 @@ public class ChunkHandler : MonoBehaviour
             {
                 Debug.Log($"Current chunk center: {GetRowColFromPosition(currentChunkPosition)}");
 
-                HashSet<Vector3> currentChunkPositions = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
-                HashSet<Vector3> chunksToLoad = new HashSet<Vector3>(GetChunksToLoad(car.transform.position)); // Positions of all the chunks that must be loaded given car position
 
-                HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoad.Except(currentChunkPositions)); // Only the positions of new chunks
-                HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositions.Except(chunksToLoad)); // Only positions of chunks to be deleted
+                HashSet<Vector3> currentChunkPositionsSet = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
+
+                Vector3[] chunksToLoadArray = GetChunksToLoad(car.transform.position);
+
+                HashSet<Vector3> chunksToLoadSet = new HashSet<Vector3>(chunksToLoadArray); // Positions of all the chunks that must be loaded given car position
+
+                HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoadSet.Except(currentChunkPositionsSet)); // Only the positions of new chunks
+                HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositionsSet.Except(chunksToLoadSet)); // Only positions of chunks to be deleted
+
 
                 foreach (Vector3 newChunkPos in newChunkPositions) // Load in all the new chunks
                 { 
@@ -110,11 +131,27 @@ public class ChunkHandler : MonoBehaviour
                     loadedChunks[newChunkPos] = chunk;
                 }
 
+
                 foreach (Vector3 deletePos in chunksToDelete) // Delete all the old chunks
                 {
                     Destroy(loadedChunks[deletePos]);
                     loadedChunks.Remove(deletePos);
                 }
+                // dictionary.TryGetValue(keyToFind, out string foundValue) ? foundValue : null;
+                Terrain center = loadedChunks.TryGetValue(chunksToLoadArray[8], out GameObject cChunk) ? cChunk.GetComponent<Terrain>() : null;
+                Terrain left = loadedChunks.TryGetValue(chunksToLoadArray[3], out GameObject lChunk) ? lChunk.GetComponent<Terrain>() : null;
+                Terrain up = loadedChunks.TryGetValue(chunksToLoadArray[0], out GameObject uChunk) ? uChunk.GetComponent<Terrain>() : null;
+                Terrain down = loadedChunks.TryGetValue(chunksToLoadArray[1], out GameObject dChunk) ? dChunk.GetComponent<Terrain>() : null;
+                Terrain right = loadedChunks.TryGetValue(chunksToLoadArray[2], out GameObject rChunk) ? rChunk.GetComponent<Terrain>() : null;
+
+                Debug.Log($"Center: {center}");
+                Debug.Log($"left: {left}");
+                Debug.Log($"up: {up}");
+                Debug.Log($"down: {down}");
+                Debug.Log($"right: {right}");
+
+                center.SetNeighbors(left, up, right, down);
+
             }
 
             prevChunkPosition = currentChunkPosition;
