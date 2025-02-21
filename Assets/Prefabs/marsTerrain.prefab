@@ -109,9 +109,8 @@ MonoBehaviour:
   terrain: {fileID: 250662670795585593}
   terrainCollider: {fileID: 1747900832165015746}
   terrainData: {fileID: 0}
-  isLoaded: 0
   heightScale: 0.2
   blurIterations: 2
-  tileMatrixSet: 8
-  tileRow: 102
-  tileCol: 214
+  tileMatrixSet: 7
+  tileRow: 0
+  tileCol: 0
