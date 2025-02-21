@@ -105,7 +105,18 @@ public class ChunkHandler : MonoBehaviour
         return (row,col);
     }
 
+    Dictionary<string, List<Vector3>> GetChunksToAddAndDelete(Vector3[] chunksToLoad)
+    {
+        Dictionary<string, List<Vector3>> chunksToAddAndDelete = new Dictionary<string, List<Vector3>>();
+        
+        HashSet<Vector3> currentChunkPositionsSet = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
+        HashSet<Vector3> chunksToLoadSet = new HashSet<Vector3>(chunksToLoad); // Positions of all the chunks that must be loaded given car position
 
+        chunksToAddAndDelete["add"] = chunksToLoadSet.Except(currentChunkPositionsSet).ToList(); // Only the positions of new chunks
+        chunksToAddAndDelete["delete"] = currentChunkPositionsSet.Except(chunksToLoadSet).ToList(); // Only positions of chunks to be deleted
+
+        return chunksToAddAndDelete;
+    }
 
 
     // Infinitely loops to check car position and load new chunks when needed
@@ -121,17 +132,19 @@ public class ChunkHandler : MonoBehaviour
                 Debug.Log($"Current chunk center: {GetRowColFromPosition(currentChunkPosition)}");
 
 
-                HashSet<Vector3> currentChunkPositionsSet = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
+                // HashSet<Vector3> currentChunkPositionsSet = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
 
                 Vector3[] chunksToLoadArray = GetChunksToLoad(car.transform.position);
 
-                HashSet<Vector3> chunksToLoadSet = new HashSet<Vector3>(chunksToLoadArray); // Positions of all the chunks that must be loaded given car position
+                // HashSet<Vector3> chunksToLoadSet = new HashSet<Vector3>(chunksToLoadArray); // Positions of all the chunks that must be loaded given car position
 
-                HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoadSet.Except(currentChunkPositionsSet)); // Only the positions of new chunks
-                HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositionsSet.Except(chunksToLoadSet)); // Only positions of chunks to be deleted
+                // HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoadSet.Except(currentChunkPositionsSet)); // Only the positions of new chunks
+                // HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositionsSet.Except(chunksToLoadSet)); // Only positions of chunks to be deleted
+
+                Dictionary<string, List<Vector3>> chunksToAddAndDelete = GetChunksToAddAndDelete(chunksToLoadArray);
 
 
-                foreach (Vector3 newChunkPos in newChunkPositions) // Load in all the new chunks
+                foreach (Vector3 newChunkPos in chunksToAddAndDelete["add"]) // Load in all the new chunks
                 { 
                     var (row, col) = GetRowColFromPosition(newChunkPos);
                     if (row < 0 || col < 0) continue;
@@ -141,7 +154,7 @@ public class ChunkHandler : MonoBehaviour
                 }
 
 
-                foreach (Vector3 deletePos in chunksToDelete) // Delete all the old chunks
+                foreach (Vector3 deletePos in chunksToAddAndDelete["delete"]) // Delete all the old chunks
                 {
                     Destroy(loadedChunks[deletePos]);
                     loadedChunks.Remove(deletePos);
