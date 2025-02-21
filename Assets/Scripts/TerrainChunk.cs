@@ -12,8 +12,8 @@ public class TerrainChunk : MonoBehaviour {
 
     public TerrainData terrainData;
 
-    private string baseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
-
+    private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
+    private string colorbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
     private float WMS_PIXEL_SIZE = 0.28e-3f;
     
     [Header("Terrain Settings")]
@@ -27,7 +27,7 @@ public class TerrainChunk : MonoBehaviour {
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
     private const float ELEVATION_RANGE = MAX_ELEVATION - MIN_ELEVATION;
 
-    private const float SCALE_DENOMINATOR = 1.0907329542893544E+06f;
+    private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
 
     private const float TILE_WIDTH = 256f;
 
@@ -37,7 +37,6 @@ public class TerrainChunk : MonoBehaviour {
     public int tileRow;
     public int tileCol;
 
-    public Texture2D marsTexture;
 
     // Initializes size of terrain data
     void Awake()
@@ -55,8 +54,8 @@ public class TerrainChunk : MonoBehaviour {
         }
 
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
-        StartCoroutine(DownloadHeightmap(row,col));
-        ApplyTexture();
+        StartCoroutine(DownloadHeightmapAndColor(row,col));
+
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
@@ -66,24 +65,29 @@ public class TerrainChunk : MonoBehaviour {
     float GetTileSpan()
     {return TILE_WIDTH * GetPixelSpan();}
     // Fills URL for API request
-    string GetDownloadURL(int row, int col)
+    string GetDownloadURL(string baseURL, int row, int col)
     {
         return $"{baseURL}/{tileMatrixSet}/{row}/{col}.jpg";
     }
     // Downloads heightmap
-    IEnumerator DownloadHeightmap(int row, int col) 
+    IEnumerator DownloadHeightmapAndColor(int row, int col) 
     {        
-        string url = GetDownloadURL(row, col);
+        string heightURL = GetDownloadURL(heightbaseURL,row, col);
+        string colorURL = GetDownloadURL(colorbaseURL,row, col);
 
-        UnityWebRequest dataRequest = UnityWebRequestTexture.GetTexture(url);
-        yield return dataRequest.SendWebRequest();
+        UnityWebRequest heightRequest = UnityWebRequestTexture.GetTexture(heightURL);
+        UnityWebRequest colorRequest = UnityWebRequestTexture.GetTexture(colorURL);
+        yield return heightRequest.SendWebRequest();
+        yield return colorRequest.SendWebRequest();
 
         //applies API texture to terrain
-        if (dataRequest.result == UnityWebRequest.Result.Success) {
-            Texture2D texture = DownloadHandlerTexture.GetContent(dataRequest);
-            ApplyHeightmap(texture);
+        if (heightRequest.result == UnityWebRequest.Result.Success) {
+            Texture2D heightTexture = DownloadHandlerTexture.GetContent(heightRequest);
+            Texture2D colorTexture = DownloadHandlerTexture.GetContent(colorRequest);
+            ApplyHeightmap(heightTexture);
+            ApplyColorMap(colorTexture);
         } else {
-            Debug.LogError("Failed to download heightmap: " + dataRequest.error);
+            Debug.LogError("Failed to download heightmap: " + heightRequest.error);
         }
 
         if (row == 0 && col == 0)
@@ -144,14 +148,14 @@ public class TerrainChunk : MonoBehaviour {
         return heights;
     }
 
-    void ApplyTexture() {
-        if(marsTexture == null) {
+    void ApplyColorMap(Texture2D texture) {
+        if(texture == null) {
             Debug.LogError("Mars texture not set!");
             return;
         }
 
         TerrainLayer terrainLayer = new TerrainLayer();
-        terrainLayer.diffuseTexture = marsTexture;
+        terrainLayer.diffuseTexture = texture;
         terrainLayer.tileSize = new Vector2(terrainData.size.x, terrainData.size.z);
         terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
     }
