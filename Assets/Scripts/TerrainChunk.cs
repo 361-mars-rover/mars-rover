@@ -14,7 +14,7 @@ public class TerrainChunk : MonoBehaviour {
 
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
-    private float WMS_PIXEL_SIZE = 0.28e-3f;
+    // private float WMS_PIXEL_SIZE = 0.28e-3f;
     
     [Header("Terrain Settings")]
 
@@ -22,14 +22,14 @@ public class TerrainChunk : MonoBehaviour {
     public float heightScale = 1f;
     public int blurIterations = 2;
     // Real size of tiles
-    private const float TILE_SIZE_KM = 100;
+    // private const float TILE_SIZE_KM = 100;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
     private const float ELEVATION_RANGE = MAX_ELEVATION - MIN_ELEVATION;
 
-    private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
+    // private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
 
-    private const float TILE_WIDTH = 256f;
+    // private const float TILE_WIDTH = 256f;
 
     [Header("Tile Settings")]
 
@@ -47,24 +47,24 @@ public class TerrainChunk : MonoBehaviour {
     }
     // Generates the terrain from NASA data
     // This is called in ChunkHandler, which specifies the row and col
-    public void Inititialize(int row, int col)
+    public void Inititialize(int row, int col, float terrainLength, float terrainWidth)
     {
         if (terrain == null) {
             Debug.LogError("Terrain reference not set!");
             return;
         }
-        terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
+        terrainData.size = new Vector3(terrainLength, ELEVATION_RANGE, terrainLength);
         tileCol = col;
         tileRow = row;
         StartCoroutine(DownloadHeightmapAndColor(row,col));
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
-    float GetPixelSpan(){return  SCALE_DENOMINATOR * WMS_PIXEL_SIZE;}
+    // float GetPixelSpan(){return  SCALE_DENOMINATOR * WMS_PIXEL_SIZE;}
 
-    // Gets tile span in meters ()
-    float GetTileSpan()
-    {return TILE_WIDTH * GetPixelSpan();}
+    // // Gets tile span in meters ()
+    // float GetTileSpan()
+    // {return TILE_WIDTH * GetPixelSpan();}
     // Fills URL for API request
     string GetDownloadURL(string baseURL, int row, int col)
     {

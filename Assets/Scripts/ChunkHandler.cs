@@ -16,17 +16,25 @@ public class ChunkHandler : MonoBehaviour
     public float activationDistance = 1500.0f;
     public float checkInterval = 0.1f;
     public GameObject terrainPrefab;
-    
-    // public float terrainWidth = 78183.74f;
-    // public float terrainHeight = 78183.74f;
 
-    public float terrainWidth = 156367.5f;
-    public float terrainHeight = 156367.5f;
+    // Set this to be 
+    // private float TerrainWidth = 156367.5f;
+    // private float TerrainLength = 156367.5f;
 
+    private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
+
+    private const float TILE_WIDTH = 256f;
+
+    private float WMS_PIXEL_SIZE = 0.28e-3f;
+
+    private float TerrainWidth;
+    private float TerrainLength;
     
     // Loads initial chunks based on car position
     void Start()
     {
+        TerrainWidth = GetTileSpan();
+        TerrainLength = TerrainWidth;
 
         Debug.Log("Chunk script started");
         prevChunkPosition = GetClosestChunkCenter(car.transform.position);
@@ -44,20 +52,27 @@ public class ChunkHandler : MonoBehaviour
 
             GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
 
-            chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
+            chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
 
             loadedChunks[chunkPos] = chunk;
         }
 
         StartCoroutine(CheckChunkDistance());
     }
+
+    // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
+    float GetPixelSpan(){return  SCALE_DENOMINATOR * WMS_PIXEL_SIZE;}
+
+    // Gets tile span in meters ()
+    float GetTileSpan()
+    {return TILE_WIDTH * GetPixelSpan();}
     
     // Find the position of the nearest chunk center relative to the car's position
     Vector3 GetClosestChunkCenter(Vector3 position)
     {
         // This gets bottom left corner of the tile
-        float x = Mathf.Floor(position.x / terrainWidth) * terrainWidth;
-        float z = Mathf.Floor(position.z / terrainHeight) * terrainHeight;
+        float x = Mathf.Floor(position.x / TerrainWidth) * TerrainWidth;
+        float z = Mathf.Floor(position.z / TerrainLength) * TerrainLength;
 
         return new Vector3(x, 0, z);
     }
@@ -66,14 +81,14 @@ public class ChunkHandler : MonoBehaviour
     {
         Vector3 nearestChunkPositon = GetClosestChunkCenter(position);
         Vector3[] chunksToLoad = new Vector3[9];
-        chunksToLoad[0] = nearestChunkPositon + Vector3.forward * terrainHeight; // Above
-        chunksToLoad[1] = nearestChunkPositon + Vector3.back * terrainHeight; // Below
-        chunksToLoad[2] = nearestChunkPositon + Vector3.right * terrainWidth; // Right
-        chunksToLoad[3] = nearestChunkPositon + Vector3.left * terrainWidth; // Left
-        chunksToLoad[4] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.right * terrainWidth;  //  Top right
-        chunksToLoad[5] = nearestChunkPositon + Vector3.forward * terrainHeight + Vector3.left * terrainWidth; // Top left
-        chunksToLoad[6] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.right * terrainWidth; // Back right
-        chunksToLoad[7] = nearestChunkPositon + Vector3.back * terrainHeight + Vector3.left * terrainWidth; // Back left
+        chunksToLoad[0] = nearestChunkPositon + Vector3.forward * TerrainLength; // Above
+        chunksToLoad[1] = nearestChunkPositon + Vector3.back * TerrainLength; // Below
+        chunksToLoad[2] = nearestChunkPositon + Vector3.right * TerrainWidth; // Right
+        chunksToLoad[3] = nearestChunkPositon + Vector3.left * TerrainWidth; // Left
+        chunksToLoad[4] = nearestChunkPositon + Vector3.forward * TerrainLength + Vector3.right * TerrainWidth;  //  Top right
+        chunksToLoad[5] = nearestChunkPositon + Vector3.forward * TerrainLength + Vector3.left * TerrainWidth; // Top left
+        chunksToLoad[6] = nearestChunkPositon + Vector3.back * TerrainLength + Vector3.right * TerrainWidth; // Back right
+        chunksToLoad[7] = nearestChunkPositon + Vector3.back * TerrainLength + Vector3.left * TerrainWidth; // Back left
         chunksToLoad[8] = nearestChunkPositon; // Current chunk
         return chunksToLoad;
     }
@@ -81,10 +96,10 @@ public class ChunkHandler : MonoBehaviour
     // Takes a chunk corner position and returns the corresponding row and column of the tile
     (int, int) GetRowColFromPosition(Vector3 position)
     {
-        // int row = (int) Math.Round((position.z - (terrainHeight / 2)) / terrainHeight);
-        // int col = (int) Math.Round((position.x - (terrainHeight / 2)) / terrainHeight);
-        int row = (int) Math.Round(position.z / terrainHeight);
-        int col = (int) Math.Round(position.x  / terrainWidth);
+        // int row = (int) Math.Round((position.z - (TerrainLength / 2)) / TerrainLength);
+        // int col = (int) Math.Round((position.x - (TerrainLength / 2)) / TerrainLength);
+        int row = (int) Math.Round(position.z / TerrainLength);
+        int col = (int) Math.Round(position.x  / TerrainWidth);
         // Debug.Log($"row: {row} col: {col}");
 
         return (row,col);
@@ -113,7 +128,7 @@ public class ChunkHandler : MonoBehaviour
                     var (row, col) = GetRowColFromPosition(newChunkPos);
                     if (row < 0 || col < 0) continue;
                     GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
-                    chunk.GetComponent<TerrainChunk>().Inititialize(row, col);
+                    chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
                     loadedChunks[newChunkPos] = chunk;
                 }
 
