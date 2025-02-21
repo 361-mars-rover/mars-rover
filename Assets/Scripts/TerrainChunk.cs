@@ -43,6 +43,7 @@ public class TerrainChunk : MonoBehaviour {
     {
         terrainData = new TerrainData();
         terrainData.heightmapResolution = 513;
+        Debug.Log($"Tile span: {GetTileSpan()}");
     }
     // Generates the terrain from NASA data
     // This is called in ChunkHandler, which specifies the row and col
@@ -52,7 +53,6 @@ public class TerrainChunk : MonoBehaviour {
             Debug.LogError("Terrain reference not set!");
             return;
         }
-
         terrainData.size = new Vector3(GetTileSpan(), ELEVATION_RANGE, GetTileSpan());
         tileCol = col;
         tileRow = row;

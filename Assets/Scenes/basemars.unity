@@ -4317,8 +4317,8 @@ MonoBehaviour:
   activationDistance: 1500
   checkInterval: 1
   terrainPrefab: {fileID: 898442925}
-  terrainWidth: 78183.74
-  terrainHeight: 78183.74
+  terrainWidth: 156367.5
+  terrainHeight: 156367.5
 --- !u!4 &1661480751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6886066687445569438, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}

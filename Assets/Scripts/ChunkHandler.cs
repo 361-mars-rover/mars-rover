@@ -17,8 +17,12 @@ public class ChunkHandler : MonoBehaviour
     public float checkInterval = 0.1f;
     public GameObject terrainPrefab;
     
-    public float terrainWidth = 78183.74f;
-    public float terrainHeight = 78183.74f;
+    // public float terrainWidth = 78183.74f;
+    // public float terrainHeight = 78183.74f;
+
+    public float terrainWidth = 156367.5f;
+    public float terrainHeight = 156367.5f;
+
     
     // Loads initial chunks based on car position
     void Start()

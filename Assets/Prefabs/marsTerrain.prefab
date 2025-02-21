@@ -111,7 +111,6 @@ MonoBehaviour:
   terrainData: {fileID: 0}
   heightScale: 0.2
   blurIterations: 2
-  tileMatrixSet: 8
-  tileRow: 102
-  tileCol: 214
-  marsTexture: {fileID: 2800000, guid: 53052d258c93f488a998276e3bb1773b, type: 3}
+  tileMatrixSet: 7
+  tileRow: 0
+  tileCol: 0
