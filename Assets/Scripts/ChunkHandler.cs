@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChunkHandler : MonoBehaviour
@@ -36,28 +37,10 @@ public class ChunkHandler : MonoBehaviour
         TerrainWidth = GetTileSpan();
         TerrainLength = TerrainWidth;
 
-        Debug.Log("Chunk script started");
         prevChunkPosition = GetClosestChunkCenter(car.transform.position);
-        Vector3[] chunksToLoad = GetChunksToLoad(car.transform.position);
-        
+        UpdateChunks();
 
-        // currentChunks[0] = Instantiate(terrainPrefab, prevChunkPosition, Quaternion.identity);
-        Debug.Log("Getting initial tiles");
-        foreach(Vector3 chunkPos in chunksToLoad)
-        {
-            var (row, col) = GetRowColFromPosition(chunkPos);
-            if (row < 0 || col < 0) continue;
-            Debug.Log($"Position: {chunkPos}");
-            Debug.Log($"row: {row} col: {col}");
-
-            GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
-
-            chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
-
-            loadedChunks[chunkPos] = chunk;
-        }
-
-        StartCoroutine(CheckChunkDistance());
+        StartCoroutine(UpdateChunksLoop());
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
@@ -79,6 +62,7 @@ public class ChunkHandler : MonoBehaviour
     // Gets the surrounding 8 chunk positions
     Vector3[] GetChunksToLoad(Vector3 position)
     {
+        // TODO: Make this cleaner...
         Vector3 nearestChunkPositon = GetClosestChunkCenter(position);
         Vector3[] chunksToLoad = new Vector3[9];
         chunksToLoad[0] = nearestChunkPositon + Vector3.forward * TerrainLength; // Above
@@ -118,9 +102,58 @@ public class ChunkHandler : MonoBehaviour
         return chunksToAddAndDelete;
     }
 
+    void AddAndDeleteChunks(Vector3[] chunksToLoad)
+    {
+        Dictionary<string, List<Vector3>> chunksToAddAndDelete = GetChunksToAddAndDelete(chunksToLoad);
+
+        foreach (Vector3 newChunkPos in chunksToAddAndDelete["add"]) // Load in all the new chunks
+        { 
+            var (row, col) = GetRowColFromPosition(newChunkPos);
+            if (row < 0 || col < 0) continue;
+            GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
+            chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
+            loadedChunks[newChunkPos] = chunk;
+        }
+
+
+        foreach (Vector3 deletePos in chunksToAddAndDelete["delete"]) // Delete all the old chunks
+        {
+            Destroy(loadedChunks[deletePos]);
+            loadedChunks.Remove(deletePos);
+        }
+    }
+
+    void UpdateNeighbours(Vector3[] chunksToLoad)
+    {
+        // TODO: Explain this...
+        Terrain center = loadedChunks.TryGetValue(chunksToLoad[8], out GameObject cChunk) ? cChunk.GetComponent<Terrain>() : null;
+        Terrain left = loadedChunks.TryGetValue(chunksToLoad[3], out GameObject lChunk) ? lChunk.GetComponent<Terrain>() : null;
+        Terrain up = loadedChunks.TryGetValue(chunksToLoad[0], out GameObject uChunk) ? uChunk.GetComponent<Terrain>() : null;
+        Terrain down = loadedChunks.TryGetValue(chunksToLoad[1], out GameObject dChunk) ? dChunk.GetComponent<Terrain>() : null;
+        Terrain right = loadedChunks.TryGetValue(chunksToLoad[2], out GameObject rChunk) ? rChunk.GetComponent<Terrain>() : null;
+
+        Debug.Log($"Center: {center}");
+        Debug.Log($"left: {left}");
+        Debug.Log($"up: {up}");
+        Debug.Log($"down: {down}");
+        Debug.Log($"right: {right}");
+
+        center.SetNeighbors(left, up, right, down);
+    }
+
+    void UpdateChunks()
+    {
+        // Debug.Log($"Current chunk center: {GetRowColFromPosition(currentChunkPosition)}");
+
+        Vector3[] chunksToLoad = GetChunksToLoad(car.transform.position);
+
+        AddAndDeleteChunks(chunksToLoad);
+
+        UpdateNeighbours(chunksToLoad);
+    }
 
     // Infinitely loops to check car position and load new chunks when needed
-    IEnumerator CheckChunkDistance()
+    IEnumerator UpdateChunksLoop()
     {
         while(true)
         {
@@ -129,59 +162,11 @@ public class ChunkHandler : MonoBehaviour
             // Only do updates if we need new chunks
             if (currentChunkPosition != prevChunkPosition)
             {
-                Debug.Log($"Current chunk center: {GetRowColFromPosition(currentChunkPosition)}");
-
-
-                // HashSet<Vector3> currentChunkPositionsSet = new HashSet<Vector3>(loadedChunks.Keys); // Positions of all currently loaded chunks
-
-                Vector3[] chunksToLoadArray = GetChunksToLoad(car.transform.position);
-
-                // HashSet<Vector3> chunksToLoadSet = new HashSet<Vector3>(chunksToLoadArray); // Positions of all the chunks that must be loaded given car position
-
-                // HashSet<Vector3> newChunkPositions = new HashSet<Vector3>(chunksToLoadSet.Except(currentChunkPositionsSet)); // Only the positions of new chunks
-                // HashSet<Vector3> chunksToDelete = new HashSet<Vector3>(currentChunkPositionsSet.Except(chunksToLoadSet)); // Only positions of chunks to be deleted
-
-                Dictionary<string, List<Vector3>> chunksToAddAndDelete = GetChunksToAddAndDelete(chunksToLoadArray);
-
-
-                foreach (Vector3 newChunkPos in chunksToAddAndDelete["add"]) // Load in all the new chunks
-                { 
-                    var (row, col) = GetRowColFromPosition(newChunkPos);
-                    if (row < 0 || col < 0) continue;
-                    GameObject chunk = Instantiate(terrainPrefab, newChunkPos, Quaternion.identity);
-                    chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
-                    loadedChunks[newChunkPos] = chunk;
-                }
-
-
-                foreach (Vector3 deletePos in chunksToAddAndDelete["delete"]) // Delete all the old chunks
-                {
-                    Destroy(loadedChunks[deletePos]);
-                    loadedChunks.Remove(deletePos);
-                }
-                // dictionary.TryGetValue(keyToFind, out string foundValue) ? foundValue : null;
-                Terrain center = loadedChunks.TryGetValue(chunksToLoadArray[8], out GameObject cChunk) ? cChunk.GetComponent<Terrain>() : null;
-                Terrain left = loadedChunks.TryGetValue(chunksToLoadArray[3], out GameObject lChunk) ? lChunk.GetComponent<Terrain>() : null;
-                Terrain up = loadedChunks.TryGetValue(chunksToLoadArray[0], out GameObject uChunk) ? uChunk.GetComponent<Terrain>() : null;
-                Terrain down = loadedChunks.TryGetValue(chunksToLoadArray[1], out GameObject dChunk) ? dChunk.GetComponent<Terrain>() : null;
-                Terrain right = loadedChunks.TryGetValue(chunksToLoadArray[2], out GameObject rChunk) ? rChunk.GetComponent<Terrain>() : null;
-
-                Debug.Log($"Center: {center}");
-                Debug.Log($"left: {left}");
-                Debug.Log($"up: {up}");
-                Debug.Log($"down: {down}");
-                Debug.Log($"right: {right}");
-
-                center.SetNeighbors(left, up, right, down);
-
+                UpdateChunks();
             }
 
             prevChunkPosition = currentChunkPosition;
 
-
-            // float h = loadedChunks[Vector3.zero].GetComponent<Terrain>().SampleHeight(new Vector3(39091.87f, 0, 39091.87f));
-
-            // Debug.Log($"height at zero: {h}");
             yield return new WaitForSeconds(checkInterval);
         }        
     }
