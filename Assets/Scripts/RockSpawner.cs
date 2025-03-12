@@ -1,0 +1,75 @@
+using UnityEngine;
+using System.Collections;
+
+public class RockSpawner : MonoBehaviour
+{
+    public GameObject rockPrefab;  
+    public int numberOfRocks = 10; 
+    public float spawnRadius = 20f;
+    public float spawnDelay = 0.5f; 
+
+    void Start()
+    {
+        StartCoroutine(DelayedSpawn());
+    }
+
+    IEnumerator DelayedSpawn()
+    {
+        yield return new WaitForSeconds(spawnDelay);
+        SpawnRocks();
+    }
+
+    void SpawnRocks()
+    {
+        for (int i = 0; i < numberOfRocks; i++)
+        {
+            Vector3 randomPosition = GetRandomPositionNearTerrain();
+            if (randomPosition != Vector3.zero)
+            {
+                GameObject rock = Instantiate(rockPrefab, randomPosition, Quaternion.identity);    
+
+                rock.transform.rotation = Quaternion.Euler(
+                    Random.Range(0, 360),
+                    Random.Range(0, 360),
+                    Random.Range(0, 360)
+                );
+
+                float scaleFactor = Random.Range(0.2f, 10f);
+                rock.transform.localScale *= scaleFactor;
+            }
+        }
+    }
+
+    Vector3 GetRandomPositionNearTerrain()
+    {
+        // Generate position around the spawner
+        Vector2 randomCircle = Random.insideUnitCircle.normalized * Random.Range(5f, spawnRadius);
+        Vector3 spawnPosition = new Vector3(
+            transform.position.x + randomCircle.x,
+            0,
+            transform.position.z + randomCircle.y
+        );
+
+        // Find the correct terrain chunk
+        foreach (Terrain terrain in Terrain.activeTerrains)
+        {
+            // Critical null check added
+            if (terrain == null || terrain.terrainData == null) continue;
+
+            Vector3 terrainPos = terrain.transform.position;
+            Vector3 terrainSize = terrain.terrainData.size;
+            
+            if (spawnPosition.x >= terrainPos.x && 
+                spawnPosition.x <= terrainPos.x + terrainSize.x &&
+                spawnPosition.z >= terrainPos.z && 
+                spawnPosition.z <= terrainPos.z + terrainSize.z)
+            {
+                spawnPosition.y = terrain.SampleHeight(spawnPosition);
+                return spawnPosition;
+            }
+        }
+
+        Debug.LogWarning("No valid terrain found for rock spawn");
+        return Vector3.zero;
+    }
+}
