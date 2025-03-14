@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class BrainTableManager : MonoBehaviour
+public class AvatarTableManager : MonoBehaviour
 {
     public GameObject togglePrefab;
-    public List<Brain> Brain;
+    public List<Avatar> avatars;
 
     void Start()
     {
