@@ -2282,11 +2282,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8981276216454776292, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
   m_PrefabInstance: {fileID: 7003715329865121356}
   m_PrefabAsset: {fileID: 0}
---- !u!218 &898442932 stripped
-Terrain:
-  m_CorrespondingSourceObject: {fileID: 250662670795585593, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
-  m_PrefabInstance: {fileID: 7003715329865121356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &920626446
 GameObject:
   m_ObjectHideFlags: 0
@@ -4083,10 +4078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1625381595}
-  offset: {x: 0, y: 5, z: -15}
-  smoothSpeed: 5
-  allowRotation: 1
-  rotationSpeed: 1000
+  switchKey: 99
 --- !u!114 &1504693237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4386,6 +4378,11 @@ MonoBehaviour:
     m_RotationOrder: 4
   accelerationSmoothness: 0.3
   brakingSmoothness: 0.5
+  maxRadius: 100
+  radiusIncrement: 0.1
+  circleSpeed: 0.5
+  homeBasePosition: {x: 0, y: 0, z: 0}
+  useAI: 1
 --- !u!54 &1625381594
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4456,7 +4453,7 @@ MonoBehaviour:
   rockPrefab: {fileID: 218550423}
   numberOfRocks: 1000
   spawnRadius: 200
-  terrain: {fileID: 898442932}
+  spawnDelay: 0.5
 --- !u!4 &1661480751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6886066687445569438, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}

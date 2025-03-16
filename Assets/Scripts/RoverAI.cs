@@ -24,7 +24,7 @@ public class RoverAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         startTime = Time.time;
         currentBase = mainBase.position;
-        StartCoroutine(ExploreRoutine());
+        StartCoroutine(ExploreRoutine()); 
     }
 
     IEnumerator ExploreRoutine()

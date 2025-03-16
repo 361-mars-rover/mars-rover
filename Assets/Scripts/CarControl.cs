@@ -27,6 +27,8 @@ public class CarControl : MonoBehaviour
     private float currentAngle;
     
     private bool isInitialized = false;
+
+    public bool useAI = false;
     
     void Awake()
     {
@@ -50,8 +52,66 @@ public class CarControl : MonoBehaviour
     void Update()
     {
         if (!isInitialized) return;
+
+        if (!useAI){
+            ManualControl();
+        }
+        else{
+            CircleAIUpdate();
+        }
         
-        // Calculate target position on the circle
+        // // Calculate target position on the circle
+        // currentAngle += circleSpeed * Time.deltaTime;
+        // if (currentAngle >= 360f)
+        // {
+        //     // Complete a full circle - move to the next radius
+        //     currentAngle = 0f;
+        //     currentRadius += maxRadius * radiusIncrement;
+            
+        //     // Check if we've reached max radius
+        //     if (currentRadius > maxRadius)
+        //     {
+        //         // Terminate algorithm or reset to start again
+        //         Debug.Log("Reached maximum radius. Algorithm complete.");
+        //         isInitialized = false;
+        //         return;
+        //     }
+            
+        //     Debug.Log("Moving to next radius: " + currentRadius);
+        // }
+        
+        // // Calculate target position on the current circle
+        // float angleRad = currentAngle * Mathf.Deg2Rad;
+        // Vector3 targetPosition = homeBasePosition + new Vector3(
+        //     Mathf.Sin(angleRad) * currentRadius,
+        //     0f,
+        //     Mathf.Cos(angleRad) * currentRadius
+        // );
+        
+        // // Calculate steering and acceleration to reach the target
+        // Vector3 toTarget = targetPosition - transform.position;
+        // toTarget.y = 0; // Ignore height differences
+        
+        // // Convert to local space for easier steering calculations
+        // Vector3 localTarget = transform.InverseTransformPoint(targetPosition);
+        
+        // // Calculate steering amount (-1 to 1)
+        // float steerAmount = Mathf.Clamp(localTarget.x / 5f, -1f, 1f);
+        
+        // // Calculate throttle amount (0 to 1)
+        // float distanceToTarget = toTarget.magnitude;
+        // float throttleAmount = Mathf.Clamp01(distanceToTarget / 10f);
+        
+        // // Apply steering and throttle to wheels
+        // ApplyControlsToWheels(throttleAmount, steerAmount);
+        
+        // // Debug visualization
+        // Debug.DrawLine(transform.position, targetPosition, Color.red);
+        // Debug.DrawLine(homeBasePosition, targetPosition, Color.blue);
+    }
+
+    void CircleAIUpdate(){
+                // Calculate target position on the circle
         currentAngle += circleSpeed * Time.deltaTime;
         if (currentAngle >= 360f)
         {
@@ -147,6 +207,55 @@ public class CarControl : MonoBehaviour
         currentRadius = maxRadius * radiusIncrement; // Reset to smallest radius
         currentAngle = 0f;
         isInitialized = true;
+    }
+
+    public void ManualControl()
+    {
+        float vInput = Input.GetAxis("Vertical");
+        float hInput = Input.GetAxis("Horizontal");
+        
+        // calculate forward speed relative to car's orientation
+        float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
+        
+        // calculate speed factor for current speed
+        float targetSpeedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed));
+        currentSpeedFactor = Mathf.Lerp(currentSpeedFactor, targetSpeedFactor, Time.deltaTime / accelerationSmoothness);
+        
+        // apply torque curve for more realistic power delivery
+        float torqueMultiplier = torqueCurve.Evaluate(currentSpeedFactor);
+        float currentMotorTorque = motorTorque * torqueMultiplier;
+        float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, currentSpeedFactor);
+        
+        // determine if we're accelerating in the same direction as current movement
+        bool isAccelerating = Mathf.Abs(vInput) > 0.1f;
+        bool isReversing = forwardSpeed < -0.1f;
+        bool isChangingDirection = (vInput > 0 && isReversing) || (vInput < 0 && forwardSpeed > 0.1f);
+        
+        foreach (var wheel in wheels)
+        {
+            if (wheel.steerable)
+            {
+                wheel.HandleSteering(hInput * currentSteerRange);
+            }
+            
+            if (isChangingDirection)
+            {
+                // apply brakes when changing direction
+                wheel.HandleMotor(0f, 0f);
+                wheel.HandleBraking(true);
+            }
+            else if (isAccelerating)
+            {
+                wheel.HandleMotor(vInput, currentMotorTorque);
+                wheel.HandleBraking(false);
+            }
+            else
+            {
+                // apply brakes when not accelerating or reversing
+                wheel.HandleMotor(0f, 0f);
+                wheel.HandleBraking(false);
+            }
+        }
     }
 }
 
