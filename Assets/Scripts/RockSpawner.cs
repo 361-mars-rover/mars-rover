@@ -5,7 +5,7 @@ public class RockSpawner : MonoBehaviour
 {
     public GameObject rockPrefab;  
     private int numberOfRocks = 1000; 
-    private float spawnRadius = 2000f;
+    private float spawnRadius = 200f;
     private float spawnDelay = 1f; 
 
     void Start()
@@ -34,7 +34,7 @@ public class RockSpawner : MonoBehaviour
                     Random.Range(0, 360)
                 );
 
-                float scaleFactor = Random.Range(0.01f, 4f);
+                float scaleFactor = Random.Range(0.0001f, 0.4f);
                 rock.transform.localScale *= scaleFactor;
             }
         }

@@ -53,7 +53,7 @@ public class TerrainChunk : MonoBehaviour {
             Debug.LogError("Terrain reference not set!");
             return;
         }
-        terrainData.size = new Vector3(terrainLength, ELEVATION_RANGE, terrainLength);
+        terrainData.size = new Vector3(terrainLength, ELEVATION_RANGE / 100f, terrainLength);
         tileCol = col;
         tileRow = row;
         StartCoroutine(DownloadHeightmapAndColor(row,col));

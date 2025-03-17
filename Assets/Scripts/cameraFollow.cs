@@ -5,13 +5,15 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     public KeyCode switchKey = KeyCode.C;
 
-    private Vector3 followOffset = new Vector3(0, 3, -8);
+    public float sizeScale = 0.001f;
+
+    private Vector3 followOffset = new Vector3(0, 3, -8) * 0.1f;
     private float followPosSmooth = 0.5f;
     private float followRotSmooth = 2f;
     private float lookAheadDistance = 10f;
 
-    private Vector3 orbitOffset = new Vector3(0, 5, -30);
-    private float orbitRotationSpeed = 2000f;
+    private Vector3 orbitOffset = new Vector3(0, 2, -10);
+    private float orbitRotationSpeed = 200f;
     private float orbitPosSmooth = 0.5f;
     private float orbitRotSmooth = 2f;
     [Range(5f, 45f)] private float minPitch = 10f, maxPitch = 35f;

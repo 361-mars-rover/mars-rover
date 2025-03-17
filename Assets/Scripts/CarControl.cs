@@ -3,21 +3,21 @@ using System.Collections;
 
 public class CarControl : MonoBehaviour
 {
-    public float motorTorque = 10000f;
-    public float brakeTorque = 2000f;
-    public float maxSpeed = 50000f;
-    public float steeringRange = 30f;
-    public float steeringRangeAtMaxSpeed = 10f;
-    public float centreOfGravityOffset = -1f;
-    public AnimationCurve torqueCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
-    public float accelerationSmoothness = 0.3f;
-    public float brakingSmoothness = 0.5f;
+    private float motorTorque = 5f;
+    private float brakeTorque = 3f;
+    private float maxSpeed = 10f;
+    private float steeringRange = 30f;
+    private float steeringRangeAtMaxSpeed = 10f;
+    private float centreOfGravityOffset = -5f;
+    private AnimationCurve torqueCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
+    private float accelerationSmoothness = 0.5f;
+    private float brakingSmoothness = 0.5f;
     
     // Algorithmic movement parameters
-    public float maxRadius = 100f;          // Maximum radius in meters
-    public float radiusIncrement = 0.1f;    // Increment as percentage of maxRadius
-    public float circleSpeed = 0.5f;        // Speed of circular movement (lower = slower)
-    public Vector3 homeBasePosition;        // Current home base position
+    private float maxRadius = 100f;          // Maximum radius in meters
+    private float radiusIncrement = 0.1f;    // Increment as percentage of maxRadius
+    private float circleSpeed = 0.5f;        // Speed of circular movement (lower = slower)
+    private Vector3 homeBasePosition;        // Current home base position
     
     private WheelControl[] wheels;
     private Rigidbody rigidBody;

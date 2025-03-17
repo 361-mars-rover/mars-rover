@@ -33,7 +33,8 @@ public class ChunkHandler : MonoBehaviour
     // Loads initial chunks based on car position
     void Start()
     {
-        TerrainWidth = GetTileSpan();
+        // TODO: Delete this later...
+        TerrainWidth = GetTileSpan() / 100f;
         TerrainLength = TerrainWidth;
 
         Debug.Log("Chunk script started");
