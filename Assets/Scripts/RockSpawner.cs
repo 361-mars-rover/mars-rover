@@ -4,9 +4,9 @@ using System.Collections;
 public class RockSpawner : MonoBehaviour
 {
     public GameObject rockPrefab;  
-    public int numberOfRocks = 10; 
-    public float spawnRadius = 20f;
-    public float spawnDelay = 0.5f; 
+    private int numberOfRocks = 1000; 
+    private float spawnRadius = 2000f;
+    private float spawnDelay = 1f; 
 
     void Start()
     {
@@ -34,7 +34,7 @@ public class RockSpawner : MonoBehaviour
                     Random.Range(0, 360)
                 );
 
-                float scaleFactor = Random.Range(0.2f, 10f);
+                float scaleFactor = Random.Range(0.01f, 4f);
                 rock.transform.localScale *= scaleFactor;
             }
         }
