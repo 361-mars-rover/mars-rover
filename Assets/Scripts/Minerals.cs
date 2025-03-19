@@ -8,7 +8,7 @@ public class Minerals : MonoBehaviour
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
 
         if (playerInventory != null) {
-            playerInventory.MineralCollected();
+            playerInventory.MineralCollected(gameObject);
             gameObject.SetActive(false);
         }
     }
