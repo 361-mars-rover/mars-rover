@@ -773,6 +773,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1000
       objectReference: {fileID: 0}
@@ -2656,9 +2668,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2525931244784360066, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
   m_PrefabInstance: {fileID: 7003715329865121356}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &898442929 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8981276216454776292, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
+--- !u!154 &898442931 stripped
+TerrainCollider:
+  m_CorrespondingSourceObject: {fileID: 1747900832165015746, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
+  m_PrefabInstance: {fileID: 7003715329865121356}
+  m_PrefabAsset: {fileID: 0}
+--- !u!218 &898442932 stripped
+Terrain:
+  m_CorrespondingSourceObject: {fileID: 250662670795585593, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
   m_PrefabInstance: {fileID: 7003715329865121356}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &920626446
@@ -2747,38 +2764,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920626446}
   m_Mesh: {fileID: 7603258759858274703, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
---- !u!1 &974062016
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 974062017}
-  m_Layer: 0
-  m_Name: Chunks
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &974062017
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974062016}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 898442929}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &977629629
 GameObject:
   m_ObjectHideFlags: 3
@@ -4862,6 +4847,14 @@ MonoBehaviour:
   activationDistance: 1500
   checkInterval: 1
   terrainPrefab: {fileID: 898442925}
+  terrain: {fileID: 898442932}
+  terrainCollider: {fileID: 898442931}
+  terrainData: {fileID: 0}
+  heightScale: 1
+  blurIterations: 2
+  tileRow: 0
+  tileCol: 0
+  isLoaded: 0
 --- !u!114 &1625381597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6021,7 +6014,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 974062017}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2027017430909772624, guid: 668ee1ccead60394c98ae2e649c8bd07, type: 3}
       propertyPath: tileCol
@@ -6100,8 +6093,8 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 180680685}
   - {fileID: 1504693234}
-  - {fileID: 974062017}
   - {fileID: 416264802}
   - {fileID: 1363044156}
   - {fileID: 1826683237}
   - {fileID: 780909003}
+  - {fileID: 7003715329865121356}
