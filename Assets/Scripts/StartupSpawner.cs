@@ -6,6 +6,8 @@ public class ChunkHandler : MonoBehaviour
 {
     public GameObject car;
 
+    public GameObject camera;
+
     // Terrain generation variables (no prefab needed anymore)
     private Terrain terrain;
     private TerrainCollider terrainCollider;
