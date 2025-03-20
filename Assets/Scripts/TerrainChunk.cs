@@ -36,6 +36,7 @@ public class TerrainChunk : MonoBehaviour {
     public int tileMatrixSet;
     public int tileRow;
     public int tileCol;
+    public bool isLoaded = false;
 
 
     // Initializes size of terrain data
@@ -123,6 +124,7 @@ public class TerrainChunk : MonoBehaviour {
 
         terrain.terrainData = terrainData;
         terrainCollider.terrainData = terrainData;
+        isLoaded = true;
     }
 
     // Smooths heights to avoid sharp edges

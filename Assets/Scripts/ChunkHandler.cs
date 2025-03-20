@@ -29,10 +29,16 @@ public class ChunkHandler : MonoBehaviour
 
     private float TerrainWidth;
     private float TerrainLength;
+
+    private int spawnTileRow = 10;
+    private int spawnTileCol = 10;
     
     // Loads initial chunks based on car position
     void Start()
     {
+        // car.SetActive(false);
+        // Vector3 chunkCenter = GetChunkCenterFromRowCol(spawnTileRow, spawnTileCol);
+        // Debug.Log($"Chunk center for ({spawnTileRow}, {spawnTileRow}) is {chunkCenter}");
         TerrainWidth = GetTileSpan();
         TerrainLength = TerrainWidth;
 
@@ -43,21 +49,35 @@ public class ChunkHandler : MonoBehaviour
 
         // currentChunks[0] = Instantiate(terrainPrefab, prevChunkPosition, Quaternion.identity);
         Debug.Log("Getting initial tiles");
-        foreach(Vector3 chunkPos in chunksToLoad)
-        {
-            var (row, col) = GetRowColFromPosition(chunkPos);
-            if (row < 0 || col < 0) continue;
-            Debug.Log($"Position: {chunkPos}");
-            Debug.Log($"row: {row} col: {col}");
+        Vector3 chunkPos = Vector3.zero;
+        // Create a tile at 0,0,0
+        GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
+        TerrainChunk t = chunk.GetComponent<TerrainChunk>();
+        t.Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
+        Vector3 chunkCenter = new Vector3(TerrainWidth / 2, 20000f, TerrainWidth / 2);
+        // Wait for chunk to load
 
-            GameObject chunk = Instantiate(terrainPrefab, chunkPos, Quaternion.identity);
-
-            chunk.GetComponent<TerrainChunk>().Inititialize(row, col, TerrainLength, TerrainWidth);
-
-            loadedChunks[chunkPos] = chunk;
-        }
-
+        StartCoroutine(SpawnCarDelay(chunkCenter, t));
         StartCoroutine(CheckChunkDistance());
+    }
+
+    // Spawns car at the center of the selected chunk
+    private IEnumerator SpawnCarDelay(Vector3 chunkCenter, TerrainChunk t){
+        while (!t.isLoaded){
+            yield return new WaitForSeconds(0.1f);
+        }
+        Debug.Log("terrain is now loaded");
+        RaycastHit hit;
+        Ray ray = new Ray(chunkCenter, Vector3.down);
+        if (Physics.Raycast(ray, out hit)){
+            Debug.Log("Printing hit");
+            Debug.Log(hit.point);
+            car.transform.position = hit.point + Vector3.up * 10f;
+            // car.SetActive(true);
+        }
+        else {
+            Debug.Log("no hit");
+        }
     }
 
     // Gets pixel span (span = height or width) in meters based on WMS docs: https://www.ogc.org/publications/standard/wmts/
@@ -91,6 +111,12 @@ public class ChunkHandler : MonoBehaviour
         chunksToLoad[7] = nearestChunkPositon + Vector3.back * TerrainLength + Vector3.left * TerrainWidth; // Back left
         chunksToLoad[8] = nearestChunkPositon; // Current chunk
         return chunksToLoad;
+    }
+
+    Vector3 GetChunkCenterFromRowCol(int row, int col){
+        float x = TerrainWidth * row + TerrainWidth / 2;
+        float z = TerrainWidth * col + TerrainWidth / 2;
+        return new Vector3(x, 0, z);
     }
 
     // Takes a chunk corner position and returns the corresponding row and column of the tile
