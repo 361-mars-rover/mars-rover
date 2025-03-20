@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBtZoS6BSCoecVW5KiMvMmSWQ_GkCWJzhA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>39648566674</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Unity-Technologies.com.unity.template.urp-blank</string>
+	<key>PROJECT_ID</key>
+	<string>mars-rover-b4a62</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mars-rover-b4a62.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:39648566674:ios:5ccc71e12fe0d8a1d7b54b</string>
+	<key>DATABASE_URL</key>
+	<string>https://mars-rover-b4a62-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
