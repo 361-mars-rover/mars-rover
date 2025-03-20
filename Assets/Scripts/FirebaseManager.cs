@@ -6,11 +6,12 @@ using UnityEngine;
 public class FirebaseManager : MonoBehaviour
 {
     public static FirebaseManager Instance;
-    private DatabaseReference dbReference;
+    public static DatabaseReference dbReference;
     private bool isFirebaseInitialized = false;
     void Start() {
         // Get the root reference location of the database.
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        Debug.Log("firebase" + dbReference);
     }
 
     void Awake()
@@ -18,11 +19,23 @@ public class FirebaseManager : MonoBehaviour
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void StoreMaterialData(string materialID)
+    public static void StoreMaterialData(string materialID)
     {
         MaterialData material = new MaterialData();
         string json = JsonUtility.ToJson(material);
-        dbReference.Child("materials").Child(materialID).SetRawJsonValueAsync(json);
+        DatabaseReference newMineralRef = dbReference.Child("materials").Push(); 
+        newMineralRef.SetValueAsync(materialID)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    Debug.Log($"Mineral ID {materialID} saved with unique key: {newMineralRef.Key}");
+                }
+                else
+                {
+                    Debug.LogError("Error saving mineral ID: " + task.Exception);
+                }
+            });
     }
 }
 
