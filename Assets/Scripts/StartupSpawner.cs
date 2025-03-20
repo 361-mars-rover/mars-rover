@@ -9,9 +9,10 @@ public class ChunkHandler : MonoBehaviour
     public GameObject camera;
 
     // Terrain generation variables (no prefab needed anymore)
-    private Terrain terrain;
-    private TerrainCollider terrainCollider;
-    private TerrainData terrainData;
+    public GameObject marsTerrain;
+    // // private Terrain terrain;
+    // private TerrainCollider terrainCollider;
+    // private TerrainData terrainData;
 
     private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
     private const float TILE_WIDTH = 256f;
@@ -23,7 +24,9 @@ public class ChunkHandler : MonoBehaviour
     private int spawnTileCol = 10;
 
     // Terrain settings
-    public float scaleFactor = 1f;
+    private float scaleFactor = 1f;
+    public float heightScale = 0.1f;
+
     public int blurIterations = 2;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
     private const float MAX_ELEVATION = 21000f;  // Olympus Mons peak
@@ -40,7 +43,7 @@ public class ChunkHandler : MonoBehaviour
 
     void Start()
     {
-        ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * scaleFactor;
+        ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * heightScale;
         car.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         TerrainWidth = GetTileSpan();
         TerrainLength = TerrainWidth;
@@ -49,7 +52,10 @@ public class ChunkHandler : MonoBehaviour
         Debug.Log("Getting initial tiles");
 
         Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
-        Vector3 chunkCenter = new Vector3(15, 20000f, 15);
+        Vector3 chunkCenter = new Vector3(0 , 100000f, 0);
+        Debug.Log($"Spawning car at position: {chunkCenter.x}, {chunkCenter.z}");
+        // Vector3 chunkCenter = new Vector3(100f , 200000f, 1000f);
+
 
         StartCoroutine(SpawnCarDelay(chunkCenter));
     }
@@ -61,18 +67,44 @@ public class ChunkHandler : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         Debug.Log("Terrain is now loaded");
+        float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
+        car.transform.position = new Vector3(chunkCenter.x, height + 20f, chunkCenter.z);
 
+        // RaycastHit hit;
+        // Ray ray = new Ray(chunkCenter, Vector3.down);
+        // if (Physics.Raycast(ray, out hit))
+        // {
+        //     // Debug.Log("Printing hit");
+        //     // Debug.Log(hit.point);
+        //     // car.transform.position = hit.point + Vector3.up * 10f;
+        //     // car.transform.position = new Vector3(-263.65f, 1971.145f, 69.5703f);
+        // }
+        // else
+        // {
+        //     Debug.Log("No hit");
+        // }
+    }
+
+    void Update()
+    {
+        Vector3 pos = car.transform.position;
+        // float terrainHeight = terrain.SampleHeight(pos);
+
+        // float heightDiff = pos.y - terrainHeight;
+
+        // Debug.Log($"Rover Y: {pos.y}, Terrain Y: {terrainHeight}, Difference: {heightDiff}");
+
+        Ray ray = new Ray(car.transform.position + Vector3.up * 5f, Vector3.down);
         RaycastHit hit;
-        Ray ray = new Ray(chunkCenter, Vector3.down);
-        if (Physics.Raycast(ray, out hit))
+
+        if (Physics.Raycast(ray, out hit, 20f))
         {
-            Debug.Log("Printing hit");
-            Debug.Log(hit.point);
-            car.transform.position = hit.point + Vector3.up * 10f;
-        }
-        else
-        {
-            Debug.Log("No hit");
+            float terrainHeight = hit.point.y;   // Collider height
+            float visualHeight = marsTerrain.GetComponent<Terrain>().SampleHeight(transform.position);  // Heightmap height
+
+            float diff = visualHeight - terrainHeight;
+
+            Debug.Log($"Collider Y: {terrainHeight}, Heightmap Y: {visualHeight}, Difference: {diff}");
         }
     }
 
@@ -95,14 +127,21 @@ public class ChunkHandler : MonoBehaviour
 
     public void Inititialize(int row, int col, float terrainLength, float terrainWidth)
     {
-        terrainData = new TerrainData();
-        terrainData.heightmapResolution = 513;
-        terrainData.size = new Vector3(terrainLength, ELEVATION_RANGE, terrainLength);
+        TerrainData terrainData = new TerrainData
+        {
+            heightmapResolution = 257,
+            size = new Vector3(terrainLength, ELEVATION_RANGE, terrainLength)
+        };
+
+        marsTerrain.GetComponent<Terrain>().terrainData = terrainData;
+        marsTerrain.GetComponent<TerrainCollider>().terrainData = terrainData;
 
         // Create the terrain GameObject from the terrainData.
-        GameObject terrainGO = Terrain.CreateTerrainGameObject(terrainData);
-        terrain = terrainGO.GetComponent<Terrain>();
-        terrainCollider = terrainGO.GetComponent<TerrainCollider>();
+        // GameObject terrainGO = Terrain.CreateTerrainGameObject(terrainData);
+        // terrainGO.transform.position = new Vector3(-terrainLength / 2, 0, -terrainLength / 2);
+        marsTerrain.transform.position = new Vector3(-terrainLength / 2, 0, -terrainLength / 2);
+        // terrain = terrainGO.GetComponent<Terrain>();
+        // terrainCollider = terrainGO.GetComponent<TerrainCollider>();
 
         tileCol = col;
         tileRow = row;
@@ -144,7 +183,7 @@ public class ChunkHandler : MonoBehaviour
 
     void ApplyHeightmap(Texture2D texture)
     {
-        int resolution = terrainData.heightmapResolution;
+        int resolution = marsTerrain.GetComponent<Terrain>().terrainData.heightmapResolution;
         float[,] heights = new float[resolution, resolution];
         Color[] pixels = texture.GetPixels();
 
@@ -162,11 +201,8 @@ public class ChunkHandler : MonoBehaviour
 
         heights = SmoothHeights(heights, resolution, blurIterations);
 
-        terrainData.SetHeights(0, 0, heights);
-
-        // Update terrain and collider data.
-        terrain.terrainData = terrainData;
-        terrainCollider.terrainData = terrainData;
+        marsTerrain.GetComponent<Terrain>().terrainData.SetHeights(0, 0, heights);
+        marsTerrain.GetComponent<TerrainCollider>().terrainData.SetHeights(0, 0, heights);
     }
 
     float[,] SmoothHeights(float[,] heights, int resolution, int iterations)
@@ -201,7 +237,7 @@ public class ChunkHandler : MonoBehaviour
 
         TerrainLayer terrainLayer = new TerrainLayer();
         terrainLayer.diffuseTexture = texture;
-        terrainLayer.tileSize = new Vector2(terrainData.size.x, terrainData.size.z);
-        terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
+        terrainLayer.tileSize = new Vector2(marsTerrain.GetComponent<Terrain>().terrainData.size.x, marsTerrain.GetComponent<Terrain>().terrainData.size.z);
+        marsTerrain.GetComponent<Terrain>().terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
     }
 }
