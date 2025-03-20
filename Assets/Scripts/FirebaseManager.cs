@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
@@ -19,17 +20,22 @@ public class FirebaseManager : MonoBehaviour
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public static void StoreMaterialData(string materialID)
+    public static void StoreMaterialData(GameObject mineral)
     {
-        MaterialData material = new MaterialData();
-        string json = JsonUtility.ToJson(material);
         DatabaseReference newMineralRef = dbReference.Child("materials").Push(); 
-        newMineralRef.SetValueAsync(materialID)
+        var mineralData = new Dictionary<string, object>{
+            {"id", mineral.name},
+            {"position", new Dictionary<string, float>{
+                {"x", mineral.transform.position.x},
+                {"z", mineral.transform.position.z}
+            }}
+        };
+        newMineralRef.SetValueAsync(mineralData)
             .ContinueWithOnMainThread(task =>
             {
                 if (task.IsCompleted)
                 {
-                    Debug.Log($"Mineral ID {materialID} saved with unique key: {newMineralRef.Key}");
+                    Debug.Log($"Mineral ID {mineral.name} saved with unique key: {newMineralRef.Key}");
                 }
                 else
                 {

@@ -24,9 +24,9 @@ public class PlayerInventory : MonoBehaviour
             Debug.LogError("❌ OnMineralCollected event is null!");
         }
 
-        if (FirebaseManager.Instance != null)
+        if (FirebaseManager.dbReference != null)
         {
-            FirebaseManager.Instance.StoreMaterialData(mineral.name);
+            FirebaseManager.StoreMaterialData(mineral);
         }
         else
         {
