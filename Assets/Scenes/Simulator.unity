@@ -3692,6 +3692,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284255875}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1297590070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1297590072}
+  - component: {fileID: 1297590071}
+  m_Layer: 0
+  m_Name: FirebaseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1297590071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297590070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb106cc744bc4667aa9af89184e5eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1297590072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297590070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1034.5847, y: -25300.037, z: 18744.543}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1363044155
 GameObject:
   m_ObjectHideFlags: 0
@@ -4900,6 +4944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d55523f637ce749bd8ab95c7b3acb38b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Minerals: []
+  NumberOfMinerals: 0
   OnMineralCollected:
     m_PersistentCalls:
       m_Calls:
@@ -6096,6 +6142,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1297590072}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 180680685}
