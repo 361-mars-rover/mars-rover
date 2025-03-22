@@ -1,0 +1,193 @@
+On branch database
+Your branch is up to date with 'origin/database'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   Assets/Editor Default Resources.meta
+	new file:   Assets/Editor Default Resources/Firebase.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_analytics.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_analytics.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_analytics_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_analytics_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_auth.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_auth.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_auth_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_auth_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_cloud_messaging.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_cloud_messaging.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_cloud_messaging_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_cloud_messaging_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_config.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_config.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_config_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_config_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_crashlytics.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_crashlytics.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_crashlytics_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_crashlytics_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_database.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_database.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_database_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_database_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_dynamic_links.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_dynamic_links.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_dynamic_links_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_dynamic_links_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_functions.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_functions.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_functions_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_functions_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_invites.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_invites.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_invites_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_invites_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_storage.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_storage.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/fb_storage_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/fb_storage_dark.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/firebase_lockup.png
+	new file:   Assets/Editor Default Resources/Firebase/firebase_lockup.png.meta
+	new file:   Assets/Editor Default Resources/Firebase/firebase_lockup_dark.png
+	new file:   Assets/Editor Default Resources/Firebase/firebase_lockup_dark.png.meta
+	new file:   Assets/ExternalDependencyManager.meta
+	new file:   Assets/ExternalDependencyManager/Editor.meta
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185.meta
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.IOSResolver.dll
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.IOSResolver.dll.meta
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.JarResolver.dll
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.JarResolver.dll.meta
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.PackageManagerResolver.dll
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.PackageManagerResolver.dll.meta
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.VersionHandlerImpl.dll
+	new file:   Assets/ExternalDependencyManager/Editor/1.2.185/Google.VersionHandlerImpl.dll.meta
+	new file:   Assets/ExternalDependencyManager/Editor/CHANGELOG.md
+	new file:   Assets/ExternalDependencyManager/Editor/CHANGELOG.md.meta
+	new file:   Assets/ExternalDependencyManager/Editor/Google.VersionHandler.dll
+	new file:   Assets/ExternalDependencyManager/Editor/Google.VersionHandler.dll.meta
+	new file:   Assets/ExternalDependencyManager/Editor/LICENSE
+	new file:   Assets/ExternalDependencyManager/Editor/LICENSE.meta
+	new file:   Assets/ExternalDependencyManager/Editor/README.md
+	new file:   Assets/ExternalDependencyManager/Editor/README.md.meta
+	new file:   Assets/ExternalDependencyManager/Editor/external-dependency-manager_version-1.2.185_manifest.txt
+	new file:   Assets/ExternalDependencyManager/Editor/external-dependency-manager_version-1.2.185_manifest.txt.meta
+	new file:   Assets/Firebase.meta
+	new file:   Assets/Firebase/Editor.meta
+	new file:   Assets/Firebase/Editor/AppDependencies.xml
+	new file:   Assets/Firebase/Editor/AppDependencies.xml.meta
+	new file:   Assets/Firebase/Editor/AuthDependencies.xml
+	new file:   Assets/Firebase/Editor/AuthDependencies.xml.meta
+	new file:   Assets/Firebase/Editor/DatabaseDependencies.xml
+	new file:   Assets/Firebase/Editor/DatabaseDependencies.xml.meta
+	new file:   Assets/Firebase/Editor/Firebase.Editor.dll
+	new file:   Assets/Firebase/Editor/Firebase.Editor.dll.meta
+	new file:   Assets/Firebase/Editor/FirebaseAuth_version-12.7.0_manifest.txt
+	new file:   Assets/Firebase/Editor/FirebaseAuth_version-12.7.0_manifest.txt.meta
+	new file:   Assets/Firebase/Editor/FirebaseDatabase_version-12.7.0_manifest.txt
+	new file:   Assets/Firebase/Editor/FirebaseDatabase_version-12.7.0_manifest.txt.meta
+	new file:   Assets/Firebase/Editor/generate_xml_from_google_services_json.exe
+	new file:   Assets/Firebase/Editor/generate_xml_from_google_services_json.exe.meta
+	new file:   Assets/Firebase/Editor/generate_xml_from_google_services_json.py
+	new file:   Assets/Firebase/Editor/generate_xml_from_google_services_json.py.meta
+	new file:   Assets/Firebase/Editor/network_request.exe
+	new file:   Assets/Firebase/Editor/network_request.exe.meta
+	new file:   Assets/Firebase/Editor/network_request.py
+	new file:   Assets/Firebase/Editor/network_request.py.meta
+	new file:   Assets/Firebase/Plugins.meta
+	new file:   Assets/Firebase/Plugins/Firebase.App.dll
+	new file:   Assets/Firebase/Plugins/Firebase.App.dll.meta
+	new file:   Assets/Firebase/Plugins/Firebase.Auth.dll
+	new file:   Assets/Firebase/Plugins/Firebase.Auth.dll.meta
+	new file:   Assets/Firebase/Plugins/Firebase.Database.dll
+	new file:   Assets/Firebase/Plugins/Firebase.Database.dll.meta
+	new file:   Assets/Firebase/Plugins/Firebase.Platform.dll
+	new file:   Assets/Firebase/Plugins/Firebase.Platform.dll.meta
+	new file:   Assets/Firebase/Plugins/Firebase.TaskExtension.dll
+	new file:   Assets/Firebase/Plugins/Firebase.TaskExtension.dll.meta
+	new file:   Assets/Firebase/Plugins/Google.MiniJson.dll
+	new file:   Assets/Firebase/Plugins/Google.MiniJson.dll.meta
+	new file:   Assets/Firebase/Plugins/iOS.meta
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.App.dll
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.App.dll.meta
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.Auth.dll
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.Auth.dll.meta
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.Database.dll
+	new file:   Assets/Firebase/Plugins/iOS/Firebase.Database.dll.meta
+	new file:   Assets/Firebase/Plugins/x86_64.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.bundle
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.bundle.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.dll
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.dll.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.so
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppApp-12_7_0.so.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.bundle
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.bundle.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.dll
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.dll.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.so
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppAuth.so.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.bundle
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.bundle.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.dll
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.dll.meta
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.so
+	new file:   Assets/Firebase/Plugins/x86_64/FirebaseCppDatabase.so.meta
+	new file:   Assets/Firebase/m2repository.meta
+	new file:   Assets/Firebase/m2repository/com.meta
+	new file:   Assets/Firebase/m2repository/com/google.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/12.7.0.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/12.7.0/firebase-app-unity-12.7.0.pom
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/12.7.0/firebase-app-unity-12.7.0.pom.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/12.7.0/firebase-app-unity-12.7.0.srcaar
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/12.7.0/firebase-app-unity-12.7.0.srcaar.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/maven-metadata.xml
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-app-unity/maven-metadata.xml.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/12.7.0.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/12.7.0/firebase-auth-unity-12.7.0.pom
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/12.7.0/firebase-auth-unity-12.7.0.pom.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/12.7.0/firebase-auth-unity-12.7.0.srcaar
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/12.7.0/firebase-auth-unity-12.7.0.srcaar.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/maven-metadata.xml
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-auth-unity/maven-metadata.xml.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/12.7.0.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/12.7.0/firebase-database-unity-12.7.0.pom
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/12.7.0/firebase-database-unity-12.7.0.pom.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/12.7.0/firebase-database-unity-12.7.0.srcaar
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/12.7.0/firebase-database-unity-12.7.0.srcaar.meta
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/maven-metadata.xml
+	new file:   Assets/Firebase/m2repository/com/google/firebase/firebase-database-unity/maven-metadata.xml.meta
+	new file:   Assets/GoogleService-Info.plist.meta
+	new file:   Assets/Plugins.meta
+	new file:   Assets/Plugins/iOS.meta
+	new file:   Assets/Plugins/iOS/Firebase.meta
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppApp.a
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppApp.a.meta
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppAuth.a
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppAuth.a.meta
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppDatabase.a
+	new file:   Assets/Plugins/iOS/Firebase/libFirebaseCppDatabase.a.meta
+	new file:   Assets/Plugins/tvOS.meta
+	new file:   Assets/Plugins/tvOS/Firebase.meta
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppApp.a
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppApp.a.meta
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppAuth.a
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppAuth.a.meta
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppDatabase.a
+	new file:   Assets/Plugins/tvOS/Firebase/libFirebaseCppDatabase.a.meta
+	modified:   Assets/Scenes/Simulator.unity
+	new file:   Assets/Scripts/FirebaseManager.cs.meta
+	modified:   Assets/Scripts/MineralSpawner.cs
+	modified:   Assets/Scripts/ObjectSpawner.cs
+	modified:   Assets/Scripts/RockSpawner.cs
+	new file:   Assets/StreamingAssets.meta
+	new file:   Assets/StreamingAssets/google-services-desktop.json
+	new file:   Assets/StreamingAssets/google-services-desktop.json.meta
+	new file:   ProjectSettings/GvhProjectSettings.xml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	git_status.txt
+

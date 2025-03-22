@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class CarControl : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class CarControl : MonoBehaviour
     private bool isInitialized = false;
 
     public bool useAI = false;
+
+    public static string id;
     
     void Awake()
     {
@@ -37,6 +40,7 @@ public class CarControl : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
         wheels = GetComponentsInChildren<WheelControl>();
+        id = Guid.NewGuid().ToString();
     }
     
     void Start()
