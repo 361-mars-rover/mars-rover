@@ -104,7 +104,7 @@ public class StartupScript : MonoBehaviour
 
             float diff = visualHeight - terrainHeight;
 
-            Debug.Log($"Collider Y: {terrainHeight}, Heightmap Y: {visualHeight}, Difference: {diff}");
+            // Debug.Log($"Collider Y: {terrainHeight}, Heightmap Y: {visualHeight}, Difference: {diff}");
         }
     }
 
