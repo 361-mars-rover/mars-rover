@@ -69,7 +69,7 @@ public class RockSpawner : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("No valid terrain found for rock spawn");
+        // Debug.LogWarning("No valid terrain found for rock spawn");
         return Vector3.zero;
     }
 }

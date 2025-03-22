@@ -1,14 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class CarControl : MonoBehaviour
 {
+    
     public float motorTorque = 10000f;
     public float brakeTorque = 2000f;
-    public float maxSpeed = 50000f;
+    public float maxSpeed = 500f;
     public float steeringRange = 30f;
     public float steeringRangeAtMaxSpeed = 10f;
-    public float centreOfGravityOffset = -1f;
+    public float centreOfGravityOffset = 0f;
     public AnimationCurve torqueCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
     public float accelerationSmoothness = 0.3f;
     public float brakingSmoothness = 0.5f;
@@ -29,12 +31,16 @@ public class CarControl : MonoBehaviour
     private bool isInitialized = false;
 
     public bool useAI = false;
+
+    public static string id;
     
     void Awake()
     {
+        Time.fixedDeltaTime = 0.01f; // Smaller value for more precise physics
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.centerOfMass += Vector3.up * centreOfGravityOffset;
         wheels = GetComponentsInChildren<WheelControl>();
+        id = Guid.NewGuid().ToString();
     }
     
     void Start()

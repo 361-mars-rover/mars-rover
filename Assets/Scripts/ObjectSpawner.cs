@@ -77,7 +77,7 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("No valid terrain found for Objects spawn");
+        // Debug.LogWarning("No valid terrain found for Objects spawn");
         return Vector3.zero;
     }
 }
