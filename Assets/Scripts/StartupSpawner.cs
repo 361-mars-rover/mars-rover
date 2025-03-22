@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ChunkHandler : MonoBehaviour
+public class StartupScript : MonoBehaviour
 {
     public GameObject car;
 
