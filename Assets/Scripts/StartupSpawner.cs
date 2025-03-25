@@ -25,7 +25,7 @@ public class StartupScript : MonoBehaviour
 
     // Terrain settings
     private float scaleFactor = 1f;
-    private float heightScale = 0.001f;
+    private float heightScale = 0.0025f;
 
     public int blurIterations = 2;
     private const float MIN_ELEVATION = -8000f;  // Lowest point on Mars
