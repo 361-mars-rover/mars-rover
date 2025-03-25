@@ -38,14 +38,22 @@ public class StartupScript : MonoBehaviour
     public bool isLoaded = false;
     private float ELEVATION_RANGE;
 
+    public GameObject dustCloudPrefab; // Assign a plane/quad prefab in Inspector
+    private float cloudHeight = 210f; // Height above terrain
+    private float cloudScrollSpeed = 0.005f;
+
+    private Texture2D dustTexture;
+    private GameObject cloudInstance;
+
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
+
 
     void Start()
     {
         ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * heightScale;
         car.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        TerrainWidth = GetTileSpan();
+        TerrainWidth = GetTileSpan() / 100;
         TerrainLength = TerrainWidth;
 
         Debug.Log("Chunk script started");
@@ -58,6 +66,7 @@ public class StartupScript : MonoBehaviour
 
 
         StartCoroutine(SpawnCarDelay(chunkCenter));
+        StartCoroutine(DownloadDustTexture(spawnTileRow, spawnTileCol));
     }
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
@@ -68,7 +77,7 @@ public class StartupScript : MonoBehaviour
         }
         Debug.Log("Terrain is now loaded");
         float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
-        car.transform.position = new Vector3(chunkCenter.x, height + 20f, chunkCenter.z);
+        car.transform.position = new Vector3(chunkCenter.x, height + 2f, chunkCenter.z);
 
         // RaycastHit hit;
         // Ray ray = new Ray(chunkCenter, Vector3.down);
@@ -83,6 +92,23 @@ public class StartupScript : MonoBehaviour
         // {
         //     Debug.Log("No hit");
         // }
+    }
+
+    IEnumerator DownloadDustTexture(int row, int col)
+    {
+        string dustURL = $"https://trek.nasa.gov/tiles/Mars/EQ/TES_Dust/1.0.0/default/default028mm/{0}/{0}/{0}.png";
+        UnityWebRequest dustRequest = UnityWebRequestTexture.GetTexture(dustURL);
+        yield return dustRequest.SendWebRequest();
+
+        if (dustRequest.result == UnityWebRequest.Result.Success)
+        {
+            dustTexture = DownloadHandlerTexture.GetContent(dustRequest);
+            CreateCloudLayer();
+        }
+        else
+        {
+            Debug.LogError("Failed to download dust texture: " + dustRequest.error);
+        }
     }
 
     void Update()
@@ -239,5 +265,76 @@ public class StartupScript : MonoBehaviour
         terrainLayer.diffuseTexture = texture;
         terrainLayer.tileSize = new Vector2(marsTerrain.GetComponent<Terrain>().terrainData.size.x, marsTerrain.GetComponent<Terrain>().terrainData.size.z);
         marsTerrain.GetComponent<Terrain>().terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
+    }
+
+    // Modified CreateCloudLayer method
+    void CreateCloudLayer()
+    {
+        if (dustTexture == null)
+        {
+            Debug.LogError("Dust texture is null!");
+            return;
+        }
+
+        Terrain terrain = marsTerrain.GetComponent<Terrain>();
+        Vector3 terrainPos = terrain.transform.position;
+        Vector3 terrainSize = terrain.terrainData.size;
+
+        // Create the cloud object
+        cloudInstance = Instantiate(dustCloudPrefab);
+        
+        // Position and scale it
+        cloudInstance.transform.position = new Vector3(
+        terrainPos.x + terrainSize.x/2,  // Center X
+        cloudHeight,                     // Height above terrain
+        terrainPos.z + terrainSize.z/2   // Center Z
+        );
+
+        cloudInstance.transform.localScale = new Vector3(
+            TerrainLength/10f, 
+            1f, 
+            TerrainWidth/10f
+        );
+
+        // Get or create the renderer
+        Renderer renderer = cloudInstance.GetComponent<Renderer>();
+        if (renderer == null)
+        {
+            Debug.LogError("No Renderer component found on cloud prefab!");
+            return;
+        }
+
+        // Create a new material using the Unlit/Transparent shader
+        Material cloudMat = new Material(Shader.Find("Unlit/Transparent"));
+        cloudMat.mainTexture = dustTexture;
+        
+        // Set texture wrap mode
+        dustTexture.wrapMode = TextureWrapMode.Repeat;
+        
+        // Apply to renderer
+        renderer.material = cloudMat;
+
+        // Add scrolling component
+        CloudScroller scroller = cloudInstance.AddComponent<CloudScroller>();
+        scroller.scrollSpeed = cloudScrollSpeed;
+        scroller.materialInstance = cloudMat;
+    }
+
+    // Updated CloudScroller class
+    public class CloudScroller : MonoBehaviour
+    {
+        public float scrollSpeed = 0.0001f;
+        [HideInInspector] public Material materialInstance;
+        private Vector2 offset = Vector2.zero;
+
+        void Update()
+        {
+            if (materialInstance != null)
+            {
+                offset.x += Time.deltaTime * scrollSpeed;
+                offset.y += Time.deltaTime * scrollSpeed * 0.5f;
+                materialInstance.mainTextureOffset = offset;
+            }
+        }
     }
 }
