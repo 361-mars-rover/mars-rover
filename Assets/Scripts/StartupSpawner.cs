@@ -39,15 +39,18 @@ public class StartupScript : MonoBehaviour
     private float ELEVATION_RANGE;
 
     public GameObject dustCloudPrefab; // Assign a plane/quad prefab in Inspector
-    private float cloudHeight = 210f; // Height above terrain
+    private float cloudHeight = 250f; // Height above terrain
     private float cloudScrollSpeed = 0.005f;
 
     private Texture2D dustTexture;
     private GameObject cloudInstance;
 
+    public Texture2D mineralTexture;
+    public ObjectSpawner mineralSpawner;
+
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
-
+    private Color dust_coloring;
 
     void Start()
     {
@@ -114,24 +117,8 @@ public class StartupScript : MonoBehaviour
     void Update()
     {
         Vector3 pos = car.transform.position;
-        // float terrainHeight = terrain.SampleHeight(pos);
-
-        // float heightDiff = pos.y - terrainHeight;
-
-        // Debug.Log($"Rover Y: {pos.y}, Terrain Y: {terrainHeight}, Difference: {heightDiff}");
-
-        Ray ray = new Ray(car.transform.position + Vector3.up * 5f, Vector3.down);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 20f))
-        {
-            float terrainHeight = hit.point.y;   // Collider height
-            float visualHeight = marsTerrain.GetComponent<Terrain>().SampleHeight(transform.position);  // Heightmap height
-
-            float diff = visualHeight - terrainHeight;
-
-            // Debug.Log($"Collider Y: {terrainHeight}, Heightmap Y: {visualHeight}, Difference: {diff}");
-        }
+        dust_coloring = dustTexture.GetPixel((int)pos.x, (int)pos.y);
+        //Debug.Log(dust_coloring);
     }
 
     float GetPixelSpan()
@@ -319,6 +306,7 @@ public class StartupScript : MonoBehaviour
         scroller.scrollSpeed = cloudScrollSpeed;
         scroller.materialInstance = cloudMat;
     }
+
 
     // Updated CloudScroller class
     public class CloudScroller : MonoBehaviour
