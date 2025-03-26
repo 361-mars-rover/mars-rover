@@ -65,7 +65,7 @@ public class WheelControl : MonoBehaviour
         // progressive braking based on current speed
         if (isBraking)
         {
-            float speed = transform.root.GetComponent<Rigidbody>().linearVelocity.magnitude;
+            float speed = transform.parent.GetComponent<Rigidbody>().linearVelocity.magnitude;
             float brakeFactor = Mathf.Lerp(0.2f, 1f, speed / 10f); // stronger braking at higher speeds
             WheelCollider.brakeTorque = brakeTorque * brakeFactor;
         }
@@ -80,7 +80,7 @@ public class WheelControl : MonoBehaviour
     {
         if (WheelCollider.isGrounded)
         {
-            Rigidbody rb = transform.root.GetComponent<Rigidbody>();
+            Rigidbody rb = transform.parent.GetComponent<Rigidbody>();
             float speed = rb.linearVelocity.magnitude;
             
             float resistance = rollingResistance * speed; // apply rolling resistance (proportional to velocity)

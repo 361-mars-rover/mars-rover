@@ -117,7 +117,9 @@ public class StartupScript : MonoBehaviour
     void Update()
     {
         Vector3 pos = car.transform.position;
-        dust_coloring = dustTexture.GetPixel((int)pos.x, (int)pos.y);
+        if (dust_coloring == null){
+            dust_coloring = dustTexture.GetPixel((int)pos.x, (int)pos.y);
+        }
         //Debug.Log(dust_coloring);
     }
 
@@ -152,7 +154,10 @@ public class StartupScript : MonoBehaviour
         // Create the terrain GameObject from the terrainData.
         // GameObject terrainGO = Terrain.CreateTerrainGameObject(terrainData);
         // terrainGO.transform.position = new Vector3(-terrainLength / 2, 0, -terrainLength / 2);
-        marsTerrain.transform.position = new Vector3(-terrainLength / 2, 0, -terrainLength / 2);
+        Debug.Log("Spawning new terrain");
+        Debug.Log($"Parent positon is ${transform.parent.position}");
+
+        marsTerrain.transform.position = transform.parent.position + new Vector3(-terrainLength / 2, 0, -terrainLength / 2);
         // terrain = terrainGO.GetComponent<Terrain>();
         // terrainCollider = terrainGO.GetComponent<TerrainCollider>();
 
