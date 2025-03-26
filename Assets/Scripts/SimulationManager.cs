@@ -13,9 +13,9 @@ public class SimulationManager : MonoBehaviour
     {
         // Instantiate simulations
         GameObject simulation1 = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
-        simulation1.SetActive(true);
+        // simulation1.SetActive(true);
         GameObject simulation2 = Instantiate(SimulationPrefab, new Vector3(10000,0,10000), Quaternion.identity);
-        // simulation2.SetActive(true);
+        simulation2.SetActive(true);
         sims[0] = simulation1;
         sims[1] = simulation2;
         cur = simulation1.GetComponentInChildren<Camera>(true);

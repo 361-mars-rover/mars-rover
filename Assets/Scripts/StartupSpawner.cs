@@ -35,7 +35,9 @@ public class StartupScript : MonoBehaviour
     private int tileMatrixSet = 7;
     public int tileRow;
     public int tileCol;
-    public bool isLoaded = false;
+    public bool terrainIsLoaded = false;
+    private bool dustIsLoaded = false;
+
     private float ELEVATION_RANGE;
 
     public GameObject dustCloudPrefab; // Assign a plane/quad prefab in Inspector
@@ -63,24 +65,53 @@ public class StartupScript : MonoBehaviour
         Debug.Log("Getting initial tiles");
 
         Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
-        Vector3 chunkCenter = new Vector3(0 , 100000f, 0);
+        float parentX = marsTerrain.transform.position.x;
+        float parentZ = marsTerrain.transform.position.z;
+        Vector3 chunkCenter = new Vector3(TerrainWidth / 2 + parentX, 100000f, TerrainWidth / 2 + parentZ);
         Debug.Log($"Spawning car at position: {chunkCenter.x}, {chunkCenter.z}");
         // Vector3 chunkCenter = new Vector3(100f , 200000f, 1000f);
 
-
-        StartCoroutine(SpawnCarDelay(chunkCenter));
         StartCoroutine(DownloadDustTexture(spawnTileRow, spawnTileCol));
+        // StartCoroutine(sampleAfterDustLoad(chunkCenter));
+        // StartCoroutine(sampleAfterTerrainLoad(chunkCenter));
+        StartCoroutine(SpawnCarDelay(chunkCenter));
     }
+
+    // private IEnumerator sampleAfterDustLoad(Vector3 chunkCenter){
+    //     while (!dustIsLoaded)
+    //     {
+    //         yield return new WaitForSeconds(0.1f);
+    //     }
+    //     Debug.Log("Dust is loaded");
+    //     float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
+    //     Debug.Log($"Sampled height after dust loaded: {height}");
+    // }
+
+    // private IEnumerator sampleAfterTerrainLoad(Vector3 chunkCenter){
+    //     while (!terrainIsLoaded)
+    //     {
+    //         yield return new WaitForSeconds(0.1f);
+    //     }
+    //     Debug.Log("Terrain is loaded");
+    //     Debug.Log($"Terrain loaded: {terrainIsLoaded}");
+    //     float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
+    //     Debug.Log($"Sampled height after terrain loaded: {height}");
+    // }
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
     {
-        while (!isLoaded)
+        while (!terrainIsLoaded || !dustIsLoaded)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
-        Debug.Log("Terrain is now loaded");
+        Debug.Log("Terrain and dust are now loaded");
+        Debug.Log($"Terrain loaded: {terrainIsLoaded}, Dust loaded: {dustIsLoaded}");
         float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
-        car.transform.position = new Vector3(chunkCenter.x, height + 2f, chunkCenter.z);
+        float parentX = marsTerrain.transform.position.x;
+        float parentZ = marsTerrain.transform.position.z;
+        Vector3 carSpawnPosition = new Vector3(chunkCenter.x, height + 2f, chunkCenter.z);
+        Debug.Log($"Spawning car at {carSpawnPosition}");
+        car.transform.position = carSpawnPosition;
 
         // RaycastHit hit;
         // Ray ray = new Ray(chunkCenter, Vector3.down);
@@ -196,7 +227,7 @@ public class StartupScript : MonoBehaviour
         {
             Debug.LogError("Failed to download heightmap: " + heightRequest.error);
         }
-        isLoaded = true;
+        terrainIsLoaded = true;
     }
 
     void ApplyHeightmap(Texture2D texture)
@@ -310,6 +341,7 @@ public class StartupScript : MonoBehaviour
         CloudScroller scroller = cloudInstance.AddComponent<CloudScroller>();
         scroller.scrollSpeed = cloudScrollSpeed;
         scroller.materialInstance = cloudMat;
+        dustIsLoaded = true;
     }
 
 
