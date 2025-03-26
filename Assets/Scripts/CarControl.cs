@@ -33,6 +33,8 @@ public class CarControl : MonoBehaviour
     public bool useAI = false;
 
     public static string id;
+
+    public bool allowInputs = true;
     
     void Awake()
     {
@@ -59,11 +61,12 @@ public class CarControl : MonoBehaviour
     {
         if (!isInitialized) return;
 
-        if (!useAI){
-            ManualControl();
-        }
-        else{
+        if (useAI){
             CircleAIUpdate();
+            
+        }
+        else if (allowInputs){
+            ManualControl();
         }
         
         // // Calculate target position on the circle
