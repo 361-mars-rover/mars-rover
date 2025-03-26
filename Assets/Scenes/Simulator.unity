@@ -1028,6 +1028,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1625381600}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1625381601}
   m_SourcePrefab: {fileID: 100100000, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}
 --- !u!1 &218550423 stripped
 GameObject:
@@ -1423,6 +1426,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 6e7e99712c0ae4004b61d579fc319303, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -6722085885383957590, guid: 6e7e99712c0ae4004b61d579fc319303, type: 3}
       propertyPath: m_Color.b
       value: 0.2765664
@@ -1442,6 +1449,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6e7e99712c0ae4004b61d579fc319303, type: 3}
       propertyPath: m_Name
       value: rock
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6e7e99712c0ae4004b61d579fc319303, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -4807,6 +4818,8 @@ MonoBehaviour:
   circleSpeed: 0.5
   homeBasePosition: {x: 0, y: 0, z: 0}
   useAI: 0
+  navigateToTarget: 0
+  avoidanceThreshold: 2
 --- !u!54 &1625381594
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4936,6 +4949,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5, y: 2, z: 2.5}
   m_Center: {x: 0.3, y: -0.1, z: 0}
+--- !u!114 &1625381601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625381592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3781509b44be744508dd5b6319a3523f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carControl: {fileID: 1625381593}
 --- !u!4 &1661480751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6886066687445569438, guid: 91f5d7afe5cd4439d80e738e194e4aae, type: 3}

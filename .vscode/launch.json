@@ -1,10 +1,18 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Attach to Unity",
-            "type": "vstuc",
-            "request": "attach"
-        }
-     ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Unity",
+      "type": "vstuc",
+      "request": "attach"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/salomonlavy/Downloads",
+      "program": "/Users/salomonlavy/Downloads/build/Debug/outDebug"
+    }
+  ]
 }
