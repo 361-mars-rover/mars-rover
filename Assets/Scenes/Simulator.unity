@@ -364,13 +364,11 @@ MonoBehaviour:
   car: {fileID: 1625381592}
   camera: {fileID: 1504693230}
   marsTerrain: {fileID: 445007612}
-  blurIterations: 2
-  tileRow: 0
-  tileCol: 0
-  terrainIsLoaded: 0
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
   mineralSpawner: {fileID: 0}
+  blurIterations: 2
+  terrainIsLoaded: 0
 --- !u!1 &1504693230
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +386,7 @@ GameObject:
   - component: {fileID: 1504693237}
   - component: {fileID: 1504693238}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: CarCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -671,6 +669,10 @@ PrefabInstance:
     - target: {fileID: 4436604557295738717, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233307838597108725, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

@@ -9,14 +9,17 @@ public class SimulationManager : MonoBehaviour
     private float TerrainWidth = 1563.675f;
     int prevIdx = -1;
     GameObject[] sims = new GameObject[5];
+    public int[,] RowColPairs = new int[2,2];
     Camera cur;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // Instantiate simulations
         GameObject simulation1 = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
+        simulation1.GetComponent<StartupSpawner>().SetRowCol(1,1);
         simulation1.SetActive(true);
         GameObject simulation2 = Instantiate(SimulationPrefab, new Vector3(TerrainWidth,0,0), Quaternion.identity);
+        simulation2.GetComponent<StartupSpawner>().SetRowCol(11,11);
         simulation2.SetActive(true);
         sims[0] = simulation1;
         sims[1] = simulation2;
