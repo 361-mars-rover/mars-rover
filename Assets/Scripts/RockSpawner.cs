@@ -4,7 +4,7 @@ using System.Collections;
 public class RockSpawner : MonoBehaviour
 {
     public GameObject rockPrefab;  
-    private int numberOfRocks = 1000; 
+    private int numberOfRocks = 500; 
     private float spawnRadius = 2000f;
     private float spawnDelay = 1f; 
 

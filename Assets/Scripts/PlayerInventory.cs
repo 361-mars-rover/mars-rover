@@ -14,5 +14,12 @@ public class PlayerInventory : MonoBehaviour
         Minerals.Add(mineral);
         NumberOfMinerals++;
         OnMineralCollected.Invoke(this);
+        Debug.Log("Mineral collected! Now notifying CarControl.");
+        // Notify CarControl
+        CarControl car = FindFirstObjectByType<CarControl>();
+        if (car != null)
+        {
+            car.GemDetected();
+        }
     }
 }
