@@ -441,6 +441,7 @@ public class StartupScript : MonoBehaviour
         // 2. Compute how large each tile should be in meters (or Unity units).
         TerrainWidth  = GetTileSpan() / 100;
         TerrainLength = TerrainWidth;
+        Debug.Log($"Terrain width: {TerrainWidth}");
 
         Debug.Log("Chunk script started");
         Debug.Log("Getting initial tiles");
