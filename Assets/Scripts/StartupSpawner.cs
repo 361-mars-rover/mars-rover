@@ -117,7 +117,9 @@ public class StartupScript : MonoBehaviour
     void Update()
     {
         Vector3 pos = car.transform.position;
-        dust_coloring = dustTexture.GetPixel((int)pos.x, (int)pos.y);
+        if (dustTexture != null){
+            dust_coloring = dustTexture.GetPixel((int)pos.x, (int)pos.y);
+        }
         //Debug.Log(dust_coloring);
     }
 
