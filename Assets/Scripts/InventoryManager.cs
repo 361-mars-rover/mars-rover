@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
         prevButton.gameObject.SetActive(false);
 
         // Initialize Firebase reference once
-        materialsRef = FirebaseManager.dbReference.Child("materials").Child(CarControl.id);
+        materialsRef = FirebaseManager.dbReference.Child("materials").Child("0");
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);

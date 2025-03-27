@@ -26,7 +26,8 @@ public class RockSpawner : MonoBehaviour
             Vector3 randomPosition = GetRandomPositionNearTerrain();
             if (randomPosition != Vector3.zero)
             {
-                GameObject rock = Instantiate(rockPrefab, randomPosition, Quaternion.identity);    
+                GameObject rock = Instantiate(rockPrefab, randomPosition, Quaternion.identity);
+                rock.transform.SetParent(transform.parent);    
 
                 rock.transform.rotation = Quaternion.Euler(
                     Random.Range(0, 360),
