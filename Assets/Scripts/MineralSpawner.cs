@@ -121,6 +121,7 @@ public class MineralSpawner : MonoBehaviour
     void CreateRock(Vector3 position)
     {
         GameObject rock = Instantiate(rockPrefab, position, Quaternion.identity);
+        rock.transform.SetParent(transform.parent);
         rock.transform.rotation = Random.rotation;
         rock.transform.localScale = Vector3.one * 0.2f;
     }
