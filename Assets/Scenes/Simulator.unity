@@ -1706,10 +1706,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mineralPanelPrefab: {fileID: 2534070097972337412, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
-  panelContainer: {fileID: 0}
+  panelContainer: {fileID: 1676861576}
   title: {fileID: 212283154574199841, guid: 7bbb70163cf384e97b6c63a391f5080c, type: 3}
-  nextButton: {fileID: 0}
-  prevButton: {fileID: 0}
+  nextButton: {fileID: 1289988300}
+  prevButton: {fileID: 1121458709}
 --- !u!114 &1676861575
 MonoBehaviour:
   m_ObjectHideFlags: 0
