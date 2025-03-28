@@ -78,6 +78,9 @@ public class CarControl : MonoBehaviour
         if (!useAI){
             ManualControl();
         }
+        else{
+            CircleAIUpdate();
+        }
         
         // // Calculate target position on the circle
         // currentAngle += circleSpeed * Time.deltaTime;
