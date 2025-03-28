@@ -221,11 +221,11 @@ public class CarControl : MonoBehaviour
         float sphereRadius = 2f;        // Adjust to match your rover’s width
         Vector3 origin = transform.position;
         Vector3 forwardDir = transform.forward;
-        int rockLayer = LayerMask.GetMask("Rock");
+        int rockLayerMask = 1 << LayerMask.NameToLayer("Rock");
 
         RaycastHit hit;
         // SphereCast returns true if it hits any rock within the detection distance
-        if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayer))
+        if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayerMask))
         {
             Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
             Vector3 rockPosition = hit.collider.transform.position;
