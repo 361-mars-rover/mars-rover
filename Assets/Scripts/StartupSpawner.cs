@@ -14,6 +14,12 @@ public class StartupScript : MonoBehaviour
     // private TerrainCollider terrainCollider;
     // private TerrainData terrainData;
 
+    public BoxCollider invisibleWall;
+    public BoxCollider invisibleWall2;
+    public BoxCollider invisibleWall3;
+    public BoxCollider invisibleWall4;
+
+
     private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
     private const float TILE_WIDTH = 256f;
     private float WMS_PIXEL_SIZE = 0.28e-3f;
@@ -45,7 +51,7 @@ public class StartupScript : MonoBehaviour
     {
         ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * heightScale;
         car.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        TerrainWidth = GetTileSpan();
+        TerrainWidth = GetTileSpan()/100;
         TerrainLength = TerrainWidth;
 
         Debug.Log("Chunk script started");
@@ -55,10 +61,28 @@ public class StartupScript : MonoBehaviour
         Vector3 chunkCenter = new Vector3(0 , 100000f, 0);
         Debug.Log($"Spawning car at position: {chunkCenter.x}, {chunkCenter.z}");
         // Vector3 chunkCenter = new Vector3(100f , 200000f, 1000f);
-
+        InitializeInvisibleWalls(TerrainWidth, TerrainLength, 10f);
 
         StartCoroutine(SpawnCarDelay(chunkCenter));
     }
+
+    void InitializeInvisibleWalls(float terrainWidth, float terrainLength, float wallHeight){
+    invisibleWall.center = new Vector3(0, wallHeight / 2, terrainLength / 2);
+    invisibleWall.size = new Vector3(terrainWidth, wallHeight, 1f);
+
+    // South Wall
+    invisibleWall2.center = new Vector3(0, wallHeight / 2, -terrainLength / 2);
+    invisibleWall2.size = new Vector3(terrainWidth, wallHeight, 1f);
+
+    // East Wall
+    invisibleWall3.center = new Vector3(terrainWidth / 2, wallHeight / 2, 0);
+    invisibleWall3.size = new Vector3(1f, wallHeight, terrainLength);
+
+    // West Wall
+    invisibleWall4.center = new Vector3(-terrainWidth / 2, wallHeight / 2, 0);
+    invisibleWall4.size = new Vector3(1f, wallHeight, terrainLength);
+    }
+    
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
     {
@@ -68,7 +92,7 @@ public class StartupScript : MonoBehaviour
         }
         Debug.Log("Terrain is now loaded");
         float height = marsTerrain.GetComponent<Terrain>().SampleHeight(chunkCenter);
-        car.transform.position = new Vector3(chunkCenter.x, height + 20f, chunkCenter.z);
+        car.transform.position = new Vector3(chunkCenter.x, height + 2f, chunkCenter.z);
 
         // RaycastHit hit;
         // Ray ray = new Ray(chunkCenter, Vector3.down);
