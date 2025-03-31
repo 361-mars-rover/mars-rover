@@ -5,16 +5,13 @@ using UnityEngine.Networking;
 public class StartupSpawner : MonoBehaviour
 {
     public GameObject car;
-    public GameObject camera;
+    // public GameObject camera;
     public GameObject marsTerrain;
     public GameObject dustCloudPrefab;
     public Texture2D mineralTexture;
     public ObjectSpawner mineralSpawner;
 
     // Terrain generation variables
-    private Terrain terrain;
-    private TerrainCollider terrainCollider;
-    private TerrainData terrainData;
 
     public BoxCollider invisibleWall;
     public BoxCollider invisibleWall2;

@@ -257,7 +257,7 @@ public class CarControl : MonoBehaviour
             Debug.Log($"Calculated avoidance offset: {offset}");
             return offset;
         }
-        Debug.Log("No rock detected via SphereCast.");
+        // Debug.Log("No rock detected via SphereCast.");
         return Vector3.zero;
     }
     IEnumerator RecoveryManeuver()
