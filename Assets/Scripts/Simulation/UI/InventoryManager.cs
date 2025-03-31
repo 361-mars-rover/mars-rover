@@ -18,6 +18,7 @@ public class InventoryManager : MonoBehaviour
     private int mineralsPerPage = 5;
 
     private DatabaseReference materialsRef; // Firebase reference for minerals
+    private string currentCarId = ""; // Store the current car ID to detect changes
 
     void Start()
     {
@@ -27,24 +28,66 @@ public class InventoryManager : MonoBehaviour
         nextButton.gameObject.SetActive(false);
         prevButton.gameObject.SetActive(false);
 
-        // Initialize Firebase reference once
-        materialsRef = FirebaseManager.dbReference.Child("materials").Child("0");
+        // Initialize Firebase reference only when car ID is available
+        UpdateCarReference();
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
         prevButton.onClick.AddListener(PreviousPage);
     }
 
+    void Update()
+    {
+        // Check if car ID has changed and update reference
+        if (CarControl.id != currentCarId)
+        {
+            UpdateCarReference();
+        }
+    }
+
+    private void UpdateCarReference()
+    {
+        if (!string.IsNullOrEmpty(CarControl.id))
+        {
+            currentCarId = CarControl.id;
+            materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
+
+            Debug.Log($"Updated Firebase reference to car ID: {currentCarId}");
+
+            // If inventory is open, refresh minerals
+            if (panelContainer.gameObject.activeSelf)
+            {
+                FetchMinerals();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Car ID is not set yet.");
+        }
+    }
+
     // Fetch minerals from Firebase and listen for changes
     public void FetchMinerals()
     {
+        if (string.IsNullOrEmpty(currentCarId))
+        {
+            Debug.LogError("Cannot fetch minerals: Car ID is not set.");
+            return;
+        }
+
         Debug.Log("Opening inventory...");
         panelContainer.gameObject.SetActive(true);
         title.SetActive(true);
 
+        // Remove previous listener if any
+        if (materialsRef != null)
+        {
+            materialsRef.ValueChanged -= OnMineralsChanged;
+        }
+
         // Listen for changes in real-time
         Debug.Log("Fetching minerals from database...");
-        materialsRef.ValueChanged += OnMineralsChanged; // Attach listener for real-time updates
+        materialsRef.ValueChanged += OnMineralsChanged;
     }
 
     // Callback function for database changes (real-time)
@@ -137,7 +180,8 @@ public class InventoryManager : MonoBehaviour
             textComponent.gameObject.SetActive(true);
             float x = float.Parse(positionX);
             float z = float.Parse(positionZ);
-            textComponent.text = $"Mineral at ({x:F2}, {z:F2})";        }
+            textComponent.text = $"Mineral at ({x:F2}, {z:F2})";
+        }
         else
         {
             Debug.LogError("TextMeshProUGUI component not found!");
