@@ -12,9 +12,6 @@ public class StartupSpawner : MonoBehaviour
     public ObjectSpawner mineralSpawner;
 
     // Terrain generation variables
-    private Terrain terrain;
-    private TerrainCollider terrainCollider;
-    private TerrainData terrainData;
 
     public BoxCollider invisibleWall;
     public BoxCollider invisibleWall2;
