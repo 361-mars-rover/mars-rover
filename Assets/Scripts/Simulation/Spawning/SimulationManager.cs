@@ -14,7 +14,7 @@ public class SimulationManager : MonoBehaviour
 
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
-    GameObject[] sims = new GameObject[3];
+    GameObject[] sims = new GameObject[9];
     Camera cur;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,13 +29,14 @@ public class SimulationManager : MonoBehaviour
             if (!IsValidRowCol(row, col)){
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
-            GameObject sim = Instantiate(SimulationPrefab, new Vector3(i * TerrainWidth,0,0), Quaternion.identity);
+            GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
             sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
-            sim.SetActive(true);
+            // sim.SetActive(true);
             sims[i] = sim;
         }
-
-        SetActivity(simIdx: 1, active: false);
+        // SetActivity(simIdx: 1, active: false);
+        // sims[0].SetActive(true);
+        SetActivity(simIdx: 0, active: true);
     }
     void Update()
     {
@@ -52,13 +53,17 @@ public class SimulationManager : MonoBehaviour
         if (keyPress > 0 && keyPress <= sims.Length)
 		{
             Debug.Log($"You pressed {keyPress}!");
-            SwitchSimulation(keyPress - 1);
+            int newSimIdx = keyPress - 1;
+            if (newSimIdx != prevIdx){
+                SwitchSimulation(newSimIdx);
+            }
 		}
     }
 
     private Camera SetActivity(int simIdx, bool active){
         Debug.Log($"Setting simulation: ${simIdx} to have activity: ${active}");
         GameObject sim = sims[simIdx];
+        sim.SetActive(active);
         Transform child = sim.transform.Find("CarCamera");   
         if (child != null)
         {
@@ -73,7 +78,23 @@ public class SimulationManager : MonoBehaviour
             cur.gameObject.SetActive(active);
 
             // enable/disable input
-            EventSystem eventSystem = sim.transform.Find("EventSystem").GetComponent<EventSystem>();
+            // EventSystem eventSystem = sim.transform.Find("EventSystem").GetComponent<EventSystem>();
+            // eventSystem.enabled = active;
+            
+            EventSystem[] eventSystems = sim.GetComponentsInChildren<EventSystem>(true);
+
+            Debug.Log($"Event systems length: {eventSystems.Length}");
+
+            foreach (EventSystem es in eventSystems)
+            {
+                es.enabled = active;
+            }
+            // EventSystem[] eventSystems = FindObjectsOfType<EventSystem>();
+
+            // for (int i = 1; i < eventSystems.Length; i++)
+            // {
+            //     Destroy(eventSystems[i].gameObject);  // Destroy all but the first one
+            // }
             // if (eventSystem == null){
             //     Debug.Log("event system is null");
             // }
@@ -82,7 +103,6 @@ public class SimulationManager : MonoBehaviour
                 Debug.Log("canvas is null");
             }
             canvas.enabled = active;
-            eventSystem.enabled = active;   // Enable input
             CarControl carControl = sim.transform.Find("car").GetComponent<CarControl>();
             // if (carControl == null){
             //     Debug.Log("car control is null");

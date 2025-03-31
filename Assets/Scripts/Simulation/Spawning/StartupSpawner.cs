@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class StartupSpawner : MonoBehaviour
 {
     public GameObject car;
-    public GameObject camera;
+    // public GameObject camera;
     public GameObject marsTerrain;
     public GameObject dustCloudPrefab;
     public Texture2D mineralTexture;
