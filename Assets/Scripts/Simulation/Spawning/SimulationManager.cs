@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,23 +42,37 @@ public class SimulationManager : MonoBehaviour
     void Update()
     {
         // int curIdx = System.Convert.ToInt32(camIdx);
-        int keyPress = -1;
-        for (int i = 0; i <= 9; i++)
+        // int keyPress = -1;
+        // for (int i = 0; i <= 9; i++)
+        // {
+        //     if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha0 + i)))
+        //     {
+        //         Debug.Log($"Pressed {i}");
+        //         keyPress = i;
+        //     }
+        // }
+        // if (keyPress > 0 && keyPress <= sims.Length)
+		// {
+        //     Debug.Log($"You pressed {keyPress}!");
+        //     int newSimIdx = keyPress - 1;
+        //     if (newSimIdx != prevIdx){
+        //         SwitchSimulation(newSimIdx);
+        //     }
+		// }
+        int simIdx;
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha0 + i)))
-            {
-                Debug.Log($"Pressed {i}");
-                keyPress = i;
-            }
+            simIdx = Math.Max(prevIdx-1, 0);
+            SwitchSimulation(simIdx);
         }
-        if (keyPress > 0 && keyPress <= sims.Length)
-		{
-            Debug.Log($"You pressed {keyPress}!");
-            int newSimIdx = keyPress - 1;
-            if (newSimIdx != prevIdx){
-                SwitchSimulation(newSimIdx);
-            }
-		}
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            simIdx = Math.Min(prevIdx+1, TileIndices.Length - 1);
+            Debug.Log($"sim index set to {simIdx}");
+            // Debug.Log($"Sim length is ${sims.Length}");
+            SwitchSimulation(simIdx);
+        }
+
     }
 
     private Camera SetActivity(int simIdx, bool active){
@@ -120,6 +135,10 @@ public class SimulationManager : MonoBehaviour
     }
 
     private void SwitchSimulation(int simIdx){
+        // Don't switch if index hasnt changed
+        if (simIdx == prevIdx){
+            return;
+        }
         // Get the simulation for the selected index
         Camera oldCamera = SetActivity(prevIdx, active: false);
         if (oldCamera == null){
