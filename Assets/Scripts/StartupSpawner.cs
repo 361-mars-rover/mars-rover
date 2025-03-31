@@ -11,11 +11,6 @@ public class StartupSpawner : MonoBehaviour
     public Texture2D mineralTexture;
     public ObjectSpawner mineralSpawner;
 
-    // Terrain generation variables
-    private Terrain terrain;
-    private TerrainCollider terrainCollider;
-    private TerrainData terrainData;
-
     private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
     private const float TILE_WIDTH = 256f;
     private float WMS_PIXEL_SIZE = 0.28e-3f;
