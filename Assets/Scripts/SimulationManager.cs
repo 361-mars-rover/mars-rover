@@ -11,6 +11,9 @@ public class SimulationManager : MonoBehaviour
 
     public Vector2Int[] TileIndices;
     int prevIdx = -1;
+
+    private int MAX_ROW = 128;
+    private int MAX_COL = 256;
     GameObject[] sims = new GameObject[3];
     Camera cur;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,9 +24,12 @@ public class SimulationManager : MonoBehaviour
             Debug.Log(row_col);
         }
         for (int i = 0; i < TileIndices.Length; i++){
-            GameObject sim = Instantiate(SimulationPrefab, new Vector3(i * TerrainWidth,0,0), Quaternion.identity);
             int row = TileIndices[i].x;
-            int col = TileIndices[i].y;
+            int col = TileIndices[i].y; 
+            if (!IsValidRowCol(row, col)){
+                Debug.LogError($"Row col pair {row},{col} is invalid");
+            }
+            GameObject sim = Instantiate(SimulationPrefab, new Vector3(i * TerrainWidth,0,0), Quaternion.identity);
             sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
             sim.SetActive(true);
             sims[i] = sim;
@@ -115,5 +121,9 @@ public class SimulationManager : MonoBehaviour
                 Debug.LogError($"CarCamera for sim {keyPress} not found!");
             }
 		}
+    }
+
+    private bool IsValidRowCol(int row, int col){
+        return (row >= 1 && row <= MAX_ROW) && (col >= 1 && col <= MAX_COL);
     }
 }
