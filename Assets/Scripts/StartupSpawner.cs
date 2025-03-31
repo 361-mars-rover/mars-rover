@@ -11,6 +11,16 @@ public class StartupSpawner : MonoBehaviour
     public Texture2D mineralTexture;
     public ObjectSpawner mineralSpawner;
 
+    // Terrain generation variables
+    private Terrain terrain;
+    private TerrainCollider terrainCollider;
+    private TerrainData terrainData;
+
+    public BoxCollider invisibleWall;
+    public BoxCollider invisibleWall2;
+    public BoxCollider invisibleWall3;
+    public BoxCollider invisibleWall4;
+
     private const float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
     private const float TILE_WIDTH = 256f;
     private float WMS_PIXEL_SIZE = 0.28e-3f;
@@ -77,6 +87,7 @@ public class StartupSpawner : MonoBehaviour
         // Start the dust texture download and final car spawn
         StartCoroutine(DownloadDustTexture(spawnTileRow, spawnTileCol));
         StartCoroutine(SpawnCarDelay(chunkCenter));
+        InitializeInvisibleWalls(TerrainWidth, TerrainLength, 120f);
     }
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
@@ -98,6 +109,23 @@ public class StartupSpawner : MonoBehaviour
         car.transform.localPosition = carSpawnPosition;
 
         car.SetActive(true);
+    }
+
+    void InitializeInvisibleWalls(float terrainWidth, float terrainLength, float wallHeight){
+        invisibleWall.center = new Vector3(0, wallHeight / 2, terrainLength / 2);
+        invisibleWall.size = new Vector3(terrainWidth, wallHeight, 1f);
+
+        // South Wall
+        invisibleWall2.center = new Vector3(0, wallHeight / 2, -terrainLength / 2);
+        invisibleWall2.size = new Vector3(terrainWidth, wallHeight, 1f);
+
+        // East Wall
+        invisibleWall3.center = new Vector3(terrainWidth / 2, wallHeight / 2, 0);
+        invisibleWall3.size = new Vector3(1f, wallHeight, terrainLength);
+
+        // West Wall
+        invisibleWall4.center = new Vector3(-terrainWidth / 2, wallHeight / 2, 0);
+        invisibleWall4.size = new Vector3(1f, wallHeight, terrainLength);
     }
 
     IEnumerator DownloadDustTexture(int row, int col)
