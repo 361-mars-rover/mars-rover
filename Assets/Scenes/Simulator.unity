@@ -151,7 +151,9 @@ MonoBehaviour:
   SimulationPrefab: {fileID: 1057071638}
   TileIndices:
   - {x: 1, y: 1}
-  - {x: 10, y: 10}
+  - {x: 1, y: 2}
+  - {x: 1, y: 3}
+  - {x: 1, y: 4}
 --- !u!4 &151140506
 Transform:
   m_ObjectHideFlags: 0
@@ -1369,7 +1371,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   car: {fileID: 1625381592}
-  camera: {fileID: 1504693230}
   marsTerrain: {fileID: 445007612}
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
@@ -2330,7 +2331,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5502787537131224737, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2434704430590388297, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
     m_AddedGameObjects:
