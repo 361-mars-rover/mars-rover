@@ -10,7 +10,7 @@ public class SimulationManager : MonoBehaviour
     private float TerrainWidth = 1563.675f;
 
     public Vector2Int[] TileIndices;
-    int prevIdx = -1;
+    int prevIdx = 0;
 
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
@@ -34,37 +34,8 @@ public class SimulationManager : MonoBehaviour
             sim.SetActive(true);
             sims[i] = sim;
         }
-        // Instantiate simulations
-        // GameObject simulation1 = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
-        // simulation1.GetComponent<StartupSpawner>().SetRowCol(1,1);
-        // simulation1.SetActive(true);
-        // GameObject simulation2 = Instantiate(SimulationPrefab, new Vector3(TerrainWidth,0,0), Quaternion.identity);
-        // simulation2.GetComponent<StartupSpawner>().SetRowCol(11,11);
-        // simulation2.SetActive(true);
-        // sims[0] = simulation1;
-        // sims[1] = simulation2;
-        // cur = simulation1.GetComponent<Camera>();
-        // Debug.Log("Trying to get camera for simulation1");
-        // if (cur == null){
-        //     Debug.Log("cur is null");
-        // }
-        Transform child = sims[0].transform.Find("CarCamera");
-        if (child != null)
-        {
-            Debug.Log("CarCamera child found!");
-            Camera myCarCamera = child.GetComponent<Camera>();
-            if (myCarCamera != null){
-                Debug.Log("CarCamera child componenent found!");
-            }
-            cur = myCarCamera;
-            Debug.Log($"Setting SIM 1 camera as active");
-            cur.gameObject.SetActive(true);
-            // do something with myCarCamera
-        }
-        else
-        {
-            Debug.LogError("CarCamera child not found!");
-        }
+
+        SetActivity(simIdx: 1, active: false);
     }
     void Update()
     {
@@ -81,46 +52,64 @@ public class SimulationManager : MonoBehaviour
         if (keyPress > 0 && keyPress <= sims.Length)
 		{
             Debug.Log($"You pressed {keyPress}!");
-            GameObject curSim = sims[keyPress - 1];
-            Transform child = curSim.transform.Find("CarCamera");
-            if (child != null)
-            {
-                Debug.Log("CarCamera child found!");
-                Camera myCarCamera = child.GetComponent<Camera>();
-                if (myCarCamera != null){
-                    Debug.Log("CarCamera child componenent found!");
-                }
-                myCarCamera.gameObject.SetActive(true);
-                Debug.Log($"CarCamera for sim {keyPress} set as active!");
-                cur.gameObject.SetActive(false);
-                cur = myCarCamera;
-                cur.gameObject.SetActive(true);
-
-                if (prevIdx > -1){
-                    GameObject prevSim = sims[prevIdx];
-                    CarControl prevCarControl = prevSim.GetComponentInChildren<CarControl>();
-                    prevCarControl.allowInputs = false;  // Disable input
-                    // prevSim.transform.Find("EventSystem").GetComponent<EventSystem>().enabled = false;
-                    Debug.Log("Disabled previous inputs system");
-                }
-
-                // enable input
-                // EventSystem eventSystem = curSim.transform.Find("EventSystem").GetComponent<EventSystem>();
-                // eventSystem.enabled = true;   // Enable input
-                CarControl curCarControl = curSim.GetComponentInChildren<CarControl>();
-                curCarControl.allowInputs = true;  // Disable input
-                Debug.Log("Enabled new event system");
-
-                prevIdx = keyPress - 1;
-
-                // camIdx = !camIdx;
-                // do something with myCarCamera
-            }
-            else
-            {
-                Debug.LogError($"CarCamera for sim {keyPress} not found!");
-            }
+            SwitchSimulation(keyPress - 1);
 		}
+    }
+
+    private Camera SetActivity(int simIdx, bool active){
+        Debug.Log($"Setting simulation: ${simIdx} to have activity: ${active}");
+        GameObject sim = sims[simIdx];
+        Transform child = sim.transform.Find("CarCamera");   
+        if (child != null)
+        {
+            Camera simCamera = child.GetComponent<Camera>();
+            if (simCamera == null){
+                Debug.Log("CarCamera is null");
+            }
+            // Set whether camera should be active or inactive
+            simCamera.gameObject.SetActive(active);
+            // Debug.Log($"CarCamera for sim {simIdx + 1} set as active!");
+            cur = simCamera;
+            cur.gameObject.SetActive(active);
+
+            // enable/disable input
+            EventSystem eventSystem = sim.transform.Find("EventSystem").GetComponent<EventSystem>();
+            // if (eventSystem == null){
+            //     Debug.Log("event system is null");
+            // }
+            Canvas canvas = sim.transform.Find("Canvas").GetComponent<Canvas>();
+            if (canvas == null){
+                Debug.Log("canvas is null");
+            }
+            canvas.enabled = active;
+            eventSystem.enabled = active;   // Enable input
+            CarControl carControl = sim.transform.Find("car").GetComponent<CarControl>();
+            // if (carControl == null){
+            //     Debug.Log("car control is null");
+            // }
+
+            carControl.allowInputs = active;  // Disable input
+            prevIdx =  simIdx;
+            return cur;
+        }
+        else
+        {
+            Debug.LogError($"CarCamera for sim {simIdx + 1} not found!");
+            return null;
+        }
+    }
+
+    private void SwitchSimulation(int simIdx){
+        // Get the simulation for the selected index
+        Camera oldCamera = SetActivity(prevIdx, active: false);
+        if (oldCamera == null){
+            Debug.LogError($"Failed to disactive {prevIdx + 1}");
+        }
+        Camera newCamera = SetActivity(simIdx, active: true);
+        if (newCamera == null){
+            Debug.LogError($"Failed to disactive {simIdx + 1}");
+        }
+        prevIdx = simIdx;
     }
 
     private bool IsValidRowCol(int row, int col){
