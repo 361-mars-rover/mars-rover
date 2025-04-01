@@ -1765,7 +1765,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create Rover
+  m_text: 'Create Avatar
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
@@ -3749,9 +3751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Rovers
-
-'
+  m_text: Avatars
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
@@ -5005,7 +5005,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Replace Brain
+  m_text: Edit Avatar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
@@ -8916,7 +8916,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Dismantle Rover
+  m_text: ' Delete Avatar'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
