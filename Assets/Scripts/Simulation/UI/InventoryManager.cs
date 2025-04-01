@@ -19,6 +19,7 @@ public class InventoryManager : MonoBehaviour
 
     private DatabaseReference materialsRef; // Firebase reference for minerals
     public SimulationManager simulationManager; // Reference to the simulation manager
+    public FirebaseManager firebaseManager; // Reference to the Firebase manager
     private string currentCarId; // Store the current car ID to detect changes
 
     void Start()
@@ -29,8 +30,9 @@ public class InventoryManager : MonoBehaviour
         nextButton.gameObject.SetActive(false);
         prevButton.gameObject.SetActive(false);
         simulationManager = FindObjectOfType<SimulationManager>();
+        firebaseManager = FindObjectOfType<FirebaseManager>();
         currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
-        materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
+        materialsRef = FirebaseManager.dbReference.Child("materials").Child(firebaseManager.simulationId).Child(currentCarId);
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
