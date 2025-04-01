@@ -9,6 +9,7 @@ public class FirebaseManager : MonoBehaviour
     public static FirebaseManager Instance;
     public static DatabaseReference dbReference;
     private bool isFirebaseInitialized = false;
+    public string simulationId;
     void Start() {
         // Get the root reference location of the database.
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -17,12 +18,14 @@ public class FirebaseManager : MonoBehaviour
 
     void Awake()
     {
+        // create sim id based on date
+        simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public static void StoreMaterialData(GameObject mineral, string carId)
+    public static void StoreMaterialData(GameObject mineral, string carId, string simId)
     {
-        DatabaseReference newMineralRef = dbReference.Child("materials").Child(carId).Push(); 
+        DatabaseReference newMineralRef = dbReference.Child("materials").Child(simId).Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{

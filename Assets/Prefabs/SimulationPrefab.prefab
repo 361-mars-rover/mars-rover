@@ -1531,15 +1531,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   car: {fileID: 3810417333407678335}
-  camera: {fileID: 0}
   marsTerrain: {fileID: 2625262542548834527}
-  blurIterations: 2
-  tileRow: 0
-  tileCol: 0
-  isLoaded: 0
   dustCloudPrefab: {fileID: 8613874049420688821}
   mineralTexture: {fileID: 0}
   mineralSpawner: {fileID: 0}
+  invisibleWall: {fileID: 0}
+  invisibleWall2: {fileID: 0}
+  invisibleWall3: {fileID: 0}
+  invisibleWall4: {fileID: 0}
+  blurIterations: 2
+  terrainIsLoaded: 0
 --- !u!1 &2625262542548834527
 GameObject:
   m_ObjectHideFlags: 0
@@ -2026,7 +2027,6 @@ Transform:
   - {fileID: 4541539713848092716}
   - {fileID: 5148841698696966620}
   - {fileID: 5322502811702436689}
-  - {fileID: 7743347896984789420}
   - {fileID: 1892300185520364159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2774,50 +2774,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!1 &4597051626497864376
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7743347896984789420}
-  - component: {fileID: 4289938125180129925}
-  m_Layer: 0
-  m_Name: FirebaseManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7743347896984789420
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4597051626497864376}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 136.56873, y: -66.38243, z: 91.75439}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4436604557295738717}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4289938125180129925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4597051626497864376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9671797c273444d954ff70afd52dad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4597685927235511424
 GameObject:
   m_ObjectHideFlags: 0
@@ -5559,6 +5515,12 @@ MonoBehaviour:
   circleSpeed: 0.5
   homeBasePosition: {x: 0, y: 0, z: 0}
   useAI: 0
+  allowInputs: 1
+  navigateToTarget: 0
+  avoidanceThreshold: 2
+  gemDetectionWindow: 2
+  requiredGemCount: 1
+  innerCircleFactor: 0.1
 --- !u!114 &6643609917398174226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5651,6 +5613,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  simulationManager: {fileID: 0}
+  firebaseManager: {fileID: 0}
 --- !u!65 &5108327763190900383
 BoxCollider:
   m_ObjectHideFlags: 0
