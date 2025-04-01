@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,10 +6,28 @@ public class AvatarTableManager : MonoBehaviour
 {
     public GameObject togglePrefab;
     public List<Avatar> avatars;
+    private Avatar currentAvatar;
 
     void Start()
     {
         PopulateTable();
+    }
+
+    void CreateAvatar(){
+        Avatar a = new Avatar();
+        currentAvatar = a;
+    }
+
+    void SetNewestAvatarName(string name){
+        throw new NotImplementedException();
+    }
+
+    void SetNewestAvatarRowCol(int row, int col){
+        throw new NotImplementedException();
+    }
+
+    void SetNewestAvatarBrain(string brain){
+        throw new NotImplementedException();
     }
 
     void PopulateTable()
