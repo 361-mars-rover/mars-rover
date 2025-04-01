@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEditor.Experimental.GraphView;
 
 public class CarControl : MonoBehaviour
 {
@@ -52,6 +53,16 @@ public class CarControl : MonoBehaviour
     public int totalInnerCircleLaps = 10;
     private float lastRockDistance = Mathf.Infinity;
     private bool inReverseManeuver = false;
+    private bool lookingForGem = false;
+    // For the dust data
+    private StartupSpawner startupSpawner;
+    // For sunlight-seeking behavior
+    private float lastDarknessPercentage = 0f;
+    private float darknessTolerance = 2.0f; // How much darker it needs to get before changing direction
+    private float adjustmentAngle = 45f; // How much to turn when finding a darker area (in degrees)
+    private float forwardDistance = 20f; // How far ahead to set the target position
+    private float logTimer = 0f;
+    private float logInterval = 1.0f; // Log every 1 second
     void Awake()
     {
         Time.fixedDeltaTime = 0.01f; // Smaller value for more precise physics
@@ -71,6 +82,11 @@ public class CarControl : MonoBehaviour
         
         // Start the circle movement
         isInitialized = true;
+        startupSpawner = FindFirstObjectByType<StartupSpawner>();
+        if (startupSpawner == null)
+        {
+            Debug.LogError("StartupSpawner not found!");
+        }
     }
     
     void Update()
@@ -133,26 +149,32 @@ public class CarControl : MonoBehaviour
         // Debug.DrawLine(transform.position, targetPosition, Color.red);
         // Debug.DrawLine(homeBasePosition, targetPosition, Color.blue);
     }
-
     public void CircleAIUpdate()
     {
-        // If we're not already avoiding a rock, compute the normal circle target.
         Vector3 targetPosition;
-        if (!avoidingRock)
+        float gemRayDistance = 50f; // Increased detection range
+        float gemSphereRadius = 2f; // Adjust to widen the detection area
+        int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
+
+        RaycastHit gemHit;
+        if (Physics.SphereCast(transform.position, gemSphereRadius, transform.forward, out gemHit, gemRayDistance, gemLayerMask))
         {
-            // Calculate target position on the current circle
+            lookingForGem = true;
+            targetPosition = gemHit.collider.transform.position;
+            Debug.Log("Gem detected via sphere cast. Moving toward gem.");
+        } 
+        else if (!avoidingRock)
+        {
+            // Normal circle target calculation.
+            Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
             float angleRad = currentAngle * Mathf.Deg2Rad;
             targetPosition = homeBasePosition + new Vector3(
                 Mathf.Sin(angleRad) * currentRadius,
                 0f,
                 Mathf.Cos(angleRad) * currentRadius
-            );
-
-            // Check if a rock is detected on our path.
-            Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
+            ); 
             if (rockAvoidanceOffset != Vector3.zero)
             {
-                // Rock detected: set avoidance mode.
                 avoidingRock = true;
                 avoidanceTarget = transform.position + rockAvoidanceOffset;
                 Debug.Log("Rock detected. Switching to avoidance mode.");
@@ -161,7 +183,6 @@ public class CarControl : MonoBehaviour
         else
         {
             targetPosition = avoidanceTarget;
-            // Check if we have reached or passed the avoidance target.
             if (Vector3.Distance(transform.position, avoidanceTarget) < avoidanceThreshold)
             {
                 avoidingRock = false;
@@ -177,19 +198,22 @@ public class CarControl : MonoBehaviour
             {
                 innerCircleLapsCompleted++;
                 Debug.Log("Inner circle lap " + innerCircleLapsCompleted + " completed.");
-                if (innerCircleLapsCompleted >= totalInnerCircleLaps)
+                // Gradually expand the inner circle radius each lap.
+                if (innerCircleLapsCompleted < totalInnerCircleLaps)
                 {
-                    // Inner circle scan complete. Restore normal parameters.
+                    // Increase by a fraction of maxRadius per lap.
+                    float innerIncrement = maxRadius * (innerCircleFactor / totalInnerCircleLaps);
+                    currentRadius += innerIncrement;
+                    Debug.Log("Expanding inner circle radius to: " + currentRadius);
+                }
+                else
+                {
+                    // After completing required laps, exit inner circle mode.
                     innerCircleMode = false;
                     innerCircleLapsCompleted = 0;
                     homeBasePosition = normalHomeBase;
                     currentRadius = normalRadius;
                     Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
-                }
-                else
-                {
-                    // Optionally, increase the inner circle radius slightly per lap if desired.
-                    // currentRadius += someIncrement;
                 }
             }
             else
@@ -209,84 +233,75 @@ public class CarControl : MonoBehaviour
                 }
             }
         }
-        // Calculate steering and throttle toward the (possibly adjusted) target position.
-        Vector3 toTarget = targetPosition - transform.position;
-        toTarget.y = 0; // Ignore height differences
 
+        // Compute steering and throttle.
+        Vector3 toTarget = targetPosition - transform.position;
+        toTarget.y = 0f;
         Vector3 localTarget = transform.InverseTransformPoint(targetPosition);
         float steerAmount = Mathf.Clamp(localTarget.x / 5f, -1f, 1f);
         float distanceToTarget = toTarget.magnitude;
         float throttleAmount = Mathf.Clamp01(distanceToTarget / 10f);
-        float maxThrottleLimit = 0.5f; // 50% throttle max
+        float maxThrottleLimit = 0.5f;
         throttleAmount = Mathf.Min(throttleAmount, maxThrottleLimit);
+
+        // Adjust throttle based on rock proximity.
         if (lastRockDistance < 5f)
-        // 5f worked fine (it hits a bit still though)
         {
-            // If the rock is extremely close, trigger a reverse maneuver if not already in one.
+            Debug.Log("Rock extremely close. Applying full brakes and initiating reverse maneuver.");
+            throttleAmount = 0f;
             if (!inReverseManeuver)
             {
-                Debug.Log("Rock extremely close. Initiating reverse maneuver.");
                 StartCoroutine(ReverseManeuver());
             }
-            // Optionally, you can skip applying normal throttle this frame:
             return;
         }
         else if (lastRockDistance < 15f)
         {
             Debug.Log("Rock detected at moderate range. Reducing throttle.");
-            throttleAmount *= 0.5f; // Reduce throttle by half
+            throttleAmount *= 0.5f;
         }
-        ApplyControlsToWheels(throttleAmount, steerAmount);
 
-        // Debug visualization: Draw the target position.
+        ApplyControlsToWheels(throttleAmount, steerAmount);
         Debug.DrawLine(transform.position, targetPosition, Color.red);
         Debug.DrawLine(homeBasePosition, targetPosition, Color.blue);
     }
-     // This function detects rocks ahead and returns an avoidance offset if a rock is detected.
     private Vector3 CheckForRockAvoidance()
     {
-        float detectionDistance = 30f;  // Increase as needed
-        float sphereRadius = 2f;        // Adjust to match your rover’s width
+        float detectionDistance = 30f;
+        float sphereRadius = 2f;
         Vector3 origin = transform.position;
         Vector3 forwardDir = transform.forward;
         int rockLayerMask = 1 << LayerMask.NameToLayer("Rock");
 
         RaycastHit hit;
-        // SphereCast returns true if it hits any rock within the detection distance
         if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayerMask))
         {
             lastRockDistance = hit.distance;
             Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
             Vector3 rockPosition = hit.collider.transform.position;
             Vector3 toRock = rockPosition - transform.position;
-            toRock.y = 0f;  // Ignore vertical differences
-
-            // Only avoid if the rock is almost directly ahead (within a narrow angle)
+            toRock.y = 0f;
             float angleToRock = Vector3.Angle(transform.forward, toRock);
-            if(angleToRock > 25f) // adjust this threshold as needed
+            if (angleToRock > 25f)
             {
-                // If the rock is off to the side, you might choose not to avoid it.
                 return Vector3.zero;
             }
-
-            // Determine which side the rock is on relative to the rover.
             float dot = Vector3.Dot(transform.right, toRock);
-            Vector3 avoidanceDirection = dot < 0 ? transform.right : -transform.right;
-
-            // Scale the avoidance offset by how close the rock is.
+            Vector3 avoidanceDirection = (dot < 0) ? transform.right : -transform.right;
             float linearStrength = Mathf.Clamp01((detectionDistance - hit.distance) / detectionDistance);
-            float avoidanceStrength = linearStrength * linearStrength; // Squared for a more aggressive response
-
-            float avoidanceMagnitude = 5f; // Tweak this to determine how far to steer away.
-
+            float avoidanceStrength = linearStrength * linearStrength;
+            float avoidanceMagnitude = 5f;
             Vector3 offset = avoidanceDirection * avoidanceMagnitude * avoidanceStrength;
             Debug.Log($"Calculated avoidance offset: {offset}");
             return offset;
         }
-        // Debug.Log("No rock detected via SphereCast.");
-        lastRockDistance = detectionDistance;
-        return Vector3.zero;
+        else
+        {
+            lastRockDistance = detectionDistance;
+            return Vector3.zero;
+        }
     }
+
     IEnumerator ReverseManeuver()
     {
         inReverseManeuver = true;
@@ -294,60 +309,53 @@ public class CarControl : MonoBehaviour
         float timer = 0f;
         while (timer < reverseDuration)
         {
-            // Apply reverse throttle and no steer (or slight steer if needed)
             float reverseThrottle = -0.5f;
-            float steerInput = 0f;  // Adjust if you want a slight turn while reversing
+            float steerInput = 0f;  // No steering while reversing (adjust if needed)
             ApplyControlsToWheels(reverseThrottle, steerInput);
             timer += Time.deltaTime;
             yield return null;
         }
+        
+        // After reverse, reset lastRockDistance so the avoidance logic doesn't trigger immediately.
+        lastRockDistance = 30f; // Reset to full detection distance (or a value of your choosing)
+        
         inReverseManeuver = false;
         Debug.Log("Reverse maneuver complete. Resuming normal behavior.");
     }
+
     IEnumerator RecoveryManeuver()
     {
         inRecovery = true;
-
-        // --- Phase 1: Normal recovery (reverse + slight steer) ---
-        float firstRecoveryTime = 2.5f; // Duration of the first attempt
+        float firstRecoveryTime = 2.5f;
         float timer = 0f;
         while (timer < firstRecoveryTime)
         {
-            // Reverse throttle + steer
             float reverseThrottle = -0.5f;
             float steerInput = 0.2f;
             ApplyControlsToWheels(reverseThrottle, steerInput);
-
             timer += Time.deltaTime;
             yield return null;
         }
         Debug.Log("First recovery attempt complete. Checking movement...");
-
-        // --- Phase 2: Check if the rover is moving after 1 second ---
-        float checkDuration = 1f;        // Wait 1 second to see if it moves
+        float checkDuration = 1f;
         float checkTimer = 0f;
         Vector3 startPos = transform.position;
-
         while (checkTimer < checkDuration)
         {
             checkTimer += Time.deltaTime;
             yield return null;
         }
-
         float distanceMoved = Vector3.Distance(transform.position, startPos);
-        if (distanceMoved < 1.5f) // threshold for "moved enough"
+        if (distanceMoved < 1.5f)
         {
-            // --- Phase 3: Still stuck, attempt a second recovery ---
             Debug.Log("Rover still stuck. Attempting second recovery maneuver.");
-            float secondRecoveryTime = 4f; // Maybe a bit longer
+            float secondRecoveryTime = 4f;
             float secondTimer = 0f;
             while (secondTimer < secondRecoveryTime)
             {
-                // Reverse throttle + steer the other way, for example
                 float reverseThrottle = -0.5f;
-                float steerInput = -0.2f; 
+                float steerInput = -0.2f;
                 ApplyControlsToWheels(reverseThrottle, steerInput);
-
                 secondTimer += Time.deltaTime;
                 yield return null;
             }
@@ -357,25 +365,24 @@ public class CarControl : MonoBehaviour
         {
             Debug.Log("Rover moved sufficiently after first recovery attempt. Resuming normal behavior.");
         }
-
         inRecovery = false;
     }
+
     void OnCollisionEnter(Collision collision)
     {
-      if (collision.gameObject.layer == LayerMask.NameToLayer("Rock"))
-      {
-        if (!inRecovery)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Rock"))
         {
-            Debug.Log("Collision with rock detected. Starting recovery maneuver.");
-            StartCoroutine(RecoveryManeuver());
+            if (!inRecovery)
+            {
+                Debug.Log("Collision with rock detected. Starting recovery maneuver.");
+                StartCoroutine(RecoveryManeuver());
+            }
         }
-      }
     }
+
     public void GemDetected()
     {
-        float currentTime = Time.time;  // Get the current time
-
-        // If this is the first gem or the previous window has expired, start a new window.
+        float currentTime = Time.time;
         if (lastGemTime < 0f || currentTime - lastGemTime > gemDetectionWindow)
         {
             gemCount = 1;
@@ -383,40 +390,174 @@ public class CarControl : MonoBehaviour
         }
         else
         {
-            // Otherwise, we're still within the current 2-second window.
             gemCount++;
         }
-        
         Debug.Log($"Gem detected! gemCount = {gemCount}");
-
-        // If the gem count meets or exceeds the required count, trigger inner circle scan.
         if (gemCount >= requiredGemCount)
         {
             TriggerInnerCircleScan();
-            // Reset the gem detection variables so we start fresh for the next batch.
             gemCount = 0;
             lastGemTime = -1f;
         }
     }
+
     void TriggerInnerCircleScan()
     {
         Debug.Log("Triggering Inner Circle Scan!");
-        
-        // Save the current (normal) scanning parameters so we can revert later.
         normalHomeBase = homeBasePosition;
         normalRadius = currentRadius;
-        
-        // Set the home base to the current position (or gem position, if desired)
         homeBasePosition = transform.position;
-        
-        // Set the inner circle radius (e.g., 10% of maxRadius)
         currentRadius = maxRadius * innerCircleFactor;
-        
-        // Reset the angle to start a new circle
         currentAngle = 0f;
-        
-        // Indicate that we are in inner circle mode.
         innerCircleMode = true;
+        innerCircleLapsCompleted = 0; // Reset lap count
+    }
+    //get as much sunligh as possible
+    public void SunlightAIUpdate()
+    {
+        // Get current sunlight darkness percentage
+        float currentDarkness = GetSunlightDarknessPercentage();
+        
+        // Store the darkness value for comparison in next frame
+        if (!isInitialized)
+        {
+            lastDarknessPercentage = currentDarkness;
+            isInitialized = true;
+            return;
+        }
+        
+        // Determine whether we're moving toward darker area
+        bool movingToDarkerArea = currentDarkness > lastDarknessPercentage + darknessTolerance;
+        
+        // Track our target position
+        Vector3 targetPosition;
+        
+        // If we're moving to a darker area, adjust direction
+        if (movingToDarkerArea)
+        {
+            // Change direction by adjusting our heading
+            // We'll use a simple strategy of turning by a fixed angle
+            currentAngle += adjustmentAngle;
+            Debug.Log($"Moving to darker area (prev: {lastDarknessPercentage:F2}%, current: {currentDarkness:F2}%). Adjusting direction.");
+            
+            // Reset avoidance state if we were avoiding something
+            avoidingRock = false;
+        }
+        else
+        {
+            // Keep moving in current direction, but check for obstacles
+            if (!avoidingRock)
+            {
+                // Check if a rock is detected on our path
+                Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
+                if (rockAvoidanceOffset != Vector3.zero)
+                {
+                    // Rock detected: set avoidance mode
+                    avoidingRock = true;
+                    avoidanceTarget = transform.position + rockAvoidanceOffset;
+                    Debug.Log("Rock detected. Switching to avoidance mode.");
+                }
+            }
+            else
+            {
+                // If we're already avoiding a rock, check if we've cleared it
+                if (Vector3.Distance(transform.position, avoidanceTarget) < avoidanceThreshold)
+                {
+                    avoidingRock = false;
+                    Debug.Log("Avoidance complete. Resuming sunlight-seeking.");
+                }
+            }
+        }
+        
+        // Calculate our target position based on current angle and state
+        if (avoidingRock)
+        {
+            targetPosition = avoidanceTarget;
+        }
+        else
+        {
+            // Calculate target position in forward direction
+            float angleRad = currentAngle * Mathf.Deg2Rad;
+            targetPosition = transform.position + new Vector3(
+                Mathf.Sin(angleRad),
+                0f,
+                Mathf.Cos(angleRad)
+            ) * forwardDistance;
+        }
+        
+        // Calculate steering and throttle toward the target position
+        Vector3 toTarget = targetPosition - transform.position;
+        toTarget.y = 0; // Ignore height differences
+        
+        Vector3 localTarget = transform.InverseTransformPoint(targetPosition);
+        float steerAmount = Mathf.Clamp(localTarget.x / 5f, -1f, 1f);
+        float distanceToTarget = toTarget.magnitude;
+        float throttleAmount = Mathf.Clamp01(distanceToTarget / 10f);
+        
+        // Apply a maximum throttle limit for safety
+        float maxThrottleLimit = 0.5f; // 50% throttle max
+        throttleAmount = Mathf.Min(throttleAmount, maxThrottleLimit);
+        
+        // Handle rock avoidance maneuvers
+        if (lastRockDistance < 5f)
+        {
+            // If the rock is extremely close, trigger a reverse maneuver if not already in one
+            if (!inReverseManeuver)
+            {
+                Debug.Log("Rock extremely close. Initiating reverse maneuver.");
+                StartCoroutine(ReverseManeuver());
+            }
+            return;
+        }
+        else if (lastRockDistance < 15f)
+        {
+            Debug.Log("Rock detected at moderate range. Reducing throttle.");
+            throttleAmount *= 0.5f; // Reduce throttle by half
+        }
+        
+        // Apply controls to the wheels
+        ApplyControlsToWheels(throttleAmount, steerAmount);
+        
+        // Update the last darkness value for the next frame
+        lastDarknessPercentage = currentDarkness;
+        
+        // Debug visualization
+        Debug.DrawLine(transform.position, targetPosition, Color.yellow);
+    }
+
+    // Helper method to get the sunlight darkness percentage
+    private float GetSunlightDarknessPercentage()
+    {
+        if (startupSpawner != null)
+        {
+            // Access dust_coloring using reflection since it's private
+            System.Reflection.FieldInfo fieldInfo = typeof(StartupSpawner).GetField("dust_coloring", 
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            
+            if (fieldInfo != null)
+            {
+                Color dustColor = (Color)fieldInfo.GetValue(startupSpawner);
+                
+                // Calculate perceived brightness using standard luminance formula
+                float brightness = 0.299f * dustColor.r + 0.587f * dustColor.g + 0.114f * dustColor.b;
+                
+                // Invert the scale (0 = bright = 0% darkness, 1 = dark = 100% darkness)
+                float darknessPercentage = (1f - brightness) * 100f;
+                
+                // Log once per second using a timer
+                logTimer += Time.deltaTime;
+                if (logTimer >= logInterval)
+                {
+                    Debug.Log($"Dust color: R:{dustColor.r:F2}, G:{dustColor.g:F2}, B:{dustColor.b:F2}");
+                    Debug.Log($"Sunlight darkness: {darknessPercentage:F2}%");
+                    logTimer = 0f;
+                }
+                
+                return darknessPercentage;
+            }
+        }
+        
+        return 50f; // Default value if we can't get the actual darkness
     }
     void ApplyControlsToWheels(float throttleInput, float steerInput)
     {

@@ -2275,6 +2275,10 @@ PrefabInstance:
       propertyPath: marsTerrainPrefab
       value: 
       objectReference: {fileID: 445007612}
+    - target: {fileID: 3115567565874063193, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_Name
       value: SimulationPrefab
