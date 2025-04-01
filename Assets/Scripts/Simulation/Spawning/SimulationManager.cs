@@ -156,6 +156,6 @@ public class SimulationManager : MonoBehaviour
     }
 
     private bool IsValidRowCol(int row, int col){
-        return (row >= 1 && row <= MAX_ROW) && (col >= 1 && col <= MAX_COL);
+        return (row >= 0 && row < MAX_ROW) && (col >= 0 && col <= MAX_COL);
     }
 }
