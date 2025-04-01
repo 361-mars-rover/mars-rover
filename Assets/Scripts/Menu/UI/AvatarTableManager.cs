@@ -11,10 +11,19 @@ public class AvatarTableManager : MonoBehaviour
 
     void Start()
     {
-        PopulateTable();
-        Debug.Log("Adding a test avatar");
-        avatars.Add(new Avatar());
-        avatars.ElementAt<Avatar>(0).Description = "testing avatars";
+        // PopulateTable();
+        Debug.Log("Adding a test avatars");
+        AddFakeData();
+    }
+
+    // Written by Jikael... Just for testing that data can be sent to SimulationManager...
+    void AddFakeData(){
+        for (int i = 0; i < 3; i++){
+            Avatar a = new Avatar();
+            a.Description = $"Avatar {i}";
+            a.SpawnRowCol = new Vector2Int(i,i);
+            avatars.Add(a);
+        }
     }
 
     void CreateAvatar(){
