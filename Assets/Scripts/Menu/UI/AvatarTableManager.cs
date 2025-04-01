@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 public class AvatarTableManager : MonoBehaviour
 {
     public GameObject togglePrefab;
-    public List<Avatar> avatars;
+    public static List<Avatar> avatars = new List<Avatar>();
     private Avatar currentAvatar;
 
     void Start()
     {
         PopulateTable();
+        Debug.Log("Adding a test avatar");
+        avatars.Add(new Avatar());
+        avatars.ElementAt<Avatar>(0).Description = "testing avatars";
     }
 
     void CreateAvatar(){

@@ -22,6 +22,8 @@ public class SimulationManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("Printing existing avatars:...");
+        AvatarTableManager.avatars.ForEach(x => Debug.Log(x.Description));
         Debug.Log("printing row col pairs");
         foreach (Vector2 row_col  in TileIndices){
             Debug.Log(row_col);
