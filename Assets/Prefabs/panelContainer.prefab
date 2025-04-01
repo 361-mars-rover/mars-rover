@@ -122,6 +122,7 @@ MonoBehaviour:
   title: {fileID: 6246764977038296961}
   nextButton: {fileID: 0}
   prevButton: {fileID: 0}
+  simulationManager: {fileID: 3671341935713382957, guid: b58adddbcbcd64070a9e39ba7d79f846, type: 3}
 --- !u!1001 &630570199136588245
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,9 +20,9 @@ public class FirebaseManager : MonoBehaviour
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public static void StoreMaterialData(GameObject mineral)
+    public static void StoreMaterialData(GameObject mineral, string carId)
     {
-        DatabaseReference newMineralRef = dbReference.Child("materials").Child(CarControl.id).Push(); 
+        DatabaseReference newMineralRef = dbReference.Child("materials").Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{

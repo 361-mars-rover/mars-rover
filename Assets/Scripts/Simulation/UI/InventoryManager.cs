@@ -18,7 +18,8 @@ public class InventoryManager : MonoBehaviour
     private int mineralsPerPage = 5;
 
     private DatabaseReference materialsRef; // Firebase reference for minerals
-    private string currentCarId = ""; // Store the current car ID to detect changes
+    public SimulationManager simulationManager; // Reference to the simulation manager
+    private string currentCarId; // Store the current car ID to detect changes
 
     void Start()
     {
@@ -27,6 +28,8 @@ public class InventoryManager : MonoBehaviour
         title.SetActive(false);
         nextButton.gameObject.SetActive(false);
         prevButton.gameObject.SetActive(false);
+        simulationManager = FindObjectOfType<SimulationManager>();
+        currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
 
         // Initialize Firebase reference only when car ID is available
         UpdateCarReference();
@@ -49,7 +52,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(CarControl.id))
         {
-            currentCarId = CarControl.id;
             materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
 
             Debug.Log($"Updated Firebase reference to car ID: {currentCarId}");
@@ -69,13 +71,13 @@ public class InventoryManager : MonoBehaviour
     // Fetch minerals from Firebase and listen for changes
     public void FetchMinerals()
     {
+        Debug.Log("Current rover:" + currentCarId);
         if (string.IsNullOrEmpty(currentCarId))
         {
             Debug.LogError("Cannot fetch minerals: Car ID is not set.");
             return;
         }
 
-        Debug.Log("Opening inventory...");
         panelContainer.gameObject.SetActive(true);
         title.SetActive(true);
 
@@ -85,8 +87,6 @@ public class InventoryManager : MonoBehaviour
             materialsRef.ValueChanged -= OnMineralsChanged;
         }
 
-        // Listen for changes in real-time
-        Debug.Log("Fetching minerals from database...");
         materialsRef.ValueChanged += OnMineralsChanged;
     }
 
@@ -99,7 +99,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Database updated. Refreshing minerals...");
+
         mineralIds.Clear();  // Clear current data to refresh UI
         ClearPanel(); // Remove old entries
 
@@ -114,7 +114,6 @@ public class InventoryManager : MonoBehaviour
                 mineralIds.Add((mineralId, positionX, positionZ));
             }
 
-            Debug.Log("Minerals updated successfully!");
             UpdatePagination(); // Refresh the UI with the updated minerals without changing the current page
         }
         else
