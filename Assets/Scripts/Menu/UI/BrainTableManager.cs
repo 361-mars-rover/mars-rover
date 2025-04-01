@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class BrainTableManager : MonoBehaviour
 {
     public GameObject togglePrefab;
-    public List<Brain> Brain;
+    public List<Brain> brains;
 
     void Start()
     {
@@ -36,5 +36,10 @@ public class BrainTableManager : MonoBehaviour
         {
             Debug.Log("Toggle On: " + changedToggle.GetComponentInChildren<Text>().text);
         }
+    }
+
+    public List<Brain> getBrains()
+    {
+        return brains;
     }
 }

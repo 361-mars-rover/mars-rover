@@ -56,4 +56,9 @@ public class AvatarTableManager : MonoBehaviour
             Debug.Log("Toggle On: " + changedToggle.GetComponentInChildren<Text>().text);
         }
     }
+
+    public List<Avatar> getAvatars()
+    {
+        return avatars;
+    }
 }

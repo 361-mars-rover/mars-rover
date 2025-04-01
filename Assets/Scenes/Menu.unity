@@ -393,10 +393,10 @@ RectTransform:
   - {fileID: 1411376203}
   m_Father: {fileID: 593899985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -34.740005}
-  m_SizeDelta: {x: 690.03, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &59903471
 MonoBehaviour:
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start Simulation
+  m_text: Set Spawn Point(s)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
@@ -1627,10 +1627,10 @@ RectTransform:
   - {fileID: 1779341019}
   m_Father: {fileID: 593899985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 690.03, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &327360740
 MonoBehaviour:
@@ -1790,7 +1790,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select Avatar
+  m_text: Select Rover
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8615465547928364fb41d0672c415ea0, type: 2}
   m_sharedMaterial: {fileID: 7853236253713521455, guid: 8615465547928364fb41d0672c415ea0, type: 2}
@@ -2297,7 +2297,7 @@ GameObject:
   - component: {fileID: 440440259}
   - component: {fileID: 440440262}
   m_Layer: 5
-  m_Name: Select Avatar Table
+  m_Name: SelectRoverTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2626,7 +2626,7 @@ GameObject:
   - component: {fileID: 536072776}
   - component: {fileID: 536072779}
   m_Layer: 5
-  m_Name: TableManager
+  m_Name: BrainTableManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3207,8 +3207,9 @@ GameObject:
   - component: {fileID: 593899988}
   - component: {fileID: 593899987}
   - component: {fileID: 593899986}
+  - component: {fileID: 593899989}
   m_Layer: 5
-  m_Name: Container
+  m_Name: AvatarTableManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3235,7 +3236,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.000034332275, y: -0.0000076293945}
-  m_SizeDelta: {x: 0, y: 34.740005}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &593899986
 MonoBehaviour:
@@ -3283,6 +3284,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593899984}
   m_CullTransparentMesh: 1
+--- !u!114 &593899989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593899984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcf0154dc4514ac0b1d9f5f88761637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  togglePrefab: {fileID: 0}
 --- !u!1 &604483873
 GameObject:
   m_ObjectHideFlags: 0
@@ -3466,7 +3480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &710116165
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3546,10 +3560,10 @@ RectTransform:
   - {fileID: 1556811167}
   m_Father: {fileID: 593899985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -11.580002}
-  m_SizeDelta: {x: 690.03, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &745885319
 MonoBehaviour:
@@ -4418,10 +4432,10 @@ RectTransform:
   - {fileID: 1554105520}
   m_Father: {fileID: 593899985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -23.160004}
-  m_SizeDelta: {x: 690.03, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &833574254
 MonoBehaviour:
@@ -6379,7 +6393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMin.x
@@ -6387,15 +6401,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 690.03
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_LocalScale.x
@@ -6962,7 +6976,7 @@ GameObject:
   - component: {fileID: 1322281152}
   - component: {fileID: 1322281151}
   m_Layer: 5
-  m_Name: Rovers
+  m_Name: Avatars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7321,7 +7335,7 @@ GameObject:
   - component: {fileID: 1366362896}
   - component: {fileID: 1366362894}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: ScrollableRect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7781,8 +7795,9 @@ GameObject:
   - component: {fileID: 1477643285}
   - component: {fileID: 1477643286}
   - component: {fileID: 1477643287}
+  - component: {fileID: 1477643288}
   m_Layer: 5
-  m_Name: TableManager
+  m_Name: RoverTableManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7854,6 +7869,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1477643288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477643282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15405c67c5539434a909ae3309ec0a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  togglePrefab: {fileID: 0}
 --- !u!1 &1492075440
 GameObject:
   m_ObjectHideFlags: 0
@@ -8835,7 +8863,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1611887905
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9282,7 +9310,7 @@ GameObject:
   - component: {fileID: 1666736073}
   - component: {fileID: 1666736075}
   m_Layer: 5
-  m_Name: Select Avatar
+  m_Name: Select Rover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9511,7 +9539,7 @@ GameObject:
   - component: {fileID: 1712591841}
   - component: {fileID: 1712591844}
   m_Layer: 5
-  m_Name: Rovers Table
+  m_Name: AvatarsTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10024,7 +10052,7 @@ GameObject:
   - component: {fileID: 1764203344}
   - component: {fileID: 1764203347}
   m_Layer: 5
-  m_Name: Select Brain Table
+  m_Name: SelectBrainTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12008,7 +12036,7 @@ GameObject:
   - component: {fileID: 2139019135}
   - component: {fileID: 2139019134}
   m_Layer: 5
-  m_Name: StartSimulationButton
+  m_Name: SetSpawnPointsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12056,7 +12084,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0.18431373}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.18431373}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.4117647}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0.34901962}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -12154,7 +12182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMin.x
@@ -12162,15 +12190,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 690.03
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1452718797499724832, guid: 00971eaa01c9bfe4a9bb93c01b431982, type: 3}
       propertyPath: m_LocalPosition.x

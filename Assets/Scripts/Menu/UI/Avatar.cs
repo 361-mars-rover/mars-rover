@@ -3,14 +3,12 @@ using UnityEngine;
 
 public class Avatar
 {
-    public string ID;
+    Rover rover;
+    Brain brain;
+    public int ID;
     public string Name;
     public string Description;
-    public Vector2Int row_col;
 
-    public Brain brain;
+    // ** Need to add Tile Coordinates **
 
-    public Avatar(){
-        ID = Guid.NewGuid().ToString();
-    }
 }
