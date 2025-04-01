@@ -48,14 +48,14 @@ public class FirebaseManager : MonoBehaviour
 
 // rover data model
 [System.Serializable]
-public class Rover
+public class AvatarData
 {
-    public string avatar;
+    public string rover;
     public string brain;
     
-    public Rover(string avatar, string brain)
+    public AvatarData(string rover, string brain)
     {
-        this.avatar = avatar;
+        this.rover = rover;
         this.brain = brain;
     }
 }
