@@ -9,7 +9,7 @@ public class WheelControl : MonoBehaviour
     public bool motorized;
     
     public float motorTorque = 2000f;
-    public float steerAngle = 30f;
+    public float steerAngle = 50f;
     public float brakeTorque = 3000f;
     public float rollingResistance = 5f;
     public float dragCoefficient = 0.3f;
