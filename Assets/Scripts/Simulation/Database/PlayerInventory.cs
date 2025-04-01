@@ -10,6 +10,15 @@ public class PlayerInventory : MonoBehaviour
 
     public void MineralCollected(GameObject mineral)
     {
+        CarControl car = Object.FindFirstObjectByType<CarControl>();
+        if (car != null && !car.innerCircleMode)
+        {
+            car.GemDetected();
+        }
+        else
+        {
+            Debug.LogError("CarControl not found!");
+        }
         Minerals.Add(mineral);
         NumberOfMinerals++;
 

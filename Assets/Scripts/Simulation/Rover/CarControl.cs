@@ -44,12 +44,14 @@ public class CarControl : MonoBehaviour
     public float gemDetectionWindow = 2f;  // 2 seconds
     public int requiredGemCount = 1;       // 3 gems
     public float innerCircleFactor = 0.1f; // 10% of maxRadius
-    private bool innerCircleMode = false;   // Indicates if we are doing an inner circle scan
+    public bool innerCircleMode = false;   // Indicates if we are doing an inner circle scan
     private Vector3 normalHomeBase;         // To backup the normal home base
     private float normalRadius;             // To backup the normal currentRadius
     private float lastGemTime = -1f;  // Stores the time of the first gem in the current window
-
-
+    private int innerCircleLapsCompleted = 0;
+    public int totalInnerCircleLaps = 10;
+    private float lastRockDistance = Mathf.Infinity;
+    private bool inReverseManeuver = false;
     void Awake()
     {
         Time.fixedDeltaTime = 0.01f; // Smaller value for more precise physics
@@ -170,19 +172,29 @@ public class CarControl : MonoBehaviour
         currentAngle += circleSpeed * Time.deltaTime;
         if (currentAngle >= 360f)
         {
-                currentAngle = 0f;
-                if (innerCircleMode)
+            currentAngle = 0f;
+            if (innerCircleMode)
             {
-                // Inner circle scan is complete.
-                innerCircleMode = false;
-                // Restore the normal scanning parameters.
-                homeBasePosition = normalHomeBase;
-                currentRadius = normalRadius;
-                Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
+                innerCircleLapsCompleted++;
+                Debug.Log("Inner circle lap " + innerCircleLapsCompleted + " completed.");
+                if (innerCircleLapsCompleted >= totalInnerCircleLaps)
+                {
+                    // Inner circle scan complete. Restore normal parameters.
+                    innerCircleMode = false;
+                    innerCircleLapsCompleted = 0;
+                    homeBasePosition = normalHomeBase;
+                    currentRadius = normalRadius;
+                    Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
+                }
+                else
+                {
+                    // Optionally, increase the inner circle radius slightly per lap if desired.
+                    // currentRadius += someIncrement;
+                }
             }
             else
             {
-                // Normal mode: Increase radius until max is reached.
+                // Normal mode: Increase radius until max is reached, then shift home base.
                 if (currentRadius < maxRadius)
                 {
                     currentRadius += maxRadius * radiusIncrement;
@@ -190,16 +202,13 @@ public class CarControl : MonoBehaviour
                 }
                 else
                 {
-                    // Once the circle at maximum radius is complete, shift the home base.
                     Vector3 newBase = homeBasePosition + Vector3.right * (2 * currentRadius);
                     homeBasePosition = newBase;
                     Debug.Log("New home base set at: " + homeBasePosition);
-                    // Reset the circle parameters for a new exploration.
                     currentRadius = maxRadius * radiusIncrement;
                 }
             }
         }
-
         // Calculate steering and throttle toward the (possibly adjusted) target position.
         Vector3 toTarget = targetPosition - transform.position;
         toTarget.y = 0; // Ignore height differences
@@ -210,7 +219,23 @@ public class CarControl : MonoBehaviour
         float throttleAmount = Mathf.Clamp01(distanceToTarget / 10f);
         float maxThrottleLimit = 0.5f; // 50% throttle max
         throttleAmount = Mathf.Min(throttleAmount, maxThrottleLimit);
-
+        if (lastRockDistance < 5f)
+        // 5f worked fine (it hits a bit still though)
+        {
+            // If the rock is extremely close, trigger a reverse maneuver if not already in one.
+            if (!inReverseManeuver)
+            {
+                Debug.Log("Rock extremely close. Initiating reverse maneuver.");
+                StartCoroutine(ReverseManeuver());
+            }
+            // Optionally, you can skip applying normal throttle this frame:
+            return;
+        }
+        else if (lastRockDistance < 15f)
+        {
+            Debug.Log("Rock detected at moderate range. Reducing throttle.");
+            throttleAmount *= 0.5f; // Reduce throttle by half
+        }
         ApplyControlsToWheels(throttleAmount, steerAmount);
 
         // Debug visualization: Draw the target position.
@@ -230,6 +255,7 @@ public class CarControl : MonoBehaviour
         // SphereCast returns true if it hits any rock within the detection distance
         if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayerMask))
         {
+            lastRockDistance = hit.distance;
             Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
             Vector3 rockPosition = hit.collider.transform.position;
             Vector3 toRock = rockPosition - transform.position;
@@ -237,7 +263,7 @@ public class CarControl : MonoBehaviour
 
             // Only avoid if the rock is almost directly ahead (within a narrow angle)
             float angleToRock = Vector3.Angle(transform.forward, toRock);
-            if(angleToRock > 20f) // adjust this threshold as needed
+            if(angleToRock > 25f) // adjust this threshold as needed
             {
                 // If the rock is off to the side, you might choose not to avoid it.
                 return Vector3.zero;
@@ -258,7 +284,25 @@ public class CarControl : MonoBehaviour
             return offset;
         }
         // Debug.Log("No rock detected via SphereCast.");
+        lastRockDistance = detectionDistance;
         return Vector3.zero;
+    }
+    IEnumerator ReverseManeuver()
+    {
+        inReverseManeuver = true;
+        float reverseDuration = 1f;  // Reverse for 1 second
+        float timer = 0f;
+        while (timer < reverseDuration)
+        {
+            // Apply reverse throttle and no steer (or slight steer if needed)
+            float reverseThrottle = -0.5f;
+            float steerInput = 0f;  // Adjust if you want a slight turn while reversing
+            ApplyControlsToWheels(reverseThrottle, steerInput);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        inReverseManeuver = false;
+        Debug.Log("Reverse maneuver complete. Resuming normal behavior.");
     }
     IEnumerator RecoveryManeuver()
     {
