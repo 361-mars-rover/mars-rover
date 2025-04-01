@@ -30,42 +30,11 @@ public class InventoryManager : MonoBehaviour
         prevButton.gameObject.SetActive(false);
         simulationManager = FindObjectOfType<SimulationManager>();
         currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
-
-        // Initialize Firebase reference only when car ID is available
-        UpdateCarReference();
+        materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
         prevButton.onClick.AddListener(PreviousPage);
-    }
-
-    void Update()
-    {
-        // Check if car ID has changed and update reference
-        if (CarControl.id != currentCarId)
-        {
-            UpdateCarReference();
-        }
-    }
-
-    private void UpdateCarReference()
-    {
-        if (!string.IsNullOrEmpty(CarControl.id))
-        {
-            materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
-
-            Debug.Log($"Updated Firebase reference to car ID: {currentCarId}");
-
-            // If inventory is open, refresh minerals
-            if (panelContainer.gameObject.activeSelf)
-            {
-                FetchMinerals();
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Car ID is not set yet.");
-        }
     }
 
     // Fetch minerals from Firebase and listen for changes
