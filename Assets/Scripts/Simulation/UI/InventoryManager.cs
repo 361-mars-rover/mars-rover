@@ -18,6 +18,8 @@ public class InventoryManager : MonoBehaviour
     private int mineralsPerPage = 5;
 
     private DatabaseReference materialsRef; // Firebase reference for minerals
+    public SimulationManager simulationManager; // Reference to the simulation manager
+    private string currentCarId; // Store the current car ID to detect changes
 
     void Start()
     {
@@ -26,9 +28,9 @@ public class InventoryManager : MonoBehaviour
         title.SetActive(false);
         nextButton.gameObject.SetActive(false);
         prevButton.gameObject.SetActive(false);
-
-        // Initialize Firebase reference once
-        materialsRef = FirebaseManager.dbReference.Child("materials").Child("0");
+        simulationManager = FindObjectOfType<SimulationManager>();
+        currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
+        materialsRef = FirebaseManager.dbReference.Child("materials").Child(currentCarId);
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
@@ -38,13 +40,23 @@ public class InventoryManager : MonoBehaviour
     // Fetch minerals from Firebase and listen for changes
     public void FetchMinerals()
     {
-        Debug.Log("Opening inventory...");
+        Debug.Log("Current rover:" + currentCarId);
+        if (string.IsNullOrEmpty(currentCarId))
+        {
+            Debug.LogError("Cannot fetch minerals: Car ID is not set.");
+            return;
+        }
+
         panelContainer.gameObject.SetActive(true);
         title.SetActive(true);
 
-        // Listen for changes in real-time
-        Debug.Log("Fetching minerals from database...");
-        materialsRef.ValueChanged += OnMineralsChanged; // Attach listener for real-time updates
+        // Remove previous listener if any
+        if (materialsRef != null)
+        {
+            materialsRef.ValueChanged -= OnMineralsChanged;
+        }
+
+        materialsRef.ValueChanged += OnMineralsChanged;
     }
 
     // Callback function for database changes (real-time)
@@ -56,7 +68,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Database updated. Refreshing minerals...");
+
         mineralIds.Clear();  // Clear current data to refresh UI
         ClearPanel(); // Remove old entries
 
@@ -71,7 +83,6 @@ public class InventoryManager : MonoBehaviour
                 mineralIds.Add((mineralId, positionX, positionZ));
             }
 
-            Debug.Log("Minerals updated successfully!");
             UpdatePagination(); // Refresh the UI with the updated minerals without changing the current page
         }
         else
@@ -137,7 +148,8 @@ public class InventoryManager : MonoBehaviour
             textComponent.gameObject.SetActive(true);
             float x = float.Parse(positionX);
             float z = float.Parse(positionZ);
-            textComponent.text = $"Mineral at ({x:F2}, {z:F2})";        }
+            textComponent.text = $"Mineral at ({x:F2}, {z:F2})";
+        }
         else
         {
             Debug.LogError("TextMeshProUGUI component not found!");

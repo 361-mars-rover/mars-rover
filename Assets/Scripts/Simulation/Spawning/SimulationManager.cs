@@ -16,6 +16,8 @@ public class SimulationManager : MonoBehaviour
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
     GameObject[] sims = new GameObject[9];
+    public int curIdx = 0;
+    public string[] roverIds = new string[9];
     Camera cur;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,6 +36,7 @@ public class SimulationManager : MonoBehaviour
             sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
             // sim.SetActive(true);
             sims[i] = sim;
+            roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
         }
         // SetActivity(simIdx: 1, active: false);
         // sims[0].SetActive(true);
@@ -135,6 +138,7 @@ public class SimulationManager : MonoBehaviour
     }
 
     private void SwitchSimulation(int simIdx){
+        curIdx = simIdx;
         // Don't switch if index hasnt changed
         if (simIdx == prevIdx){
             return;
