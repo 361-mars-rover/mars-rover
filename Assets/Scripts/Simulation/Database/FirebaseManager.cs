@@ -29,13 +29,21 @@ public class FirebaseManager : MonoBehaviour
     {
         if (isTerrainDataStored) return; 
         DatabaseReference terrainRef = dbReference.Child("Simulations").Child(simId).Child("MarsGeospatialData");
-        float pos_x = spawnTileRow * terrainWidth;
-        float pos_y = spawnTileCol * terrainLength;
+        float min_pos_x = spawnTileRow * terrainWidth;
+        float min_pos_y = spawnTileCol * terrainLength;
+        float max_pos_x = (spawnTileRow + 1) * terrainWidth;
+        float max_pos_y = (spawnTileCol + 1) * terrainLength;
         Debug.Log($"Terrain position: {spawnTileCol}, {spawnTileRow}");
 
         var terrainData = new Dictionary<string, object>{
-            {"Position X", pos_x},
-            {"Position Y", pos_y},
+            {"North-west X-coord", min_pos_x},
+            {"North-west Y-coord", max_pos_y},
+            {"North-east X-coord", max_pos_x},
+            {"North-east Y-coord", max_pos_y},
+            {"South-west X-coord", min_pos_x},
+            {"South-west Y-coord", min_pos_y},
+            {"South-east X-coord", max_pos_x},
+            {"South-east Y-coord", min_pos_y},
             {"Area length", terrainLength},
             {"Area Width", terrainWidth}
         };
