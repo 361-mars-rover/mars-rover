@@ -32,7 +32,7 @@ public class InventoryManager : MonoBehaviour
         simulationManager = FindObjectOfType<SimulationManager>();
         firebaseManager = FindObjectOfType<FirebaseManager>();
         currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
-        materialsRef = FirebaseManager.dbReference.Child("materials").Child(firebaseManager.simulationId).Child(currentCarId);
+        materialsRef = FirebaseManager.dbReference.Child("Simulations").Child(firebaseManager.simulationId).Child("Avatars").Child(currentCarId);
 
         // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
