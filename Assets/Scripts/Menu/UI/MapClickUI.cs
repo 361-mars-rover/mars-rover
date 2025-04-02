@@ -49,8 +49,8 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
             int tile_row = (int)(normalizedY * 128);
 
             // Assign to current avatar
-            avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(tile_row, tile_col);
-            Debug.Log($"Assigned to Avatar {currentAvatarIndex}: (Row {tile_row}, Col {tile_col})");
+            avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(tile_col, tile_row);
+            //Debug.Log($"Assigned to Avatar {currentAvatarIndex}: (Row {tile_row}, Col {tile_col})");
 
             GameObject dot = new GameObject("Dot");
             dot.transform.SetParent(rectTransform, false);
