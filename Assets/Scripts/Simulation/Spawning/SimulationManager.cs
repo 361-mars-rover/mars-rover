@@ -22,13 +22,30 @@ public class SimulationManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("printing row col pairs");
-        foreach (Vector2 row_col  in TileIndices){
-            Debug.Log(row_col);
-        }
-        for (int i = 0; i < TileIndices.Length; i++){
-            int row = TileIndices[i].x;
-            int col = TileIndices[i].y; 
+        Debug.Log("Printing existing avatars:...");
+        // AvatarTableManager.avatars.ForEach(x => Debug.Log(x.Description));
+        // Debug.Log("printing row col pairs");
+        // foreach (Vector2 row_col  in TileIndices){
+        //     Debug.Log(row_col);
+        // }
+        // for (int i = 0; i < TileIndices.Length; i++){
+        //     int row = TileIndices[i].x;
+        //     int col = TileIndices[i].y; 
+        //     if (!IsValidRowCol(row, col)){
+        //         Debug.LogError($"Row col pair {row},{col} is invalid");
+        //     }
+        //     GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
+        //     sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
+        //     // sim.SetActive(true);
+        //     sims[i] = sim;
+        //     roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
+        // }
+
+        for (int i = 0; i < AvatarTableManager.avatars.Count; i++){
+            Avatar a = AvatarTableManager.avatars[i];
+            Debug.Log($"Setting up simulation for rover {a.Description}");
+            int row = a.SpawnRowCol.y;
+            int col = a.SpawnRowCol.x;
             if (!IsValidRowCol(row, col)){
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
@@ -38,6 +55,7 @@ public class SimulationManager : MonoBehaviour
             sims[i] = sim;
             roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
         }
+
         // SetActivity(simIdx: 1, active: false);
         // sims[0].SetActive(true);
         SetActivity(simIdx: 0, active: true);
@@ -70,7 +88,7 @@ public class SimulationManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
-            simIdx = Math.Min(prevIdx+1, TileIndices.Length - 1);
+            simIdx = Math.Min(prevIdx+1, AvatarTableManager.avatars.Count - 1);
             Debug.Log($"sim index set to {simIdx}");
             // Debug.Log($"Sim length is ${sims.Length}");
             SwitchSimulation(simIdx);
@@ -156,6 +174,6 @@ public class SimulationManager : MonoBehaviour
     }
 
     private bool IsValidRowCol(int row, int col){
-        return (row >= 1 && row <= MAX_ROW) && (col >= 1 && col <= MAX_COL);
+        return (row >= 0 && row < MAX_ROW) && (col >= 0 && col <= MAX_COL);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Avatar
@@ -8,6 +9,6 @@ public class Avatar
     public string Name;
     public string Description;
 
-    // ** Need to add Tile Coordinates **
+    public Vector2Int SpawnRowCol;
 
 }
