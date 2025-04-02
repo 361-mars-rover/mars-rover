@@ -12,8 +12,8 @@ public class FirebaseManager : MonoBehaviour
     public string simulationId;
     void Start() {
         // Get the root reference location of the database.
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-        Debug.Log("firebase" + dbReference);
+        // dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        // Debug.Log("firebase" + dbReference);
     }
 
     void Awake()
@@ -23,9 +23,21 @@ public class FirebaseManager : MonoBehaviour
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
+    public static void StoreMarsTerrainData(string simId, float terrainWidth, float terrainLength) 
+    {
+        DatabaseReference terrainRef = dbReference.Child("Simulations").Child(simId).Child("MarsGeospatialData");
+
+        var terrainData = new Dictionary<string, object>{
+            {"Length", terrainLength},
+            {"Width", terrainWidth}
+        };
+
+        terrainRef.SetValueAsync(terrainData);
+    }
+
     public static void StoreMaterialData(GameObject mineral, string carId, string simId)
     {
-        DatabaseReference newMineralRef = dbReference.Child("materials").Child(simId).Child(carId).Push(); 
+        DatabaseReference newMineralRef = dbReference.Child("Simulations").Child(simId).Child("Avatars").Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{

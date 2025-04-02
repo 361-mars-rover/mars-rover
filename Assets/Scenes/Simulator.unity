@@ -1123,6 +1123,7 @@ MonoBehaviour:
   invisibleWall4: {fileID: 234963107}
   blurIterations: 2
   terrainIsLoaded: 0
+  firebaseManager: {fileID: 2099217467}
 --- !u!1 &1411949949
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,6 +1670,17 @@ MonoBehaviour:
   - {fileID: 1046077069658734051}
   - {fileID: 4774950037796701218}
   - {fileID: 26386546810657853}
+--- !u!114 &2099217467 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5742922775807658539, guid: 1513e401f20f24e59b62d86205856996, type: 3}
+  m_PrefabInstance: {fileID: 1809056906}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9671797c273444d954ff70afd52dad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2116938144
 PrefabInstance:
   m_ObjectHideFlags: 0

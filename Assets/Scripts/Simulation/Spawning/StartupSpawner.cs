@@ -52,6 +52,8 @@ public class StartupSpawner : MonoBehaviour
 
     // This is our local "root" for the entire simulation
     private Transform simulationRoot;
+    public FirebaseManager firebaseManager; // Reference to the Firebase manager
+
 
     public void SetRowCol(int row, int col){
         spawnTileRow = row;
@@ -62,6 +64,8 @@ public class StartupSpawner : MonoBehaviour
     {
         // 1. Store a reference to the SimulationPrefab’s transform
         simulationRoot = this.transform;
+        firebaseManager = FindObjectOfType<FirebaseManager>();
+
 
         ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * heightScale;
         car.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
@@ -85,6 +89,8 @@ public class StartupSpawner : MonoBehaviour
         StartCoroutine(DownloadDustTexture(spawnTileRow, spawnTileCol));
         StartCoroutine(SpawnCarDelay(chunkCenter));
         InitializeInvisibleWalls(TerrainWidth, TerrainLength, 120f);
+        FirebaseManager.StoreMarsTerrainData(firebaseManager.simulationId, TerrainWidth, TerrainLength);
+
     }
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
