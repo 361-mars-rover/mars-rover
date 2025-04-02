@@ -153,7 +153,7 @@ public class CarControl : MonoBehaviour
                 // Rock detected: set avoidance mode.
                 avoidingRock = true;
                 avoidanceTarget = transform.position + rockAvoidanceOffset;
-                Debug.Log("Rock detected. Switching to avoidance mode.");
+                //Debug.Log("Rock detected. Switching to avoidance mode.");
             }
         }
         else
@@ -163,7 +163,7 @@ public class CarControl : MonoBehaviour
             if (Vector3.Distance(transform.position, avoidanceTarget) < avoidanceThreshold)
             {
                 avoidingRock = false;
-                Debug.Log("Avoidance complete. Resuming circle path.");
+                //Debug.Log("Avoidance complete. Resuming circle path.");
             }
         }
 
@@ -178,7 +178,7 @@ public class CarControl : MonoBehaviour
                 // Restore the normal scanning parameters.
                 homeBasePosition = normalHomeBase;
                 currentRadius = normalRadius;
-                Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
+                //Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
             }
             else
             {
@@ -186,14 +186,14 @@ public class CarControl : MonoBehaviour
                 if (currentRadius < maxRadius)
                 {
                     currentRadius += maxRadius * radiusIncrement;
-                    Debug.Log("Increasing circle radius to: " + currentRadius);
+                    //Debug.Log("Increasing circle radius to: " + currentRadius);
                 }
                 else
                 {
                     // Once the circle at maximum radius is complete, shift the home base.
                     Vector3 newBase = homeBasePosition + Vector3.right * (2 * currentRadius);
                     homeBasePosition = newBase;
-                    Debug.Log("New home base set at: " + homeBasePosition);
+                    //Debug.Log("New home base set at: " + homeBasePosition);
                     // Reset the circle parameters for a new exploration.
                     currentRadius = maxRadius * radiusIncrement;
                 }
@@ -230,7 +230,7 @@ public class CarControl : MonoBehaviour
         // SphereCast returns true if it hits any rock within the detection distance
         if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayerMask))
         {
-            Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
+            //Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
             Vector3 rockPosition = hit.collider.transform.position;
             Vector3 toRock = rockPosition - transform.position;
             toRock.y = 0f;  // Ignore vertical differences
@@ -254,7 +254,7 @@ public class CarControl : MonoBehaviour
             float avoidanceMagnitude = 5f; // Tweak this to determine how far to steer away.
 
             Vector3 offset = avoidanceDirection * avoidanceMagnitude * avoidanceStrength;
-            Debug.Log($"Calculated avoidance offset: {offset}");
+            //Debug.Log($"Calculated avoidance offset: {offset}");
             return offset;
         }
         // Debug.Log("No rock detected via SphereCast.");
