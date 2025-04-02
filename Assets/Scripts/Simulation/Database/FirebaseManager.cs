@@ -10,32 +10,41 @@ public class FirebaseManager : MonoBehaviour
     public static DatabaseReference dbReference;
     private bool isFirebaseInitialized = false;
     public string simulationId;
+    public bool isTerrainDataStored = false;
     void Start() {
         // Get the root reference location of the database.
         // dbReference = FirebaseDatabase.DefaultInstance.RootReference;
         // Debug.Log("firebase" + dbReference);
+        simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     void Awake()
     {
         // create sim id based on date
-        simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        
     }
 
-    public static void StoreMarsTerrainData(string simId, float terrainWidth, float terrainLength) 
+    public void StoreMarsTerrainData(string simId, float terrainWidth, float terrainLength, float spawnTileRow, float spawnTileCol) 
     {
+        if (isTerrainDataStored) return; 
         DatabaseReference terrainRef = dbReference.Child("Simulations").Child(simId).Child("MarsGeospatialData");
+        float pos_x = spawnTileRow * terrainWidth;
+        float pos_y = spawnTileCol * terrainLength;
+        Debug.Log($"Terrain position: {spawnTileCol}, {spawnTileRow}");
 
         var terrainData = new Dictionary<string, object>{
-            {"Length", terrainLength},
-            {"Width", terrainWidth}
+            {"Position X", pos_x},
+            {"Position Y", pos_y},
+            {"Area length", terrainLength},
+            {"Area Width", terrainWidth}
         };
 
         terrainRef.SetValueAsync(terrainData);
+        isTerrainDataStored = true; 
     }
 
-    public static void StoreMaterialData(GameObject mineral, string carId, string simId)
+    public void StoreMaterialData(GameObject mineral, string carId, string simId)
     {
         DatabaseReference newMineralRef = dbReference.Child("Simulations").Child(simId).Child("Avatars").Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{

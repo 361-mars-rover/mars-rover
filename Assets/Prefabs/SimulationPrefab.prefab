@@ -1541,6 +1541,7 @@ MonoBehaviour:
   invisibleWall4: {fileID: 0}
   blurIterations: 2
   terrainIsLoaded: 0
+  firebaseManager: {fileID: 5742922775807658539, guid: 1513e401f20f24e59b62d86205856996, type: 3}
 --- !u!1 &2625262542548834527
 GameObject:
   m_ObjectHideFlags: 0
