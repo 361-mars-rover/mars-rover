@@ -52,6 +52,8 @@ public class StartupSpawner : MonoBehaviour
 
     // This is our local "root" for the entire simulation
     private Transform simulationRoot;
+    public FirebaseManager firebaseManager; // Reference to the Firebase manager
+
 
     public void SetRowCol(int row, int col){
         spawnTileRow = row;
@@ -85,6 +87,9 @@ public class StartupSpawner : MonoBehaviour
         StartCoroutine(DownloadDustTexture(spawnTileRow, spawnTileCol));
         StartCoroutine(SpawnCarDelay(chunkCenter));
         InitializeInvisibleWalls(TerrainWidth, TerrainLength, 120f);
+        firebaseManager.StoreMarsTerrainData(firebaseManager.simulationId, TerrainWidth, TerrainLength, 
+            spawnTileRow, spawnTileCol);
+
     }
 
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)

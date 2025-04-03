@@ -10,22 +10,51 @@ public class FirebaseManager : MonoBehaviour
     public static DatabaseReference dbReference;
     private bool isFirebaseInitialized = false;
     public string simulationId;
+    public bool isTerrainDataStored = false;
     void Start() {
         // Get the root reference location of the database.
+        // dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        // Debug.Log("firebase" + dbReference);
+        simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-        Debug.Log("firebase" + dbReference);
     }
 
     void Awake()
     {
         // create sim id based on date
-        simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        
     }
 
-    public static void StoreMaterialData(GameObject mineral, string carId, string simId)
+    public void StoreMarsTerrainData(string simId, float terrainWidth, float terrainLength, float spawnTileRow, float spawnTileCol) 
     {
-        DatabaseReference newMineralRef = dbReference.Child("materials").Child(simId).Child(carId).Push(); 
+        if (isTerrainDataStored) return; 
+        DatabaseReference terrainRef = dbReference.Child("Simulations").Child(simId).Child("MarsGeospatialData");
+        float min_pos_x = spawnTileRow * terrainWidth;
+        float min_pos_y = spawnTileCol * terrainLength;
+        float max_pos_x = (spawnTileRow + 1) * terrainWidth;
+        float max_pos_y = (spawnTileCol + 1) * terrainLength;
+        Debug.Log($"Terrain position: {spawnTileCol}, {spawnTileRow}");
+
+        var terrainData = new Dictionary<string, object>{
+            {"North-west X-coord", min_pos_x},
+            {"North-west Y-coord", max_pos_y},
+            {"North-east X-coord", max_pos_x},
+            {"North-east Y-coord", max_pos_y},
+            {"South-west X-coord", min_pos_x},
+            {"South-west Y-coord", min_pos_y},
+            {"South-east X-coord", max_pos_x},
+            {"South-east Y-coord", min_pos_y},
+            {"Area length", terrainLength},
+            {"Area Width", terrainWidth}
+        };
+
+        terrainRef.SetValueAsync(terrainData);
+        isTerrainDataStored = true; 
+    }
+
+    public void StoreMaterialData(GameObject mineral, string carId, string simId)
+    {
+        DatabaseReference newMineralRef = dbReference.Child("Simulations").Child(simId).Child("Avatars").Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{
