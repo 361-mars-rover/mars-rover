@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,7 +10,6 @@ public class StartupSpawner : MonoBehaviour
     public GameObject marsTerrain;
     public GameObject dustCloudPrefab;
     public Texture2D mineralTexture;
-    public ObjectSpawner mineralSpawner;
 
     // Terrain generation variables
 
@@ -27,7 +27,6 @@ public class StartupSpawner : MonoBehaviour
     private int spawnTileRow = 10;
     private int spawnTileCol = 10;
 
-    private float scaleFactor = 1f;
     private float heightScale = 0.0025f;
     public int blurIterations = 2;
     private const float MIN_ELEVATION = -8000f;
@@ -66,7 +65,7 @@ public class StartupSpawner : MonoBehaviour
         simulationRoot = this.transform;
 
         ELEVATION_RANGE = (MAX_ELEVATION - MIN_ELEVATION) * heightScale;
-        car.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+
 
         // 2. Compute how large each tile should be in meters (or Unity units).
         TerrainWidth  = GetTileSpan() / 100;
@@ -77,7 +76,10 @@ public class StartupSpawner : MonoBehaviour
         Debug.Log("Getting initial tiles");
 
         // 3. Initialize terrain in local coordinates
-        Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
+        // Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
+        this.AddComponent<TerrainSpawner>().Init(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+        // TerrainSpawner.Init(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+
 
         // Example local chunk center for spawning the car
         Vector3 chunkCenter = new Vector3(0, 100000f, 0); // Local coords
@@ -95,7 +97,7 @@ public class StartupSpawner : MonoBehaviour
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
     {
         // Wait until terrain & dust are fully loaded
-        while (!terrainIsLoaded || !dustIsLoaded)
+        while (!this.GetComponent<TerrainSpawner>().terrainIsLoaded || !dustIsLoaded)
         {
             yield return new WaitForSeconds(0.1f);
         }
@@ -166,7 +168,7 @@ public class StartupSpawner : MonoBehaviour
 
     float GetTileSpan()
     {
-        return TILE_WIDTH * GetPixelSpan() * scaleFactor;
+        return TILE_WIDTH * GetPixelSpan();
     }
 
     Vector3 GetChunkCenterFromRowCol(int row, int col)

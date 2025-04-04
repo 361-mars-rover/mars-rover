@@ -62,24 +62,6 @@ public class SimulationManager : MonoBehaviour
     }
     void Update()
     {
-        // int curIdx = System.Convert.ToInt32(camIdx);
-        // int keyPress = -1;
-        // for (int i = 0; i <= 9; i++)
-        // {
-        //     if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha0 + i)))
-        //     {
-        //         Debug.Log($"Pressed {i}");
-        //         keyPress = i;
-        //     }
-        // }
-        // if (keyPress > 0 && keyPress <= sims.Length)
-		// {
-        //     Debug.Log($"You pressed {keyPress}!");
-        //     int newSimIdx = keyPress - 1;
-        //     if (newSimIdx != prevIdx){
-        //         SwitchSimulation(newSimIdx);
-        //     }
-		// }
         int simIdx;
         if (Input.GetKeyDown(KeyCode.K))
         {
