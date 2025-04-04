@@ -12,8 +12,8 @@ public class PlayerInventory : MonoBehaviour
     public FirebaseManager firebaseManager; // Reference to the Firebase manager
     public void MineralCollected(GameObject mineral)
     {
-        simulationManager = FindObjectOfType<SimulationManager>();
-        firebaseManager = FindObjectOfType<FirebaseManager>();
+        simulationManager = FindFirstObjectByType<SimulationManager>();
+        firebaseManager = FindFirstObjectByType<FirebaseManager>();
         Debug.Log("Mineral collected for: " + simulationManager.roverIds[simulationManager.curIdx]);
         Minerals.Add(mineral);
         NumberOfMinerals++;

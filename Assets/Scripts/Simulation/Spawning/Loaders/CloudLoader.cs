@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using Loaders;
 class CloudLoader : LoaderMonoBehaviour
 {
     private GameObject DustCloudPrefab;
@@ -14,13 +14,15 @@ class CloudLoader : LoaderMonoBehaviour
 
     public Color DustColouring;
 
-    private float cloudHeight = 250f; // Height above terrain
-    private float cloudScrollSpeed = 0.005f;
+    private readonly float CloudHeight = 250f; // Height above terrain
+    private readonly float cloudScrollSpeed = 0.005f;
     private int row;
     private int col;
 
     public static CloudLoader Create(int row, int col, GameObject DustCloudPrefab, GameObject MarsTerrain, Transform SimulationRoot, GameObject gameObject = null){
         CloudLoader cl = Create<CloudLoader>(gameObject);
+        cl.row = row;
+        cl.col = col;
         cl.DustCloudPrefab = DustCloudPrefab;
         cl.MarsTerrain = MarsTerrain;
         cl.SimulationRoot = SimulationRoot;
@@ -69,7 +71,7 @@ class CloudLoader : LoaderMonoBehaviour
         //    the center is roughly (terrainLength/2, 0, terrainWidth/2) in that local space.
         CloudInstance.transform.localPosition = new Vector3(
             0, // offset from the parent's origin
-            cloudHeight,           // height above terrain
+            CloudHeight,           // height above terrain
             0
         );
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Loaders;
 class InvisibleWallLoader : LoaderMonoBehaviour
 {
     private BoxCollider wall1;
