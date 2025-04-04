@@ -53,7 +53,7 @@ public class StartupSpawner : MonoBehaviour
     private Transform simulationRoot;
     public FirebaseManager firebaseManager; // Reference to the Firebase manager
 
-
+    private TerrainSpawner ts;
     public void SetRowCol(int row, int col){
         spawnTileRow = row;
         spawnTileCol = col;
@@ -77,9 +77,11 @@ public class StartupSpawner : MonoBehaviour
 
         // 3. Initialize terrain in local coordinates
         // Inititialize(spawnTileRow, spawnTileCol, TerrainLength, TerrainWidth);
-        this.AddComponent<TerrainSpawner>().Init(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+        // this.AddComponent<TerrainSpawner>().Init(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
         // TerrainSpawner.Init(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
 
+        ts = TerrainSpawner.Create(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+        ts.Spawn();
 
         // Example local chunk center for spawning the car
         Vector3 chunkCenter = new Vector3(0, 100000f, 0); // Local coords
@@ -97,8 +99,9 @@ public class StartupSpawner : MonoBehaviour
     private IEnumerator SpawnCarDelay(Vector3 chunkCenter)
     {
         // Wait until terrain & dust are fully loaded
-        while (!this.GetComponent<TerrainSpawner>().terrainIsLoaded || !dustIsLoaded)
+        while (!ts.getIsLoaded() || !dustIsLoaded)
         {
+            Debug.Log($"TS is loaded: ${ts.getIsLoaded()}");
             yield return new WaitForSeconds(0.1f);
         }
         Debug.Log("Terrain and dust are now loaded");
@@ -109,7 +112,7 @@ public class StartupSpawner : MonoBehaviour
 
         // We assume chunkCenter is local. So if we want the car’s Y offset
         // to be height + 2 in local coords, do this:
-        Vector3 carSpawnPosition = new Vector3(chunkCenter.x, height + 2f, chunkCenter.z);
+        Vector3 carSpawnPosition = new Vector3(chunkCenter.x, height + 3f, chunkCenter.z);
         car.transform.localPosition = carSpawnPosition;
 
         car.SetActive(true);

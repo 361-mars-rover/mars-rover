@@ -2,17 +2,31 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class TerrainSpawner : MonoBehaviour {
+class TerrainSpawner : SpawnerMonoBehaviour{
 
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL =  "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
-    public bool terrainIsLoaded = false;
     private GameObject marsTerrain;
     public int blurIterations = 2;
 
-    public void Init(int row, int col, Transform simulationRoot, GameObject marsTerrain)
+    int row;
+    int col;
+
+    Transform simulationRoot;
+
+    public static TerrainSpawner Create(int row, int col, Transform simulationRoot, GameObject marsTerrain, GameObject gameObject = null){
+        Debug.Log("Creating a spawner");
+        TerrainSpawner ts = Create<TerrainSpawner>(gameObject);
+        ts.row = row;
+        ts.col = col;
+        ts.simulationRoot = simulationRoot;
+        ts.marsTerrain = marsTerrain;
+        return ts;
+    }
+
+    public override void Spawn()
     {
-        this.marsTerrain = marsTerrain;
+        Debug.Log("Calling the spawn method");
         // 1. Create a fresh TerrainData
         TerrainData terrainData = new TerrainData
         {
@@ -60,7 +74,8 @@ public class TerrainSpawner : MonoBehaviour {
         {
             Debug.LogError("Failed to download heightmap: " + heightRequest.error);
         }
-        terrainIsLoaded = true;
+        Debug.Log("Setting isLoaded to true");
+        isLoaded = true;
     }
 
         void ApplyHeightmap(Texture2D texture)
