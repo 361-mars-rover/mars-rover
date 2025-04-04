@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class RockSpawner : MonoBehaviour
+class RockSpawner : MonoBehaviour
 {
     public GameObject rockPrefab;  
     private int numberOfRocks = 500; 

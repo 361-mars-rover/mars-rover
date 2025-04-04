@@ -2,21 +2,21 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-class TerrainSpawner : SpawnerMonoBehaviour{
+class TerrainLoader : LoaderMonoBehaviour{
 
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL =  "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
     private GameObject marsTerrain;
     public int blurIterations = 2;
 
-    int row;
-    int col;
+    private int row;
+    private int col;
 
-    Transform simulationRoot;
+    private Transform simulationRoot;
 
-    public static TerrainSpawner Create(int row, int col, Transform simulationRoot, GameObject marsTerrain, GameObject gameObject = null){
+    public static TerrainLoader Create(int row, int col, Transform simulationRoot, GameObject marsTerrain, GameObject gameObject = null){
         Debug.Log("Creating a spawner");
-        TerrainSpawner ts = Create<TerrainSpawner>(gameObject);
+        TerrainLoader ts = Create<TerrainLoader>(gameObject);
         ts.row = row;
         ts.col = col;
         ts.simulationRoot = simulationRoot;
@@ -24,7 +24,7 @@ class TerrainSpawner : SpawnerMonoBehaviour{
         return ts;
     }
 
-    public override void Spawn()
+    public override void Load()
     {
         Debug.Log("Calling the spawn method");
         // 1. Create a fresh TerrainData

@@ -1,8 +1,8 @@
-abstract class SpawnerMonoBehaviour : ParameterizedMonoBehaviour{
+abstract class LoaderMonoBehaviour : ParameterizedMonoBehaviour{
     protected bool isLoaded = false;
     public bool getIsLoaded(){
         return isLoaded;
     }
 
-    public abstract void Spawn();
+    public abstract void Load();
 }
