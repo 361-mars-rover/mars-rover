@@ -16,12 +16,12 @@ class TerrainLoader : LoaderMonoBehaviour{
 
     public static TerrainLoader Create(int row, int col, Transform simulationRoot, GameObject marsTerrain, GameObject gameObject = null){
         Debug.Log("Creating a spawner");
-        TerrainLoader ts = Create<TerrainLoader>(gameObject);
-        ts.row = row;
-        ts.col = col;
-        ts.simulationRoot = simulationRoot;
-        ts.marsTerrain = marsTerrain;
-        return ts;
+        TerrainLoader tl = Create<TerrainLoader>(gameObject);
+        tl.row = row;
+        tl.col = col;
+        tl.simulationRoot = simulationRoot;
+        tl.marsTerrain = marsTerrain;
+        return tl;
     }
 
     public override void Load()

@@ -12,6 +12,8 @@ class CloudLoader : LoaderMonoBehaviour
 
     public GameObject CloudInstance;
 
+    public Color DustColouring;
+
     private float cloudHeight = 250f; // Height above terrain
     private float cloudScrollSpeed = 0.005f;
     private int row;

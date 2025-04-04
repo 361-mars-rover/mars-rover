@@ -8,7 +8,6 @@ using UnityEngine.Tilemaps;
 public class SimulationManager : MonoBehaviour
 {
     public GameObject SimulationPrefab;
-    private float TerrainWidth = 1563.675f;
 
     public Vector2Int[] TileIndices;
     int prevIdx = 0;
