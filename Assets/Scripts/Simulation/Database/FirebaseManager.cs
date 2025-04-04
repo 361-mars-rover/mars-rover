@@ -8,7 +8,6 @@ public class FirebaseManager : MonoBehaviour
 {
     public static FirebaseManager Instance;
     public static DatabaseReference dbReference;
-    private bool isFirebaseInitialized = false;
     public string simulationId;
     public bool isTerrainDataStored = false;
     void Start() {
