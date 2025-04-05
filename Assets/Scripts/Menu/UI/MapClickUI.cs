@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using UnityEngine.UI;  // Add this line to fix the List<> error
+using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;  // Add this line to fix the List<> error
 
 public class MapClickUI : MonoBehaviour, IPointerClickHandler
 {
@@ -16,7 +19,27 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
 
     void Awake()
     {
+        SetTopText($"Select Spawn Point for Avatar {currentAvatarIndex}");
         rectTransform = GetComponent<RectTransform>();
+    }
+
+    public void UndoOnClick(){
+        Debug.Log("Clicked undo!");
+        if (currentAvatarIndex > 0) {
+            currentAvatarIndex--;
+            
+            // Find the marker for the current avatar index and destroy it
+            GameObject marker = GameObject.Find($"AvatarMarker_{currentAvatarIndex}");
+            if (marker != null) {
+                Destroy(marker);
+            }
+            
+            // Reset that avatar's spawn position
+            if (currentAvatarIndex < avatars.Count) {
+                avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(-1, -1); // Reset to invalid position
+            }
+            SetTopText($"Select spawn point for rover {currentAvatarIndex}");
+        }
     }
 
     void Start()
@@ -26,9 +49,27 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
         Debug.Log($"Ready to assign spawn positions for {avatars.Count} avatars.");
     }
 
+    private void SetTopText(string newText){
+        GameObject textObject = GameObject.Find("Select Spawn Point Text");
+        // Get the TMP_Text component
+        textObject.GetComponent<TMP_Text>().text = newText;
+    }
+
+    public void OnSimulationStartClick(){
+        Debug.Log($"current avatar index: {currentAvatarIndex}");
+        Debug.Log($"Avatar count: {avatars.Count}");
+        if (currentAvatarIndex == avatars.Count){
+            Debug.Log("Loading the new scene");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else{
+            Debug.Log("You have not set all spawn locations");
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Skip if all avatars have positions
+                // Skip if all avatars have positions
         if (currentAvatarIndex >= avatars.Count)
             return;
 
@@ -50,31 +91,55 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
 
             // Assign to current avatar
             avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(tile_col, tile_row);
-            //Debug.Log($"Assigned to Avatar {currentAvatarIndex}: (Row {tile_row}, Col {tile_col})");
-
+            
+            // Create parent GameObject to hold both dot and text
+            GameObject markerGroup = new GameObject($"AvatarMarker_{currentAvatarIndex}");
+            markerGroup.transform.SetParent(rectTransform, false);
+            RectTransform markerRect = markerGroup.AddComponent<RectTransform>();
+            markerRect.anchoredPosition = localPoint;
+            
+            // Create dot as child of marker group
             GameObject dot = new GameObject("Dot");
-            dot.transform.SetParent(rectTransform, false);
+            dot.transform.SetParent(markerGroup.transform, false);
             
             // Add a RectTransform and set its size
             RectTransform dotRect = dot.AddComponent<RectTransform>();
-            dotRect.sizeDelta = new Vector2(20, 20);  // 10x10 dot
-
-            // Add an Image component and set its color (or assign a sprite if you prefer)
+            dotRect.sizeDelta = new Vector2(15, 15);
+            dotRect.anchoredPosition = Vector2.zero; // Center in parent
+            
+            // Add an Image component and set its color
             Image dotImage = dot.AddComponent<Image>();
             dotImage.color = Color.red;
+            
+            // Create text above the dot
+            GameObject textObj = new GameObject("Label");
+            textObj.transform.SetParent(markerGroup.transform, false);
 
-            // Set the dot's anchored position to the localPoint
-            dotRect.anchoredPosition = localPoint;
+            // Add TextMeshProUGUI component instead of Text
+            TextMeshProUGUI tmpText = textObj.AddComponent<TextMeshProUGUI>();
+            tmpText.text = $"Avatar {currentAvatarIndex}";
+            tmpText.fontSize = 24;
+            tmpText.color = Color.white;
+            tmpText.alignment = TextAlignmentOptions.Center;
+            tmpText.fontStyle = FontStyles.Bold;
+            tmpText.outlineWidth = 0.2f;
+            tmpText.outlineColor = Color.black;
 
-            // Bring the dot to the front
-            dot.transform.SetAsLastSibling();
-
-
+            // Position text above dot
+            RectTransform textRect = tmpText.GetComponent<RectTransform>();
+            textRect.anchoredPosition = new Vector2(0, 20);
+            textRect.sizeDelta = new Vector2(150, 30);
+            
+            // Bring the marker group to the front
+            markerGroup.transform.SetAsLastSibling();
+            
             currentAvatarIndex++;
-
+            SetTopText($"Select spawn point for avatar {currentAvatarIndex}");
+            
             // Check if all avatars are assigned
             if (currentAvatarIndex >= avatars.Count)
+                SetTopText($"Click start simulation to begin!");
                 Debug.Log("All spawn positions assigned!");
         }
-    }
+            }
 }
