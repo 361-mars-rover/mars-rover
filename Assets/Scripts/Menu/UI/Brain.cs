@@ -3,6 +3,6 @@ using UnityEngine;
 public class Brain
 {
     public int ID;
-    public string Name;
-    public string Description;
+    public string name;
+    public string description;
 }

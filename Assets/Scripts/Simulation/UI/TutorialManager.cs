@@ -40,7 +40,7 @@ public class TutorialManager : MonoBehaviour
 
         if (popUpIndex == 0)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.X))
             {
                 popUpIndex = 1;
 
@@ -50,13 +50,13 @@ public class TutorialManager : MonoBehaviour
         }
         else if (popUpIndex == 1)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.X))
             {
                 popUps[1].SetActive(!popUps[1].activeSelf);
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.V))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.V))
             {
-                popUps[popUpIndex + 1].SetActive(!popUps[popUpIndex + 1].activeSelf);
+                popUps[2].SetActive(!popUps[2].activeSelf);
             }
         }
 
