@@ -1,45 +1,89 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class RoverTableManager : MonoBehaviour
+using TMPro;
+public class RoverTableManager : TableManager<Rover>
 {
-    public GameObject togglePrefab;
-    public List<Rover> rovers;
+    private List<Rover> rovers = new List<Rover>();
 
-    void Start()
+    protected override void Start()
     {
-        PopulateTable();
+        AddTestRovers();
+        base.Start();
     }
 
-    void PopulateTable()
+    void AddTestRovers()
     {
-        Debug.Log("Tables Populated");
-        /*foreach (var avatar in avatars)
+        for (int i = 0; i < 3; i++)
         {
-            GameObject newToggle = Instantiate(togglePrefab, transform);
-            Text[] texts = newToggle.GetComponentsInChildren<Text>();
-            // Assuming the order of texts in your prefab is ID, Name, Description
-            texts[0].text = avatar.ID.ToString();
-            texts[1].text = avatar.Name;
-            texts[2].text = avatar.Description;
-
-            Toggle toggle = newToggle.GetComponent<Toggle>();
-            toggle.onValueChanged.AddListener(delegate {
-                ToggleChanged(toggle);
-            });
-        }*/
-    }
-
-    void ToggleChanged(Toggle changedToggle)
-    {
-        if (changedToggle.isOn)
-        {
-            Debug.Log("Toggle On: " + changedToggle.GetComponentInChildren<Text>().text);
+            rovers.Add(new Rover { ID = i, name = $"Rover {i}", description = $"Rover {i}" });
         }
     }
 
-    public List<Rover> getRovers()
+    protected override List<Rover> GetDataList() => rovers;
+
+    protected override string[] GetDisplayTexts(Rover rover)
     {
-        return rovers;
+        return new string[] { rover.ID.ToString(), rover.name, rover.description };
+    }
+
+    protected override void OnToggleSelected(Toggle toggle)
+    {
+        mainMenu.setSelectedRover(toggle);
+    }
+    protected override void AttachDataToToggle(GameObject toggleGO, Rover data)
+    {
+        var toggleData = toggleGO.AddComponent<RoverToggleData>();
+        toggleData.data = data;
+    }
+
+    protected override void SortDataList()
+    {
+        rovers.Sort((a, b) => a.ID.CompareTo(b.ID));
+    }
+
+    public List<Rover> GetRovers() => rovers;
+
+    public void RemoveSelectedRover()
+    {
+        if (selectedToggle == null) return;
+
+        var data = selectedToggle.GetComponent<ToggleData<Rover>>()?.data;
+        if (data != null)
+        {
+            rovers.Remove(data);
+            Debug.Log($"Consumed Rover: {data.name}");
+        }
+
+        listToggles.Remove(selectedToggle);
+        Destroy(selectedToggle.gameObject);
+        selectedToggle = null;
+
+        mainMenu.setSelectedRover(null);
+        mainMenu.UpdateButtons();
+    }
+
+    public void AddRover(Rover rover)
+    {
+        if (rover == null) return;
+
+        rovers.Add(rover);
+
+        GameObject newToggle = Instantiate(togglePrefab, transform);
+        TextMeshProUGUI[] texts = newToggle.GetComponentsInChildren<TextMeshProUGUI>();
+        string[] displayTexts = GetDisplayTexts(rover);
+        for (int i = 0; i < texts.Length && i < displayTexts.Length; i++)
+        {
+            texts[i].text = displayTexts[i];
+        }
+
+        AttachDataToToggle(newToggle, rover);
+
+        Toggle toggle = newToggle.GetComponent<Toggle>();
+        toggle.onValueChanged.AddListener(delegate {
+            ToggleChanged(toggle);
+        });
+
+        listToggles.Add(toggle);
     }
 }
