@@ -3,7 +3,8 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;  // Add this line to fix the List<> error
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;  // Add this line to fix the List<> error
 
 public class MapClickUI : MonoBehaviour, IPointerClickHandler
 {
@@ -18,7 +19,7 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
 
     void Awake()
     {
-        SetTopText($"Select spawn point for avatar {currentAvatarIndex}");
+        SetTopText($"Select Spawn Point for Avatar {currentAvatarIndex}");
         rectTransform = GetComponent<RectTransform>();
     }
 
@@ -52,6 +53,18 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
         GameObject textObject = GameObject.Find("Select Spawn Point Text");
         // Get the TMP_Text component
         textObject.GetComponent<TMP_Text>().text = newText;
+    }
+
+    public void OnSimulationStartClick(){
+        Debug.Log($"current avatar index: {currentAvatarIndex}");
+        Debug.Log($"Avatar count: {avatars.Count}");
+        if (currentAvatarIndex == avatars.Count){
+            Debug.Log("Loading the new scene");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else{
+            Debug.Log("You have not set all spawn locations");
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
