@@ -15,73 +15,30 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
 
     public GameObject pinPrefab;
 
-    private TextMeshProUGUI headerText;
-
-    private GameObject selectSpawnPointTextObj;
-    private TMP_Text selectSpawnPointText; // or Text if using UnityEngine.UI.Text
-
 
     void Awake()
     {
         SetTopText($"Select spawn point for avatar {currentAvatarIndex}");
         rectTransform = GetComponent<RectTransform>();
-        // Create undo button
-        GameObject undoButton = new GameObject("UndoButton");
-        undoButton.transform.SetParent(rectTransform, false);
+    }
 
-        // Add Image component for the button background
-        Image undoButtonImage = undoButton.AddComponent<Image>();
-        undoButtonImage.color = new Color(0.2f, 0.2f, 0.2f, 0.8f); // Dark semi-transparent background
-
-        // Add Button component
-        Button undoButtonComponent = undoButton.AddComponent<Button>();
-        ColorBlock colors = undoButtonComponent.colors;
-        colors.normalColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-        colors.highlightedColor = new Color(0.3f, 0.3f, 0.3f, 0.8f);
-        colors.pressedColor = new Color(0.1f, 0.1f, 0.1f, 0.8f);
-        undoButtonComponent.colors = colors;
-
-        // Position the button at the bottom right
-        RectTransform undoButtonRect = undoButton.GetComponent<RectTransform>();
-        undoButtonRect.anchorMin = new Vector2(1, 0);
-        undoButtonRect.anchorMax = new Vector2(1, 0);
-        undoButtonRect.pivot = new Vector2(1, 0);
-        undoButtonRect.anchoredPosition = new Vector2(-20, 20);
-        undoButtonRect.sizeDelta = new Vector2(120, 40);
-
-        // Add text to the button
-        GameObject undoTextObj = new GameObject("UndoText");
-        undoTextObj.transform.SetParent(undoButton.transform, false);
-
-        TextMeshProUGUI undoText = undoTextObj.AddComponent<TextMeshProUGUI>();
-        undoText.text = "Undo";
-        undoText.fontSize = 20;
-        undoText.color = Color.white;
-        undoText.alignment = TextAlignmentOptions.Center;
-
-        RectTransform undoTextRect = undoText.GetComponent<RectTransform>();
-        undoTextRect.anchorMin = Vector2.zero;
-        undoTextRect.anchorMax = Vector2.one;
-        undoTextRect.sizeDelta = Vector2.zero;
-
-        // Add click functionality to the undo button
-        undoButtonComponent.onClick.AddListener(() => {
-            if (currentAvatarIndex > 0) {
-                currentAvatarIndex--;
-                
-                // Find the marker for the current avatar index and destroy it
-                GameObject marker = GameObject.Find($"AvatarMarker_{currentAvatarIndex}");
-                if (marker != null) {
-                    Destroy(marker);
-                }
-                
-                // Reset that avatar's spawn position
-                if (currentAvatarIndex < avatars.Count) {
-                    avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(-1, -1); // Reset to invalid position
-                }
-                SetTopText($"Select spawn point for rover {currentAvatarIndex}");
+    public void UndoOnClick(){
+        Debug.Log("Clicked undo!");
+        if (currentAvatarIndex > 0) {
+            currentAvatarIndex--;
+            
+            // Find the marker for the current avatar index and destroy it
+            GameObject marker = GameObject.Find($"AvatarMarker_{currentAvatarIndex}");
+            if (marker != null) {
+                Destroy(marker);
             }
-        });
+            
+            // Reset that avatar's spawn position
+            if (currentAvatarIndex < avatars.Count) {
+                avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(-1, -1); // Reset to invalid position
+            }
+            SetTopText($"Select spawn point for rover {currentAvatarIndex}");
+        }
     }
 
     void Start()
@@ -92,12 +49,9 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
     }
 
     private void SetTopText(string newText){
-        GameObject text = GameObject.Find("Select Spawn Point Text");
+        GameObject textObject = GameObject.Find("Select Spawn Point Text");
         // Get the TMP_Text component
-        selectSpawnPointText = text.GetComponent<TMP_Text>();
-        
-        // Example: Set text
-        selectSpawnPointText.text = newText;
+        textObject.GetComponent<TMP_Text>().text = newText;
     }
 
     public void OnPointerClick(PointerEventData eventData)
