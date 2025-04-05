@@ -3,33 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-public class AvatarTableManager : MonoBehaviour
+using TMPro;
+public class AvatarTableManager : TableManager<Avatar>
 {
-    public GameObject togglePrefab;
     public static List<Avatar> avatars = new List<Avatar>();
-    private Avatar currentAvatar;
 
-    void Start()
+    protected override void Start()
     {
-        // PopulateTable();
-        Debug.Log("Adding a test avatars");
-        AddFakeData();
+        //AddFakeData();
+        base.Start();
     }
 
-    // Written by Jikael... Just for testing that data can be sent to SimulationManager...
-    void AddFakeData(){
-        for (int i = 0; i < 3; i++){
-            Avatar a = new Avatar();
-            a.Description = $"Avatar {i}";
-            a.SpawnRowCol = new Vector2Int(i,i);
-            avatars.Add(a);
+    void AddFakeData()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            avatars.Add(new Avatar
+            {
+                description = $"Avatar {i}",
+                SpawnRowCol = new Vector2Int(i, i),
+                rover = new Rover { name = $"Rover {i}" },
+                brain = new Brain { name = $"Brain {i}" }
+            });
         }
     }
 
-    void CreateAvatar(){
-        Avatar a = new Avatar();
-        currentAvatar = a;
+    protected override List<Avatar> GetDataList() => avatars;
+
+    protected override string[] GetDisplayTexts(Avatar avatar)
+    {
+        return new string[] { avatar.ID.ToString(), avatar.rover.name, avatar.brain.name };
     }
+
+    protected override void OnToggleSelected(Toggle toggle)
+    {
+        mainMenu.setSelectedAvatar(toggle);
+    }
+
+    protected override void AttachDataToToggle(GameObject toggleGO, Avatar data)
+    {
+        var toggleData = toggleGO.AddComponent<AvatarToggleData>();
+        toggleData.data = data;
+    }
+    protected override void SortDataList()
+    {
+        avatars.Sort((a, b) => a.ID.CompareTo(b.ID));
+    }
+
+    public List<Avatar> getAvatars() => avatars;
 
     void SetNewestAvatarName(string name){
         throw new NotImplementedException();
@@ -43,35 +64,49 @@ public class AvatarTableManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    void PopulateTable()
+    public void RefreshTable()
     {
-        Debug.Log("Tables Populated");
-        /*foreach (var avatar in avatars)
-        {
-            GameObject newToggle = Instantiate(togglePrefab, transform);
-            Text[] texts = newToggle.GetComponentsInChildren<Text>();
-            // Assuming the order of texts in your prefab is ID, Name, Description
-            texts[0].text = avatar.ID.ToString();
-            texts[1].text = avatar.Name;
-            texts[2].text = avatar.Description;
+        Avatar latest = avatars[^1]; // Get the last avatar (C# 8 syntax)
 
-            Toggle toggle = newToggle.GetComponent<Toggle>();
-            toggle.onValueChanged.AddListener(delegate {
-                ToggleChanged(toggle);
-            });
-        }*/
-    }
+        GameObject newToggle = Instantiate(togglePrefab, transform);
+        TextMeshProUGUI[] texts = newToggle.GetComponentsInChildren<TextMeshProUGUI>();
 
-    void ToggleChanged(Toggle changedToggle)
-    {
-        if (changedToggle.isOn)
+        string[] displayTexts = GetDisplayTexts(latest);
+        for (int i = 0; i < texts.Length && i < displayTexts.Length; i++)
         {
-            Debug.Log("Toggle On: " + changedToggle.GetComponentInChildren<Text>().text);
+            texts[i].text = displayTexts[i];
         }
+
+        AttachDataToToggle(newToggle, latest);
+
+        Toggle toggle = newToggle.GetComponent<Toggle>();
+        toggle.onValueChanged.AddListener(delegate {
+            ToggleChanged(toggle);
+        });
+
+        listToggles.Add(toggle);
     }
 
-    public List<Avatar> getAvatars()
+    public void RemoveSelectedAvatar()
     {
-        return avatars;
+        if (selectedToggle == null) return;
+
+        var dataComponent = selectedToggle.GetComponent<ToggleData<Avatar>>();
+        if (dataComponent != null)
+        {
+            Avatar avatar = dataComponent.data;
+            avatars.Remove(avatar);
+            Debug.Log($"Removed avatar: ID {avatar.ID}");
+
+            // Pass brain/rover back to MainMenu
+            mainMenu.ReAddBrainAndRover(avatar.brain, avatar.rover);
+        }
+
+        listToggles.Remove(selectedToggle);
+        Destroy(selectedToggle.gameObject);
+        selectedToggle = null;
+
+        mainMenu.setSelectedAvatar(null);
+        mainMenu.UpdateButtons();
     }
 }

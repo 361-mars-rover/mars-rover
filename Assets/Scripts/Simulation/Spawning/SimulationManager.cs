@@ -42,7 +42,7 @@ public class SimulationManager : MonoBehaviour
 
         for (int i = 0; i < AvatarTableManager.avatars.Count; i++){
             Avatar a = AvatarTableManager.avatars[i];
-            Debug.Log($"Setting up simulation for rover {a.Description}");
+            Debug.Log($"Setting up simulation for rover {a.description}");
             int row = a.SpawnRowCol.y;
             int col = a.SpawnRowCol.x;
             if (!IsValidRowCol(row, col)){
