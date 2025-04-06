@@ -70,7 +70,8 @@ public class StartupSpawner : MonoBehaviour
     private IEnumerator SpawnCarDelay(Transform simulationRoot)
     {
         // Wait until terrain & dust are fully loaded
-        while (!tl.getIsLoaded() || !cl.getIsLoaded())
+        // TODO: add || !cl.getIsLoaded() back later
+        while (!tl.getIsLoaded())
         {
             Debug.Log($"TL is loaded: ${tl.getIsLoaded()}");
             Debug.Log($"CL is loaded: ${cl.getIsLoaded()}");

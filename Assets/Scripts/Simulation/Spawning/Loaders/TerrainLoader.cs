@@ -6,6 +6,8 @@ class TerrainLoader : LoaderMonoBehaviour{
 
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
     private string colorbaseURL =  "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
+
+    private string backupbaseURL = "https://api.nasa.gov/mars-wmts/catalog/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
     private GameObject marsTerrain;
     public int blurIterations = 2;
 
@@ -72,7 +74,12 @@ class TerrainLoader : LoaderMonoBehaviour{
         }
         else
         {
-            Debug.LogError("Failed to download heightmap: " + heightRequest.error);
+            string backupURL = GetDownloadURL(backupbaseURL, row, col);
+            UnityWebRequest backupRequest = UnityWebRequestTexture.GetTexture(backupURL);
+            yield return backupRequest.SendWebRequest();
+            Texture2D backupTexture = DownloadHandlerTexture.GetContent(backupRequest);
+            ApplyHeightmap(backupTexture);
+            ApplyColorMap(backupTexture);
         }
         Debug.Log("Setting isLoaded to true");
         isLoaded = true;
