@@ -9,6 +9,10 @@ public class FirebaseManager : MonoBehaviour
     public static FirebaseManager Instance;
     public static DatabaseReference dbReference;
     public string simulationId;
+    public float tileRow;
+    public float tileCol;
+    public float terrainL;
+    public float terrainW;
     public bool isTerrainDataStored = false;
     void Start() {
         // Get the root reference location of the database.
@@ -28,6 +32,10 @@ public class FirebaseManager : MonoBehaviour
     {
         if (isTerrainDataStored) return; 
         DatabaseReference terrainRef = dbReference.Child("Simulations").Child(simId).Child("MarsGeospatialData");
+        tileRow = spawnTileRow;
+        tileCol = spawnTileCol;
+        terrainL = terrainLength;
+        terrainW = terrainWidth;
         float min_pos_x = spawnTileRow * terrainWidth;
         float min_pos_y = spawnTileCol * terrainLength;
         float max_pos_x = (spawnTileRow + 1) * terrainWidth;
@@ -51,14 +59,27 @@ public class FirebaseManager : MonoBehaviour
         isTerrainDataStored = true; 
     }
 
+    public float calculateLat(float posZ){
+        float maxLat = 90 - (1.40625f * tileRow);
+        float minLat = 90 - (1.400625f * (tileRow + 1));
+        float normalizedZ = (posZ + terrainL / 2) / terrainL;
+        return Mathf.Lerp(minLat, maxLat, normalizedZ);
+    }
+    public float calculateLong(float posX){
+        float minLong = -180 + (1.40625f * tileCol);
+        float maxLong = -180 + (1.40625f *(tileCol+1));
+        float normalizedX = (posX + terrainW / 2) / terrainW;
+        return Mathf.Lerp(minLong, maxLong, normalizedX);
+    }
+
     public void StoreMaterialData(GameObject mineral, string carId, string simId)
     {
         DatabaseReference newMineralRef = dbReference.Child("Simulations").Child(simId).Child("Avatars").Child(carId).Push(); 
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{
-                {"x", mineral.transform.position.x},
-                {"z", mineral.transform.position.z}
+                {"x", calculateLong(mineral.transform.position.x)},
+                {"z", calculateLat(mineral.transform.position.z)}
             }}
         };
         newMineralRef.SetValueAsync(mineralData)
