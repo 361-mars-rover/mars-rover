@@ -1252,13 +1252,10 @@ MonoBehaviour:
   marsTerrain: {fileID: 445007612}
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
-  mineralSpawner: {fileID: 0}
   invisibleWall: {fileID: 611799222}
   invisibleWall2: {fileID: 1411949950}
   invisibleWall3: {fileID: 595534510}
   invisibleWall4: {fileID: 234963107}
-  blurIterations: 2
-  terrainIsLoaded: 0
   firebaseManager: {fileID: 2099217467}
 --- !u!1 &1354096515
 GameObject:
@@ -2006,7 +2003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2014,7 +2011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2022,7 +2019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 117.53499
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2054,11 +2051,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 249.99997
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -231.23248
       objectReference: {fileID: 0}
     - target: {fileID: 2424468940667804103, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2151,7 +2148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3810417333407678335, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_IsActive
@@ -2547,23 +2544,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1688483883057089459, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1688483883057089459, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1688483883057089459, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 132.465
       objectReference: {fileID: 0}
     - target: {fileID: 1688483883057089459, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 249.99997
       objectReference: {fileID: 0}
     - target: {fileID: 1688483883057089459, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -116.2325
       objectReference: {fileID: 0}
     - target: {fileID: 2020449760806507201, guid: 9a08b48b3a0ff4446805db12bb0325af, type: 3}
       propertyPath: m_AnchorMax.y
