@@ -1,20 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
 
 public class PlayerInventory : MonoBehaviour
 {
     public List<GameObject> Minerals = new List<GameObject>(); // ✅ Ensure list is initialized
     public int NumberOfMinerals = 0;
     public UnityEvent<PlayerInventory> OnMineralCollected = new UnityEvent<PlayerInventory>(); // ✅ Ensure event is initialized
-    public SimulationManager simulationManager;
-    public FirebaseManager firebaseManager; // Reference to the Firebase manager
+
     public void MineralCollected(GameObject mineral)
     {
-        simulationManager = FindFirstObjectByType<SimulationManager>();
-        firebaseManager = FindFirstObjectByType<FirebaseManager>();
-        Debug.Log("Mineral collected for: " + simulationManager.roverIds[simulationManager.curIdx]);
+        CarControl car = Object.FindFirstObjectByType<CarControl>();
+        if (car != null && !car.innerCircleMode)
+        {
+            car.GemDetected();
+        }
+        else
+        {
+            Debug.LogError("CarControl not found!");
+        }
         Minerals.Add(mineral);
         NumberOfMinerals++;
 
@@ -29,7 +33,15 @@ public class PlayerInventory : MonoBehaviour
             Debug.LogError("❌ OnMineralCollected event is null!");
         }
 
-        firebaseManager.StoreMaterialData(mineral, simulationManager.roverIds[simulationManager.curIdx], firebaseManager.simulationId);
+        if (FirebaseManager.dbReference != null)
+        {
+            FirebaseManager.StoreMaterialData(mineral);
+        }
+        else
+        {
+            Debug.LogError("❌ FirebaseManager.Instance is null!");
+        }
     }
 }
+
 
