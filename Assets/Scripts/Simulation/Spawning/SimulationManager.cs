@@ -7,7 +7,6 @@ public class SimulationManager : MonoBehaviour
     public GameObject SimulationPrefab;
 
     public Vector2Int[] TileIndices;
-    private int prevIdx = 0;
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
     GameObject[] sims = new GameObject[9];
@@ -40,12 +39,12 @@ public class SimulationManager : MonoBehaviour
         int simIdx;
         if (Input.GetKeyDown(KeyCode.K))
         {
-            simIdx = Math.Max(prevIdx-1, 0);
+            simIdx = Math.Max(curIdx-1, 0);
             SwitchSimulation(simIdx);
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
-            simIdx = Math.Min(prevIdx+1, AvatarTableManager.avatars.Count - 1);
+            simIdx = Math.Min(curIdx+1, AvatarTableManager.avatars.Count - 1);
             Debug.Log($"sim index set to {simIdx}");
             SwitchSimulation(simIdx);
         }
@@ -54,12 +53,12 @@ public class SimulationManager : MonoBehaviour
 
     private void SwitchSimulation(int simIdx){
         // Don't switch if index hasnt changed
-        if (simIdx == prevIdx){
+        if (simIdx == curIdx){
             return;
         }
-        sims[prevIdx].SetActive(false);
+        sims[curIdx].SetActive(false);
         sims[simIdx].SetActive(true);
-        prevIdx = simIdx;
+        curIdx = simIdx;
     }
 
     private bool IsValidRowCol(int row, int col){
