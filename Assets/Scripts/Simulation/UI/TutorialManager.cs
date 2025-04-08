@@ -11,7 +11,6 @@ public class TutorialManager : MonoBehaviour
     {
         popUpIndex = 0;
         popUps[1].SetActive(false);
-        popUps[2].SetActive(false);
 
         Cursor.visible = false;
     }
@@ -53,10 +52,6 @@ public class TutorialManager : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.X))
             {
                 popUps[1].SetActive(!popUps[1].activeSelf);
-            }
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.V))
-            {
-                popUps[2].SetActive(!popUps[2].activeSelf);
             }
         }
 

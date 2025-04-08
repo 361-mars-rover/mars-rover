@@ -15,8 +15,6 @@ public class AboutScreen: MonoBehaviour
         nextButton.onClick.AddListener(NextSlide);
         backButton.onClick.AddListener(PreviousSlide);
 
-        nextButton.interactable = true;
-        backButton.interactable = true;
     }
 
     void ShowSlide(int index)
@@ -24,8 +22,8 @@ public class AboutScreen: MonoBehaviour
         for (int i = 0; i < slides.Length; i++)
             slides[i].SetActive(i == index);
 
-        backButton.interactable = index > 0;
-        nextButton.interactable = index < slides.Length - 1;
+        backButton.gameObject.SetActive(index > 0);
+        nextButton.gameObject.SetActive(index < slides.Length - 1);
     }
 
     void NextSlide()
