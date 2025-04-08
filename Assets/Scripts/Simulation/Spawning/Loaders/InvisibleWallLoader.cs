@@ -1,20 +1,13 @@
 using UnityEngine;
 using Loaders;
-class InvisibleWallLoader : LoaderMonoBehaviour
+class InvisibleWallLoader : Loader
 {
-    private BoxCollider wall1;
-    private BoxCollider wall2;
-    private BoxCollider wall3;
-    private BoxCollider wall4;
+    public BoxCollider wall1;
+    public BoxCollider wall2;
+    public BoxCollider wall3;
+    public BoxCollider wall4;
     private float wallHeight = 120f;
-    public static InvisibleWallLoader Create(BoxCollider wall1, BoxCollider wall2, BoxCollider wall3, BoxCollider wall4, GameObject gameObject = null){
-        InvisibleWallLoader iwl = Create<InvisibleWallLoader>(gameObject);
-        iwl.wall1 = wall1;
-        iwl.wall2 = wall2;
-        iwl.wall3 = wall3;
-        iwl.wall4 = wall4;
-        return iwl;
-    }
+
     public override void Load()
     {
         wall1.center = new Vector3(0, wallHeight / 2, TerrainInfo.TERRAIN_LENGTH / 2);

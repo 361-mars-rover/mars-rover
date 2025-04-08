@@ -2,11 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using Loaders;
-class CloudLoader : LoaderMonoBehaviour
+class CloudLoader : Loader
 {
-    private GameObject DustCloudPrefab;
-    private GameObject MarsTerrain;
-    private Transform SimulationRoot;
+    public GameObject DustCloudPrefab;
+    public GameObject MarsTerrain;
+    public Transform SimulationRoot;
 
     public Texture2D DustTexture;
 
@@ -16,18 +16,8 @@ class CloudLoader : LoaderMonoBehaviour
 
     private readonly float CloudHeight = 250f; // Height above terrain
     private readonly float cloudScrollSpeed = 0.005f;
-    private int row;
-    private int col;
-
-    public static CloudLoader Create(int row, int col, GameObject DustCloudPrefab, GameObject MarsTerrain, Transform SimulationRoot, GameObject gameObject = null){
-        CloudLoader cl = Create<CloudLoader>(gameObject);
-        cl.row = row;
-        cl.col = col;
-        cl.DustCloudPrefab = DustCloudPrefab;
-        cl.MarsTerrain = MarsTerrain;
-        cl.SimulationRoot = SimulationRoot;
-        return cl;
-    }
+    public int row;
+    public int col;
     public override void Load()
     {
         StartCoroutine(DownloadDustTexture(row, col));

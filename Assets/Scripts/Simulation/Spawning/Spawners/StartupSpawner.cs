@@ -39,13 +39,13 @@ public class StartupSpawner : MonoBehaviour
         // 1. Get a reference to the SimulationPrefab’s transform
         Transform simulationRoot = this.transform;
 
-        tl = TerrainLoader.Create(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+        tl = TerrainLoaderFactory.Create(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
         tl.Load();
 
-        cl = CloudLoader.Create(spawnTileRow, spawnTileCol, dustCloudPrefab, marsTerrain, simulationRoot);
+        cl = CloudLoaderFactory.Create(spawnTileRow, spawnTileCol, dustCloudPrefab, marsTerrain, simulationRoot);
         cl.Load();
 
-        iwl = InvisibleWallLoader.Create(invisibleWall, invisibleWall2, invisibleWall3, invisibleWall4);
+        iwl = InvisibleWallFactory.Create(invisibleWall, invisibleWall2, invisibleWall3, invisibleWall4);
         iwl.Load();
 
         StartCoroutine(SpawnCarDelay(simulationRoot));
