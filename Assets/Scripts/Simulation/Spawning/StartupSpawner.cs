@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
+using Spawners;
 using Loaders;
 
 public class StartupSpawner : MonoBehaviour
@@ -28,31 +29,30 @@ public class StartupSpawner : MonoBehaviour
     private TerrainLoader tl;
     private CloudLoader cl;
 
+    private Loader compositeLoader;
+
     private InvisibleWallLoader iwl;
     public void SetRowCol(int row, int col){
         spawnTileRow = row;
         spawnTileCol = col;
     }
 
+    private void setupLoader()
+    {
+        Transform simulationRoot = this.transform;
+        tl = TerrainLoader.Factory.Create(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
+        cl = CloudLoader.Factory.Create(spawnTileRow, spawnTileCol, dustCloudPrefab, marsTerrain, simulationRoot);
+        iwl = InvisibleWallLoader.Factory.Create(invisibleWall, invisibleWall2, invisibleWall3, invisibleWall4);
+        compositeLoader = CompositeLoader.Factory.Create(null, tl, cl, iwl);
+    }
+
     void Start()
     {
-        // 1. Get a reference to the SimulationPrefab’s transform
-        Transform simulationRoot = this.transform;
-
-        tl = TerrainLoaderFactory.Create(spawnTileRow, spawnTileCol, simulationRoot, marsTerrain);
-        tl.Load();
-
-        cl = CloudLoaderFactory.Create(spawnTileRow, spawnTileCol, dustCloudPrefab, marsTerrain, simulationRoot);
-        cl.Load();
-
-        iwl = InvisibleWallFactory.Create(invisibleWall, invisibleWall2, invisibleWall3, invisibleWall4);
-        iwl.Load();
-
-        StartCoroutine(SpawnCarDelay(simulationRoot));
-        // InitializeInvisibleWalls(120f);
+        setupLoader();
+        compositeLoader.Load();
+        StartCoroutine(SpawnCarDelay(this.transform));
         firebaseManager.StoreMarsTerrainData(firebaseManager.simulationId, TerrainInfo.TERRAIN_WIDTH, TerrainInfo.TERRAIN_LENGTH, 
             spawnTileRow, spawnTileCol);
-
     }
 
     void Update()
@@ -70,10 +70,10 @@ public class StartupSpawner : MonoBehaviour
     private IEnumerator SpawnCarDelay(Transform simulationRoot)
     {
         // Wait until terrain & dust are fully loaded
-        while (!tl.getIsLoaded() || !cl.getIsLoaded())
+        while (!tl.IsLoaded || !cl.IsLoaded)
         {
-            Debug.Log($"TL is loaded: ${tl.getIsLoaded()}");
-            Debug.Log($"CL is loaded: ${cl.getIsLoaded()}");
+            Debug.Log($"TL is loaded: ${tl.IsLoaded}");
+            Debug.Log($"CL is loaded: ${cl.IsLoaded}");
             yield return new WaitForSeconds(0.1f);
         }
         Vector3 carSpawnPosition = new Vector3(0, 0, 0);

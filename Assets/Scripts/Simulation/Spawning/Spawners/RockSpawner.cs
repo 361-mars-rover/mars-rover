@@ -1,25 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using Spawners;
 
-class RockSpawner : MonoBehaviour
+class RockSpawner : Spawner
 {
     public GameObject rockPrefab;  
     private int numberOfRocks = 500; 
     private float spawnRadius = 2000f;
     private float spawnDelay = 1f; 
 
-    void Start()
-    {
-        StartCoroutine(DelayedSpawn());
-    }
-
-    IEnumerator DelayedSpawn()
-    {
-        yield return new WaitForSeconds(spawnDelay);
-        SpawnRocks();
-    }
-
-    void SpawnRocks()
+    protected override void Spawn()
     {
         for (int i = 0; i < numberOfRocks; i++)
         {
@@ -39,6 +29,17 @@ class RockSpawner : MonoBehaviour
                 rock.transform.localScale *= scaleFactor;
             }
         }
+    }
+
+    void Start()
+    {
+        StartCoroutine(DelayedSpawn());
+    }
+
+    IEnumerator DelayedSpawn()
+    {
+        yield return new WaitForSeconds(spawnDelay);
+        Spawn();
     }
 
     Vector3 GetRandomPositionNearTerrain()

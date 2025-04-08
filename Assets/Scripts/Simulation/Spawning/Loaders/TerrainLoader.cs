@@ -2,17 +2,30 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using Loaders;
+
 class TerrainLoader : Loader
 {
-    public string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
-    public string colorbaseURL =  "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
-    public GameObject marsTerrain;
-    public int blurIterations = 2;
+    private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
+    private string colorbaseURL =  "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm";
+    private GameObject marsTerrain;
+    private int blurIterations = 2;
 
-    public int row;
-    public int col;
+    private int row;
+    private int col;
 
-    public Transform simulationRoot;
+    private Transform simulationRoot;
+
+    public class Factory : MonoBehaviourFactory{
+        public static TerrainLoader Create(int row, int col, Transform simulationRoot, GameObject marsTerrain, GameObject gameObject = null){
+            Debug.Log("Creating a spawner");
+            TerrainLoader tl = Create<TerrainLoader>(gameObject);
+            tl.row = row;
+            tl.col = col;
+            tl.simulationRoot = simulationRoot;
+            tl.marsTerrain = marsTerrain;
+            return tl;
+        }
+    }
 
     public override void Load()
     {

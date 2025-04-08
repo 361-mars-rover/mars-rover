@@ -4,27 +4,45 @@ using UnityEngine.Networking;
 using Loaders;
 class CloudLoader : Loader
 {
-    public GameObject DustCloudPrefab;
-    public GameObject MarsTerrain;
-    public Transform SimulationRoot;
+    private GameObject DustCloudPrefab;
+    private GameObject MarsTerrain;
+    private Transform SimulationRoot;
 
-    public Texture2D DustTexture;
+    private Texture2D dustTexture;
+    public Texture2D DustTexture{
+        get {return dustTexture;}
+        set {dustTexture = value;}
+    }
 
-    public GameObject CloudInstance;
+    private GameObject CloudInstance;
+    private Color dustColouring;
 
-    public Color DustColouring;
+    public Color DustColouring{
+        get {return dustColouring;}
+        set {dustColouring = value;}
+    }
 
     private readonly float CloudHeight = 250f; // Height above terrain
     private readonly float cloudScrollSpeed = 0.005f;
-    public int row;
-    public int col;
+    private int row;
+    private int col;
+    public class Factory : MonoBehaviourFactory{
+        public static CloudLoader Create(int row, int col, GameObject DustCloudPrefab, GameObject MarsTerrain, Transform SimulationRoot, GameObject gameObject = null){
+            CloudLoader cl = Create<CloudLoader>(gameObject);
+            cl.row = row;
+            cl.col = col;
+            cl.DustCloudPrefab = DustCloudPrefab;
+            cl.MarsTerrain = MarsTerrain;
+            cl.SimulationRoot = SimulationRoot;
+            return cl;
+        }
+    }
     public override void Load()
     {
         StartCoroutine(DownloadDustTexture(row, col));
     }
-    
 
-    IEnumerator DownloadDustTexture(int row, int col)
+    private IEnumerator DownloadDustTexture(int row, int col)
     {
         string dustURL = $"https://trek.nasa.gov/tiles/Mars/EQ/TES_Dust/1.0.0/default/default028mm/{0}/{0}/{0}.png";
         UnityWebRequest dustRequest = UnityWebRequestTexture.GetTexture(dustURL);
@@ -32,7 +50,7 @@ class CloudLoader : Loader
 
         if (dustRequest.result == UnityWebRequest.Result.Success)
         {
-            DustTexture = DownloadHandlerTexture.GetContent(dustRequest);
+            dustTexture = DownloadHandlerTexture.GetContent(dustRequest);
             CreateCloudLayer();
         }
         else
@@ -41,7 +59,7 @@ class CloudLoader : Loader
         }
     }
 
-    void CreateCloudLayer()
+    private void CreateCloudLayer()
     {
         if (DustTexture == null)
         {
@@ -91,4 +109,5 @@ class CloudLoader : Loader
 
         isLoaded = true;
     }
+
 }
