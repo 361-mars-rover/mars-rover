@@ -15,7 +15,7 @@ public class SunlightAIController : MonoBehaviour
     private Vector3 avoidanceTarget = Vector3.zero;
     private float lastRockDistance = Mathf.Infinity;
     private float lastDarknessPercentage = 0f;
-    private StartupSpawner startupSpawner;
+    private SimulationStart startupSpawner;
     private float logTimer = 0f;
     private float logInterval = 1.0f;
     private bool isInitialized = false;
@@ -23,7 +23,7 @@ public class SunlightAIController : MonoBehaviour
     // Method to initialize the controller with necessary parameters
     public void Initialize(Transform transform, float angle, float tolerance, 
                           float adjustment, float forward, float avoidThreshold,
-                          StartupSpawner spawner)
+                          SimulationStart spawner)
     {
         carTransform = transform;
         currentAngle = angle;
@@ -127,7 +127,7 @@ public class SunlightAIController : MonoBehaviour
         if (startupSpawner != null)
         {
             // Access dust_coloring using reflection since it's private
-            FieldInfo fieldInfo = typeof(StartupSpawner).GetField("dust_coloring", 
+            FieldInfo fieldInfo = typeof(SimulationStart).GetField("dust_coloring", 
                 BindingFlags.NonPublic | BindingFlags.Instance);
             
             if (fieldInfo != null)

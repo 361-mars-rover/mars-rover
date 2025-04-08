@@ -1,11 +1,8 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Networking;
-using Spawners;
 using Loaders;
 
-public class StartupSpawner : MonoBehaviour
+public class SimulationStart : MonoBehaviour
 {
     public GameObject car;
     // public GameObject camera;

@@ -27,7 +27,7 @@ public class SimulationManager : MonoBehaviour
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
             GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
-            sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
+            sim.GetComponent<SimulationStart>().SetRowCol(row,col);
             // sim.SetActive(true);
             sims[i] = sim;
             roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();

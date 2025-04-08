@@ -68,7 +68,7 @@ public class CarControl : MonoBehaviour
     private bool inReverseManeuver = false;
     private bool lookingForGem = false;
     // For the dust data
-    private StartupSpawner startupSpawner;
+    private SimulationStart startupSpawner;
     // For sunlight-seeking behavior
     private float lastDarknessPercentage = 0f;
     private float darknessTolerance = 2.0f; // How much darker it needs to get before changing direction
@@ -112,7 +112,7 @@ public class CarControl : MonoBehaviour
         
         // Start the circle movement
         isInitialized = true;
-        startupSpawner = FindFirstObjectByType<StartupSpawner>();
+        startupSpawner = FindFirstObjectByType<SimulationStart>();
         if (startupSpawner == null)
         {
             Debug.LogError("StartupSpawner not found!");

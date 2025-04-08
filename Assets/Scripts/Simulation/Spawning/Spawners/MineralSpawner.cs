@@ -24,7 +24,7 @@ public class MineralSpawner : Spawner
         new Keyframe(1f, 1f)
     );
 
-    protected override void Spawn()
+    public override void Spawn()
     {
         if (mineralTexture == null)
         {

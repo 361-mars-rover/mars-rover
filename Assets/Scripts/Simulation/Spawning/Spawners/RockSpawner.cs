@@ -9,7 +9,7 @@ class RockSpawner : Spawner
     private float spawnRadius = 2000f;
     private float spawnDelay = 1f; 
 
-    protected override void Spawn()
+    public override void Spawn()
     {
         for (int i = 0; i < numberOfRocks; i++)
         {
