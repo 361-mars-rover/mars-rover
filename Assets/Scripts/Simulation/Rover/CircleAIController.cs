@@ -1,22 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class CircleAIController : MonoBehaviour, IAIController
+public class CircleAIController : BaseAIController
 {
     // Configuration and state fields.
-    private Transform carTransform;
     private Vector3 homeBasePosition;
     private float currentRadius;
-    private float currentAngle;
     private float circleSpeed;
     private float maxRadius;
     private float radiusIncrement;
-    private float avoidanceThreshold;
-    
-    private bool avoidingRock;
-    private Vector3 avoidanceTarget;
-    private float lastRockDistance = Mathf.Infinity;
-    private bool inReverseManeuver = false;
     private bool lookingForGem = false;
     
     private bool innerCircleMode = false;
@@ -25,11 +17,6 @@ public class CircleAIController : MonoBehaviour, IAIController
     private int innerCircleLapsCompleted = 0;
     private int totalInnerCircleLaps = 10;
     private float innerCircleFactor = 0.1f;
-
-    private bool inRecovery = false;
-
-    // Reference to the CarControl input interface.
-    private IAIInput aiInput;
 
     /// <summary>
     /// Initializes the circle AI with its parameters and a reference to the CarControl input.
@@ -76,124 +63,7 @@ public class CircleAIController : MonoBehaviour, IAIController
         avoidanceTarget = avoidTarget;
     }
 
-    /// <summary>
-    /// This function is called from CarControl to update AI behavior.
-    /// It computes a target based on the circle logic (with gem detection and rock avoidance),
-    /// calculates control inputs, and pushes them back via IAIInput.SetControls.
-    /// </summary>
-    // public void UpdateRover()
-    // {
-    //     Vector3 targetPosition;
-
-    //     // --- Gem Detection (has higher priority) ---
-    //     float gemRayDistance = 50f;
-    //     float gemSphereRadius = 2f;
-    //     int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
-
-    //     RaycastHit gemHit;
-    //     if (Physics.SphereCast(carTransform.position, gemSphereRadius, carTransform.forward, out gemHit, gemRayDistance, gemLayerMask))
-    //     {
-    //         lookingForGem = true;
-    //         targetPosition = gemHit.collider.transform.position;
-    //         Debug.Log("Gem detected via sphere cast. Moving toward gem.");
-    //     }
-    //     // --- Rock avoidance and normal circle logic ---
-    //     else if (!avoidingRock)
-    //     {
-    //         Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
-    //         float angleRad = currentAngle * Mathf.Deg2Rad;
-    //         targetPosition = homeBasePosition + new Vector3(
-    //             Mathf.Sin(angleRad) * currentRadius,
-    //             0f,
-    //             Mathf.Cos(angleRad) * currentRadius
-    //         );
-    //         if (rockAvoidanceOffset != Vector3.zero)
-    //         {
-    //             avoidingRock = true;
-    //             avoidanceTarget = carTransform.position + rockAvoidanceOffset;
-    //             Debug.Log("Rock detected. Switching to avoidance mode.");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         targetPosition = avoidanceTarget;
-    //         if (Vector3.Distance(carTransform.position, avoidanceTarget) < avoidanceThreshold)
-    //         {
-    //             avoidingRock = false;
-    //             Debug.Log("Avoidance complete. Resuming circle path.");
-    //         }
-    //     }
-
-    //     // --- Update angle and radius based on laps and mode ---
-    //     currentAngle += circleSpeed * Time.deltaTime;
-    //     if (currentAngle >= 360f)
-    //     {
-    //         currentAngle = 0f;
-    //         if (innerCircleMode)
-    //         {
-    //             innerCircleLapsCompleted++;
-    //             Debug.Log("Inner circle lap " + innerCircleLapsCompleted + " completed.");
-    //             if (innerCircleLapsCompleted < totalInnerCircleLaps)
-    //             {
-    //                 float innerIncrement = maxRadius * (innerCircleFactor / totalInnerCircleLaps);
-    //                 currentRadius += innerIncrement;
-    //                 Debug.Log("Expanding inner circle radius to: " + currentRadius);
-    //             }
-    //             else
-    //             {
-    //                 innerCircleMode = false;
-    //                 innerCircleLapsCompleted = 0;
-    //                 homeBasePosition = normalHomeBase;
-    //                 currentRadius = normalRadius;
-    //                 Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
-    //             }
-    //         }
-    //         else
-    //         {
-    //             if (currentRadius < maxRadius)
-    //             {
-    //                 currentRadius += maxRadius * radiusIncrement;
-    //                 Debug.Log("Increasing circle radius to: " + currentRadius);
-    //             }
-    //             else
-    //             {
-    //                 Vector3 newBase = homeBasePosition + Vector3.right * (2 * currentRadius);
-    //                 homeBasePosition = newBase;
-    //                 Debug.Log("New home base set at: " + homeBasePosition);
-    //                 currentRadius = maxRadius * radiusIncrement;
-    //             }
-    //         }
-    //     }
-
-    //     Debug.DrawLine(carTransform.position, targetPosition, Color.blue);
-
-    //     // --- Compute control inputs based on target ---
-    //     Vector3 toTarget = targetPosition - carTransform.position;
-    //     toTarget.y = 0;
-    //     Vector3 localTarget = carTransform.InverseTransformPoint(targetPosition);
-    //     float steer = Mathf.Clamp(localTarget.x / 5f, -1f, 1f);
-    //     float distance = toTarget.magnitude;
-    //     float throttle = Mathf.Clamp01(distance / 10f);
-    //     throttle = Mathf.Min(throttle, 0.5f);
-
-    //     // Optionally adjust throttle if a rock is extremely close.
-    //     if (lastRockDistance < 5f)
-    //     {
-    //         throttle = 0f;  // You could trigger a reverse maneuver here if desired.
-    //     }
-    //     else if (lastRockDistance < 15f)
-    //     {
-    //         throttle *= 0.5f;
-    //     }
-
-    //     // --- Push calculated controls to CarControl ---
-    //     if (aiInput != null)
-    //     {
-    //         aiInput.SetControls(throttle, steer);
-    //     }
-    // }
-
-    public void UpdateRover()
+    public override void UpdateRover()
     {
         Vector3 targetPosition;
 

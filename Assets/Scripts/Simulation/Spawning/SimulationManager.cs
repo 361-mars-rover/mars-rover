@@ -41,7 +41,7 @@ public class SimulationManager : MonoBehaviour
             // Now get the CarControl component from the car object
             CarControl carControl = carTransform.GetComponent<CarControl>();
             carControl.PrepareAIControllers(startupSpawner);
-            carControl.SetAI(AIMode.SunlightAI);
+            carControl.SetAI(AIMode.CircleAI);
             Debug.Log($"Car control: {carControl}");
             // sim.SetActive(true);
             sims[i] = sim;
