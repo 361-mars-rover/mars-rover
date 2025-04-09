@@ -2,9 +2,24 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UnityEditor.Experimental.GraphView;
+using AI;
+using System.Runtime.InteropServices;
 
 public class CarControl : MonoBehaviour
 {
+
+    public class Factory : ParameterizedMonoBehaviour{
+        public static CarControl Create(Rigidbody rigidbody, WheelControl[] wheels, GameObject gameObject = null){
+            Debug.Log("Creating car control");
+            CarControl c = Create<CarControl>(gameObject);
+            Time.fixedDeltaTime = 0.01f; // Smaller value for more precise physics
+            c.rigidBody = rigidbody;
+            c.wheels = wheels;
+            c.id = Guid.NewGuid().ToString();
+            return c;
+        }
+    }
+
     public float motorTorque = 2f;
     public float brakeTorque = 200f;
     public float maxSpeed = 1f;
@@ -44,7 +59,7 @@ public class CarControl : MonoBehaviour
     // Don't comment out right away since its being used in Behaviour tree
     public bool useAI = false;
 
-    public static string id;
+    public string id;
     public bool allowInputs = true;
     
     public bool navigateToTarget = false;
@@ -81,8 +96,8 @@ public class CarControl : MonoBehaviour
     private CircleAIController circleAIController;
 
     private SunlightAIController sunlightAIController;
-    
 
+    private AIControllerBase aIController;
 
     void Awake()
     {

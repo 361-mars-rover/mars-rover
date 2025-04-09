@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
-
-public class CircleAIController : MonoBehaviour
+using AI;
+public class CircleAIController : AIController<(Vector3 targetPosition, float updatedAngle, bool isAvoidingRock, 
+    Vector3 avoidanceTarget, bool isInnerCircle, float updatedRadius, int updatedLaps)>
 {
     // These will be set by CarControl when calling the CircleAIUpdate function
     private Transform carTransform;
@@ -208,5 +209,97 @@ public class CircleAIController : MonoBehaviour
     public void SetReverseManeuverState(bool state)
     {
         inReverseManeuver = state;
+    }
+
+    public override (Vector3 targetPosition, float updatedAngle, bool isAvoidingRock, Vector3 avoidanceTarget, 
+        bool isInnerCircle, float updatedRadius, int updatedLaps) AIUpdate()
+    {
+        Vector3 targetPosition;
+        float gemRayDistance = 50f; // Increased detection range
+        float gemSphereRadius = 2f; // Adjust to widen the detection area
+        int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
+
+        RaycastHit gemHit;
+        if (Physics.SphereCast(carTransform.position, gemSphereRadius, carTransform.forward, out gemHit, gemRayDistance, gemLayerMask))
+        {
+            lookingForGem = true;
+            targetPosition = gemHit.collider.transform.position;
+            Debug.Log("Gem detected via sphere cast. Moving toward gem.");
+        } 
+        else if (!avoidingRock)
+        {
+            // Normal circle target calculation.
+            Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
+            float angleRad = currentAngle * Mathf.Deg2Rad;
+            targetPosition = homeBasePosition + new Vector3(
+                Mathf.Sin(angleRad) * currentRadius,
+                0f,
+                Mathf.Cos(angleRad) * currentRadius
+            ); 
+            if (rockAvoidanceOffset != Vector3.zero)
+            {
+                avoidingRock = true;
+                avoidanceTarget = carTransform.position + rockAvoidanceOffset;
+                Debug.Log("Rock detected. Switching to avoidance mode.");
+            }
+        }
+        else
+        {
+            targetPosition = avoidanceTarget;
+            if (Vector3.Distance(carTransform.position, avoidanceTarget) < avoidanceThreshold)
+            {
+                avoidingRock = false;
+                Debug.Log("Avoidance complete. Resuming circle path.");
+            }
+        }
+
+        currentAngle += circleSpeed * Time.deltaTime;
+        if (currentAngle >= 360f)
+        {
+            currentAngle = 0f;
+            if (innerCircleMode)
+            {
+                innerCircleLapsCompleted++;
+                Debug.Log("Inner circle lap " + innerCircleLapsCompleted + " completed.");
+                // Gradually expand the inner circle radius each lap.
+                if (innerCircleLapsCompleted < totalInnerCircleLaps)
+                {
+                    // Increase by a fraction of maxRadius per lap.
+                    float innerIncrement = maxRadius * (innerCircleFactor / totalInnerCircleLaps);
+                    currentRadius += innerIncrement;
+                    Debug.Log("Expanding inner circle radius to: " + currentRadius);
+                }
+                else
+                {
+                    // After completing required laps, exit inner circle mode.
+                    innerCircleMode = false;
+                    innerCircleLapsCompleted = 0;
+                    homeBasePosition = normalHomeBase;
+                    currentRadius = normalRadius;
+                    Debug.Log("Inner circle scan complete. Resuming normal circle scan.");
+                }
+            }
+            else
+            {
+                // Normal mode: Increase radius until max is reached, then shift home base.
+                if (currentRadius < maxRadius)
+                {
+                    currentRadius += maxRadius * radiusIncrement;
+                    Debug.Log("Increasing circle radius to: " + currentRadius);
+                }
+                else
+                {
+                    Vector3 newBase = homeBasePosition + Vector3.right * (2 * currentRadius);
+                    homeBasePosition = newBase;
+                    Debug.Log("New home base set at: " + homeBasePosition);
+                    currentRadius = maxRadius * radiusIncrement;
+                }
+            }
+        }
+
+        // Return all the updated values and the target position
+        return (targetPosition, currentAngle, avoidingRock, avoidanceTarget, 
+            innerCircleMode, currentRadius, innerCircleLapsCompleted);
+
     }
 }

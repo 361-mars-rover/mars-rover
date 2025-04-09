@@ -22,23 +22,6 @@ public class SimulationManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Printing existing avatars:...");
-        // AvatarTableManager.avatars.ForEach(x => Debug.Log(x.Description));
-        // Debug.Log("printing row col pairs");
-        // foreach (Vector2 row_col  in TileIndices){
-        //     Debug.Log(row_col);
-        // }
-        // for (int i = 0; i < TileIndices.Length; i++){
-        //     int row = TileIndices[i].x;
-        //     int col = TileIndices[i].y; 
-        //     if (!IsValidRowCol(row, col)){
-        //         Debug.LogError($"Row col pair {row},{col} is invalid");
-        //     }
-        //     GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
-        //     sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
-        //     // sim.SetActive(true);
-        //     sims[i] = sim;
-        //     roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
-        // }
 
         for (int i = 0; i < AvatarTableManager.avatars.Count; i++){
             Avatar a = AvatarTableManager.avatars[i];
@@ -49,6 +32,7 @@ public class SimulationManager : MonoBehaviour
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
             GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
+            CarControl carControl = sim.GetComponent<CarControl>();
             sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
             // sim.SetActive(true);
             sims[i] = sim;

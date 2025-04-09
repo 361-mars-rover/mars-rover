@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Reflection;
+using AI;
 
-public class SunlightAIController : MonoBehaviour
+public class SunlightAIController : AIController<(Vector3 targetPosition, float updatedAngle, bool isAvoidingRock, Vector3 avoidanceTarget, float rockDistance)>
 {
     // Parameters for the controller
     private Transform carTransform;
@@ -202,4 +203,83 @@ public class SunlightAIController : MonoBehaviour
     {
         currentAngle = angle;
     }
+
+    public override (Vector3 targetPosition, float updatedAngle, bool isAvoidingRock, Vector3 avoidanceTarget, float rockDistance) AIUpdate()
+    {
+                if (!isInitialized)
+        {
+            return (carTransform.position + carTransform.forward * forwardDistance, currentAngle, 
+                   avoidingRock, avoidanceTarget, lastRockDistance);
+        }
+        
+        // Get current sunlight darkness percentage
+        float currentDarkness = GetSunlightDarknessPercentage();
+        
+        // Determine whether we're moving toward darker area
+        bool movingToDarkerArea = currentDarkness > lastDarknessPercentage + darknessTolerance;
+        
+        // Track our target position
+        Vector3 targetPosition;
+        
+        // If we're moving to a darker area, adjust direction
+        if (movingToDarkerArea)
+        {
+            // Change direction by adjusting our heading
+            currentAngle += adjustmentAngle;
+            Debug.Log($"Moving to darker area (prev: {lastDarknessPercentage:F2}%, current: {currentDarkness:F2}%). Adjusting direction.");
+            
+            // Reset avoidance state if we were avoiding something
+            avoidingRock = false;
+        }
+        else
+        {
+            // Keep moving in current direction, but check for obstacles
+            if (!avoidingRock)
+            {
+                // Check if a rock is detected on our path
+                Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
+                if (rockAvoidanceOffset != Vector3.zero)
+                {
+                    // Rock detected: set avoidance mode
+                    avoidingRock = true;
+                    avoidanceTarget = carTransform.position + rockAvoidanceOffset;
+                    Debug.Log("Rock detected. Switching to avoidance mode.");
+                }
+            }
+            else
+            {
+                // If we're already avoiding a rock, check if we've cleared it
+                if (Vector3.Distance(carTransform.position, avoidanceTarget) < avoidanceThreshold)
+                {
+                    avoidingRock = false;
+                    Debug.Log("Avoidance complete. Resuming sunlight-seeking.");
+                }
+            }
+        }
+        
+        // Calculate our target position based on current angle and state
+        if (avoidingRock)
+        {
+            targetPosition = avoidanceTarget;
+        }
+        else
+        {
+            // Calculate target position in forward direction
+            float angleRad = currentAngle * Mathf.Deg2Rad;
+            targetPosition = carTransform.position + new Vector3(
+                Mathf.Sin(angleRad),
+                0f,
+                Mathf.Cos(angleRad)
+            ) * forwardDistance;
+        }
+        
+        // Update the last darkness value for the next frame
+        lastDarknessPercentage = currentDarkness;
+        
+        // Debug visualization
+        Debug.DrawLine(carTransform.position, targetPosition, Color.yellow);
+        
+        return (targetPosition, currentAngle, avoidingRock, avoidanceTarget, lastRockDistance);
+    }
+
 }
