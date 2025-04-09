@@ -109,7 +109,7 @@ public class SimulationManager : MonoBehaviour
             //     Debug.Log("car control is null");
             // }
 
-            carControl.allowInputs = active;  // Disable input
+            // carControl.allowInputs = active;  // Disable input
             prevIdx =  simIdx;
             return cur;
         }

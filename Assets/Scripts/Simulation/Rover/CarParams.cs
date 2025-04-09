@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class CarData{
+public static class CarParams{
     public static readonly float MOTOR_TORQUE = 2f;
     public static readonly float BRAKE_TORQUE = 200f;
     public static readonly float MAX_SPEED = 1f;
@@ -10,4 +10,5 @@ public static class CarData{
     public static readonly AnimationCurve TORQUE_CURVE = AnimationCurve.EaseInOut(0f, 1f, 1f, 0.2f);
     public static readonly float ACCELERATION_SMOOTHNESS = 0.3f;
     public static readonly float BRAKING_SMOOTHNESS = 0.5f;
+    public static readonly float AVOIDANCE_THRESHOLD = 2f;
 }
