@@ -43,6 +43,7 @@ public class SimulationManager : MonoBehaviour
             carControl.PrepareAIControllers(startupSpawner);
             carControl.SetAI(a.brain.aIMode);
             Debug.Log($"Car control: {carControl}");
+            CarColorUtils.SetCarColor(carTransform, a.rover.color);
             // sim.SetActive(true);
             sims[i] = sim;
             roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();

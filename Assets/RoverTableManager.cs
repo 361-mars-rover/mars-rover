@@ -14,9 +14,12 @@ public class RoverTableManager : TableManager<Rover>
 
     void AddTestRovers()
     {
-        for (int i = 0; i < 3; i++)
+        Color [] colors = {Color.red, Color.blue, Color.yellow, Color.black, Color.gray};
+        string [] colorNames = {"red", "blue", "yellow", "black", "gray"};
+        for (int i = 0; i < colors.Length; i++)
         {
-            rovers.Add(new Rover { ID = i, name = $"Rover {i}", description = $"Rover {i}" });
+            Color color = colors[i];
+            rovers.Add(new Rover { ID = i, name = $"Rover {i}", description = colorNames[i], color=color});
         }
     }
 
