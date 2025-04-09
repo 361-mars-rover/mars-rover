@@ -32,8 +32,17 @@ public class SimulationManager : MonoBehaviour
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
             GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
-            CarControl carControl = sim.GetComponent<CarControl>();
-            sim.GetComponent<StartupSpawner>().SetRowCol(row,col);
+            StartupSpawner startupSpawner = sim.GetComponent<StartupSpawner>();
+            startupSpawner.SetRowCol(row,col);
+
+                        // Get the "car" child object
+            Transform carTransform = sim.transform.Find("car");
+
+            // Now get the CarControl component from the car object
+            CarControl carControl = carTransform.GetComponent<CarControl>();
+            carControl.PrepareAIControllers(startupSpawner);
+            carControl.SetAI(AIMode.SunlightAI);
+            Debug.Log($"Car control: {carControl}");
             // sim.SetActive(true);
             sims[i] = sim;
             roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
