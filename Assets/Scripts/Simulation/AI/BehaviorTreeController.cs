@@ -8,7 +8,12 @@ public class BehaviorTreeController : MonoBehaviour
     void Start()
     {
         ActionNode circleScan = new ActionNode(() => {
-            carControl.CircleAIUpdate();
+            // carControl.CircleAIUpdate();
+            if (carControl.aiController is SunlightAIController)
+            {
+                carControl.aiController.UpdateRover();
+            }
+            // carControl.aiController.UpdateRover();
             return Status.Running;
         });
 
