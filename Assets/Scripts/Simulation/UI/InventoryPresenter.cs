@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryPresenter : MonoBehaviour
 {
     public GameObject mineralPanelPrefab; // UI prefab for displaying minerals
     public Transform panelContainer; // Parent panel to hold mineral entries
@@ -13,7 +13,7 @@ public class InventoryManager : MonoBehaviour
     public Button nextButton; // Button to go to next page
     public Button prevButton; // Button to go to previous page
 
-    private List<(string id, string x, string z)> mineralIds = new List<(string, string, string)>(); // Store mineral info
+    private Inventory inventory;
     private int currentPage = 0;
     private int mineralsPerPage = 5;
 
@@ -71,7 +71,7 @@ public class InventoryManager : MonoBehaviour
         }
 
 
-        mineralIds.Clear();  // Clear current data to refresh UI
+        inventory.Clear();  // Clear current data to refresh UI
         ClearPanel(); // Remove old entries
 
         DataSnapshot snapshot = args.Snapshot;
@@ -82,7 +82,7 @@ public class InventoryManager : MonoBehaviour
                 string mineralId = mineralEntry.Child("id").Value.ToString();
                 string positionX = mineralEntry.Child("position").Child("x").Value.ToString();
                 string positionZ = mineralEntry.Child("position").Child("z").Value.ToString();
-                mineralIds.Add((mineralId, positionX, positionZ));
+                inventory.AddMineral(mineralId, positionX, positionZ);
             }
 
             UpdatePagination(); // Refresh the UI with the updated minerals without changing the current page
@@ -99,22 +99,23 @@ public class InventoryManager : MonoBehaviour
         ClearPanel(); // Clear existing entries
 
         int startIndex = currentPage * mineralsPerPage;
-        int endIndex = Mathf.Min(startIndex + mineralsPerPage, mineralIds.Count);
+        int endIndex = Mathf.Min(startIndex + mineralsPerPage, inventory.GetMineralCount());
 
         for (int i = startIndex; i < endIndex; i++)
         {
-            CreateMineralEntry(mineralIds[i].id, mineralIds[i].x, mineralIds[i].z);
+            (string id, string x, string z) = inventory.GetMineral(i);
+            CreateMineralEntry(id, x, z);
         }
 
         // Enable/disable pagination buttons based on current page
         prevButton.gameObject.SetActive(currentPage > 0);
-        nextButton.gameObject.SetActive(endIndex < mineralIds.Count);
+        nextButton.gameObject.SetActive(endIndex < inventory.GetMineralCount());
     }
 
     // Go to the next page of minerals
     public void NextPage()
     {
-        if ((currentPage + 1) * mineralsPerPage < mineralIds.Count)
+        if ((currentPage + 1) * mineralsPerPage < inventory.GetMineralCount())
         {
             currentPage++;
             UpdatePagination();

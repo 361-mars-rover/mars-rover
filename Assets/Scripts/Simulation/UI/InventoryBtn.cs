@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class InventoryButton : MonoBehaviour
 {
-    public InventoryManager inventoryManager;
+    public InventoryPresenter inventoryPresenter;
     public bool isOpen;
 
     void Start()
@@ -12,12 +12,12 @@ public class InventoryButton : MonoBehaviour
         if (isOpen)
         {
             isOpen = false;
-            inventoryManager.CloseInventory();
+            inventoryPresenter.CloseInventory();
         }
         else
         {
             isOpen = true;
-            inventoryManager.FetchMinerals();
+            inventoryPresenter.FetchMinerals();
         }});
         
     }
