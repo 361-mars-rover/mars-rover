@@ -13,7 +13,7 @@ public class InventoryPresenter : MonoBehaviour
     public Button nextButton; // Button to go to next page
     public Button prevButton; // Button to go to previous page
 
-    private Inventory inventory;
+    private Inventory inventory = new Inventory();
     private int currentPage = 0;
     private int mineralsPerPage = 5;
 

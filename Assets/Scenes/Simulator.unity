@@ -881,7 +881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26484cf0929eb4267b2870aaee7b42a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryManager: {fileID: 573476492}
+  inventoryPresenter: {fileID: 573476492}
   isOpen: 0
 --- !u!114 &515809390
 MonoBehaviour:
