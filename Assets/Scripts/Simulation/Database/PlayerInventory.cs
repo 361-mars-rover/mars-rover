@@ -5,7 +5,7 @@ using System;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public List<GameObject> Minerals = new List<GameObject>(); // ✅ Ensure list is initialized
+    public List<GameObject> Minerals = new List<GameObject>();
     public int NumberOfMinerals = 0;
     public UnityEvent<PlayerInventory> OnMineralCollected = new UnityEvent<PlayerInventory>(); // ✅ Ensure event is initialized
     public SimulationManager simulationManager;

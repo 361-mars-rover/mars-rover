@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class InventoryUI : MonoBehaviour
+public class MineralsCollectedCountUI : MonoBehaviour
 {
     private TextMeshProUGUI mineralText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

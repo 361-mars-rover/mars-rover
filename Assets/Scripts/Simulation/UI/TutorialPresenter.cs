@@ -15,7 +15,7 @@ public class TutorialPresenter : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void Update()
+    void HandleInputs()
     {
         if (popUpIndex == 0)
         {
@@ -39,6 +39,10 @@ public class TutorialPresenter : MonoBehaviour
         {
             Cursor.visible = !Cursor.visible;
         }
+    }
 
+    void Update()
+    {
+        HandleInputs();
     }
 }
