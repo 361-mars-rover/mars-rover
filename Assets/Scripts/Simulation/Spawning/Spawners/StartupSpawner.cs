@@ -67,6 +67,11 @@ public class StartupSpawner : MonoBehaviour
         }
     }
 
+    public Color GetDustColouring()
+    {
+        return cl != null ? cl.DustColouring : Color.black;
+    }
+
     private IEnumerator SpawnCarDelay(Transform simulationRoot)
     {
         // Wait until terrain & dust are fully loaded

@@ -1,29 +1,19 @@
-using UnityEngine;
 using System.Collections;
-using System.Reflection;
+using UnityEngine;
 
-public class SunlightAIController : MonoBehaviour
+public class SunlightAIController : BaseAIController
 {
-    // Parameters for the controller
-    private Transform carTransform;
-    private float currentAngle;
-    private float darknessTolerance = 2.0f;
-    private float adjustmentAngle = 45f;
-    private float forwardDistance = 20f;
-    private float avoidanceThreshold = 2f;
-    private bool avoidingRock = false;
-    private Vector3 avoidanceTarget = Vector3.zero;
-    private float lastRockDistance = Mathf.Infinity;
     private float lastDarknessPercentage = 0f;
     private StartupSpawner startupSpawner;
     private float logTimer = 0f;
     private float logInterval = 1.0f;
     private bool isInitialized = false;
 
-    // Method to initialize the controller with necessary parameters
+    // Reference to the car's control input interface.
+
     public void Initialize(Transform transform, float angle, float tolerance, 
-                          float adjustment, float forward, float avoidThreshold,
-                          StartupSpawner spawner)
+                           float adjustment, float forward, float avoidThreshold,
+                           StartupSpawner spawner, IAIInput input)
     {
         carTransform = transform;
         currentAngle = angle;
@@ -34,60 +24,46 @@ public class SunlightAIController : MonoBehaviour
         startupSpawner = spawner;
         lastDarknessPercentage = GetSunlightDarknessPercentage();
         isInitialized = true;
+        aiInput = input;
     }
 
-    public void SetAvoidanceState(bool isAvoiding, Vector3 avoidTarget)
+    public override void UpdateRover()
     {
-        avoidingRock = isAvoiding;
-        avoidanceTarget = avoidTarget;
-    }
+        Debug.Log("Updating rover");
 
-    public (Vector3 targetPosition, float updatedAngle, bool isAvoidingRock, Vector3 avoidanceTarget, float rockDistance) 
-    SunlightAIUpdate()
-    {
         if (!isInitialized)
         {
-            return (carTransform.position + carTransform.forward * forwardDistance, currentAngle, 
-                   avoidingRock, avoidanceTarget, lastRockDistance);
+            Debug.Log("Rover is not initialized");
+            aiInput.SetControls(0.0f, 0.0f);
+            return;
         }
-        
-        // Get current sunlight darkness percentage
+
+        // Calculate current darkness.
         float currentDarkness = GetSunlightDarknessPercentage();
-        
-        // Determine whether we're moving toward darker area
         bool movingToDarkerArea = currentDarkness > lastDarknessPercentage + darknessTolerance;
-        
-        // Track our target position
-        Vector3 targetPosition;
-        
-        // If we're moving to a darker area, adjust direction
+        Vector3 desiredTarget;
+
         if (movingToDarkerArea)
         {
-            // Change direction by adjusting our heading
+            // Adjust heading
             currentAngle += adjustmentAngle;
             Debug.Log($"Moving to darker area (prev: {lastDarknessPercentage:F2}%, current: {currentDarkness:F2}%). Adjusting direction.");
-            
-            // Reset avoidance state if we were avoiding something
-            avoidingRock = false;
+            avoidingRock = false;  // Reset avoidance mode when moving to a darker area
         }
         else
         {
-            // Keep moving in current direction, but check for obstacles
             if (!avoidingRock)
             {
-                // Check if a rock is detected on our path
-                Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
-                if (rockAvoidanceOffset != Vector3.zero)
+                Vector3 rockOffset = CheckForRockAvoidance();
+                if (rockOffset != Vector3.zero)
                 {
-                    // Rock detected: set avoidance mode
                     avoidingRock = true;
-                    avoidanceTarget = carTransform.position + rockAvoidanceOffset;
+                    avoidanceTarget = carTransform.position + rockOffset;
                     Debug.Log("Rock detected. Switching to avoidance mode.");
                 }
             }
             else
             {
-                // If we're already avoiding a rock, check if we've cleared it
                 if (Vector3.Distance(carTransform.position, avoidanceTarget) < avoidanceThreshold)
                 {
                     avoidingRock = false;
@@ -95,111 +71,55 @@ public class SunlightAIController : MonoBehaviour
                 }
             }
         }
-        
-        // Calculate our target position based on current angle and state
+
+        // Determine the desired target position.
         if (avoidingRock)
         {
-            targetPosition = avoidanceTarget;
+            desiredTarget = avoidanceTarget;
         }
         else
         {
-            // Calculate target position in forward direction
             float angleRad = currentAngle * Mathf.Deg2Rad;
-            targetPosition = carTransform.position + new Vector3(
-                Mathf.Sin(angleRad),
-                0f,
+            desiredTarget = carTransform.position + new Vector3(
+                Mathf.Sin(angleRad), 
+                0f, 
                 Mathf.Cos(angleRad)
             ) * forwardDistance;
         }
-        
-        // Update the last darkness value for the next frame
+
         lastDarknessPercentage = currentDarkness;
-        
-        // Debug visualization
-        Debug.DrawLine(carTransform.position, targetPosition, Color.yellow);
-        
-        return (targetPosition, currentAngle, avoidingRock, avoidanceTarget, lastRockDistance);
+        Debug.DrawLine(carTransform.position, desiredTarget, Color.yellow);
+
+        // Here we calculate simple control inputs from the desired target.
+        Vector3 toTarget = desiredTarget - carTransform.position;
+        toTarget.y = 0;
+        Vector3 localTarget = carTransform.InverseTransformPoint(desiredTarget);
+        float steer = Mathf.Clamp(localTarget.x / 5f, -1f, 1f);
+        float distance = toTarget.magnitude;
+        float throttleAmount = Mathf.Clamp01(distance / 10f);
+        throttleAmount = Mathf.Min(throttleAmount, 0.5f);
+        HandleRockProximity(throttleAmount, steer);
     }
 
-    // Helper method to get the sunlight darkness percentage
     private float GetSunlightDarknessPercentage()
     {
+
         if (startupSpawner != null)
         {
-            // Access dust_coloring using reflection since it's private
-            FieldInfo fieldInfo = typeof(StartupSpawner).GetField("dust_coloring", 
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            
-            if (fieldInfo != null)
-            {
-                Color dustColor = (Color)fieldInfo.GetValue(startupSpawner);
-                
-                // Calculate perceived brightness using standard luminance formula
-                float brightness = 0.299f * dustColor.r + 0.587f * dustColor.g + 0.114f * dustColor.b;
-                
-                // Invert the scale (0 = bright = 0% darkness, 1 = dark = 100% darkness)
-                float darknessPercentage = (1f - brightness) * 100f;
-                
-                // Log once per second using a timer
-                logTimer += Time.deltaTime;
-                if (logTimer >= logInterval)
-                {
-                    Debug.Log($"Dust color: R:{dustColor.r:F2}, G:{dustColor.g:F2}, B:{dustColor.b:F2}");
-                    Debug.Log($"Sunlight darkness: {darknessPercentage:F2}%");
-                    logTimer = 0f;
-                }
-                
-                return darknessPercentage;
-            }
-        }
-        
-        return 50f; // Default value if we can't get the actual darkness
-    }
-    
-    private Vector3 CheckForRockAvoidance()
-    {
-        float detectionDistance = 30f;
-        float sphereRadius = 2f;
-        Vector3 origin = carTransform.position;
-        Vector3 forwardDir = carTransform.forward;
-        int rockLayerMask = 1 << LayerMask.NameToLayer("Rock");
+            Color dustColor = startupSpawner.GetDustColouring();
+            float brightness = 0.299f * dustColor.r + 0.587f * dustColor.g + 0.114f * dustColor.b;
+            float darknessPercentage = (1f - brightness) * 100f;
 
-        RaycastHit hit;
-        if (Physics.SphereCast(origin, sphereRadius, forwardDir, out hit, detectionDistance, rockLayerMask))
-        {
-            lastRockDistance = hit.distance;
-            Debug.Log($"Rock detected via SphereCast: {hit.collider.name}, distance: {hit.distance}");
-            Vector3 rockPosition = hit.collider.transform.position;
-            Vector3 toRock = rockPosition - carTransform.position;
-            toRock.y = 0f;
-            float angleToRock = Vector3.Angle(carTransform.forward, toRock);
-            if (angleToRock > 25f)
+            logTimer += Time.deltaTime;
+            if (logTimer >= logInterval)
             {
-                return Vector3.zero;
+                Debug.Log($"Dust color: R:{dustColor.r:F2}, G:{dustColor.g:F2}, B:{dustColor.b:F2}");
+                Debug.Log($"Sunlight darkness: {darknessPercentage:F2}%");
+                logTimer = 0f;
             }
-            float dot = Vector3.Dot(carTransform.right, toRock);
-            Vector3 avoidanceDirection = (dot < 0) ? carTransform.right : -carTransform.right;
-            float linearStrength = Mathf.Clamp01((detectionDistance - hit.distance) / detectionDistance);
-            float avoidanceStrength = linearStrength * linearStrength;
-            float avoidanceMagnitude = 5f;
-            Vector3 offset = avoidanceDirection * avoidanceMagnitude * avoidanceStrength;
-            Debug.Log($"Calculated avoidance offset: {offset}");
-            return offset;
+            return darknessPercentage;
         }
-        else
-        {
-            lastRockDistance = detectionDistance;
-            return Vector3.zero;
-        }
-    }
-    
-    public float GetLastRockDistance()
-    {
-        return lastRockDistance;
-    }
+        return 50f; // Default fallback
 
-    public void SetCurrentAngle(float angle)
-    {
-        currentAngle = angle;
     }
 }

@@ -14,9 +14,10 @@ public class BrainTableManager : TableManager<Brain>
 
     void AddTestBrains()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
-            brains.Add(new Brain { ID = i, name = $"Brain {i}", description = $"Brain {i}" });
+            AIMode aiMode = (AIMode)i;
+            brains.Add(new Brain { ID = i, name = $"{aiMode.ToString()}", description = aiMode.GetDescription(), aIMode=aiMode});
         }
     }
 
