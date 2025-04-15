@@ -7,6 +7,10 @@ using Loaders;
 public class StartupSpawner : MonoBehaviour
 {
     public GameObject car;
+
+    public GameObject podlegs;
+
+    public GameObject pod;
     // public GameObject camera;
     public GameObject marsTerrain;
     public GameObject dustCloudPrefab;
@@ -84,6 +88,19 @@ public class StartupSpawner : MonoBehaviour
         car.transform.SetParent(simulationRoot, false);
         carSpawnPosition.y = height + 3f;
         car.transform.localPosition = carSpawnPosition;
+
+
+        Vector3 podOffset = new Vector3(5f, 0, 0); // Adjust this as needed
+        Vector3 podSpawnPosition = carSpawnPosition + podOffset;
+        podSpawnPosition.y = marsTerrain.GetComponent<Terrain>().SampleHeight(podSpawnPosition) + 3f;
+
+        pod.transform.SetParent(simulationRoot, false);
+        podlegs.transform.SetParent(pod.transform, false);
+        pod.transform.localPosition = podSpawnPosition;
+        pod.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        Vector3 legsOffset = new Vector3(0f, -1.5f, 0f); // adjust -Y as needed
+        podlegs.transform.localPosition = legsOffset;
+        podlegs.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
         car.SetActive(true);
     }
