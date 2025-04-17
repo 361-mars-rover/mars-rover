@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using Unity.VisualScripting;
+// Chloe Gavrilovic 260955835
 
 public class CarControl : MonoBehaviour, IAIInput
 {
@@ -16,21 +17,14 @@ public class CarControl : MonoBehaviour, IAIInput
     public float accelerationSmoothness = 0.3f;
     public float brakingSmoothness = 0.5f;
     public bool navigateToTarget = false;
-
     public bool useAI = true;
-
     private WheelControl[] wheels;
     private Rigidbody rigidBody;
     private float currentSpeedFactor;
-
     public enum ControlMode { Human, AI }
     public ControlMode currentControlMode = ControlMode.Human;
     public string id;
-
-    // Reference to the active AI controller.
-
     private CircleAIController circleAIController;
-
     private SunlightAIController sunlightAIController;
     public IAIController aiController;
 
@@ -43,16 +37,17 @@ public class CarControl : MonoBehaviour, IAIInput
         id = Guid.NewGuid().ToString();
     }
 
+    // assign the AI controller to the car
     public void PrepareAIControllers(StartupSpawner startupSpawner)
     {
-        // Set up home base at starting position
+        // set up home base at starting position
         Vector3 homeBasePosition = transform.position;
 
-        // Calculate initial circle radius
+        // calculate initial circle radius
         float currentRadius = CircleAIParams.MAX_RADIUS * CircleAIParams.RADIUS_INCREMENT;
         float currentAngle = 0f;
 
-        // Add and initialize Circle AI
+        // add and initialize circle AI
         if (circleAIController == null)
         {
             circleAIController = gameObject.AddComponent<CircleAIController>();
@@ -69,7 +64,7 @@ public class CarControl : MonoBehaviour, IAIInput
             );
         }
 
-        // Add and initialize Sunlight AI
+        // add and initialize sunlight AI
         if (sunlightAIController == null)
         {
             sunlightAIController = gameObject.AddComponent<SunlightAIController>();
@@ -80,11 +75,10 @@ public class CarControl : MonoBehaviour, IAIInput
                 SunlightAIParams.ADJUSTMENT_ANGLE,
                 SunlightAIParams.FORWARD_DISTANCE,
                 CarParams.AVOIDANCE_THRESHOLD,
-                startupSpawner,  // You can assign StartupSpawner if necessary, but it’s not critical here
+                startupSpawner, 
                 this
             );
         }
-
         Debug.Log("AI controllers are prepared and ready.");
     }
 
@@ -92,6 +86,7 @@ public class CarControl : MonoBehaviour, IAIInput
     {
     }
 
+    // set the AI controller mode 
     public void SetAI(AIMode mode){
         switch (mode)
         {
@@ -106,13 +101,14 @@ public class CarControl : MonoBehaviour, IAIInput
         }
     }
 
+    // set the control mode to human or AI
     void Update()
     {
         if (currentControlMode == ControlMode.Human)
         {
             ManualControl();
         }
-        else // AI Control
+        else 
         {
             if (aiController == null){
                 Debug.Log("AI isn't set yet");
@@ -121,23 +117,22 @@ public class CarControl : MonoBehaviour, IAIInput
             aiController.UpdateRover();
         }
     }
-    
-    // This method will be called by the AI controllers.
+
     public void SetControls(float throttle, float steer)
     {
-        // Here you could add any extra processing or constraints if needed.
         ApplyControlsToWheels(throttle, steer);
     }
 
+    // apply the controls to the wheels
     void ApplyControlsToWheels(float throttleInput, float steerInput)
     {
+        // calculate the current speed factor based on the forward speed and max speed
         float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
         float targetSpeedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed));
         currentSpeedFactor = Mathf.Lerp(currentSpeedFactor, targetSpeedFactor, Time.deltaTime / accelerationSmoothness);
         float torqueMultiplier = torqueCurve.Evaluate(currentSpeedFactor);
         float currentMotorTorque = motorTorque * torqueMultiplier;
         float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, currentSpeedFactor);
-        
         bool isReversing = forwardSpeed < -0.1f;
         bool needsToReverse = (throttleInput < 0 && forwardSpeed > 0.1f) || (throttleInput > 0 && isReversing);
         
@@ -147,7 +142,6 @@ public class CarControl : MonoBehaviour, IAIInput
             {
                 wheel.HandleSteering(steerInput * currentSteerRange);
             }
-            
             if (needsToReverse)
             {
                 wheel.HandleMotor(0f, 0f);
@@ -163,6 +157,7 @@ public class CarControl : MonoBehaviour, IAIInput
 
     public void ManualControl()
     {
+        // get the input from the user
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
         float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
@@ -171,11 +166,11 @@ public class CarControl : MonoBehaviour, IAIInput
         float torqueMultiplier = torqueCurve.Evaluate(currentSpeedFactor);
         float currentMotorTorque = motorTorque * torqueMultiplier;
         float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, currentSpeedFactor);
-        
         bool isAccelerating = Mathf.Abs(vInput) > 0.1f;
         bool isReversing = forwardSpeed < -0.1f;
         bool isChangingDirection = (vInput > 0 && isReversing) || (vInput < 0 && forwardSpeed > 0.1f);
         
+        // apply the controls to the wheels
         foreach (var wheel in wheels)
         {
             if (wheel.steerable)

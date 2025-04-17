@@ -4,26 +4,26 @@ using Firebase.Extensions;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+// Chloe Gavrilovic 260955835
 
 public class InventoryManager : MonoBehaviour
 {
-    public GameObject mineralPanelPrefab; // UI prefab for displaying minerals
-    public Transform panelContainer; // Parent panel to hold mineral entries
-    public GameObject title; // Title or header
-    public Button nextButton; // Button to go to next page
-    public Button prevButton; // Button to go to previous page
-
-    private List<(string id, string x, string z)> mineralIds = new List<(string, string, string)>(); // Store mineral info
+    public GameObject mineralPanelPrefab; 
+    public Transform panelContainer; 
+    public GameObject title; 
+    public Button nextButton; 
+    public Button prevButton; 
+    private List<(string id, string x, string z)> mineralIds = new List<(string, string, string)>(); 
     private int currentPage = 0;
     private int mineralsPerPage = 5;
-
-    private DatabaseReference materialsRef; // Firebase reference for minerals
-    public SimulationManager simulationManager; // Reference to the simulation manager
-    public FirebaseManager firebaseManager; // Reference to the Firebase manager
-    private string currentCarId; // Store the current car ID to detect changes
+    private DatabaseReference materialsRef; 
+    public SimulationManager simulationManager; 
+    public FirebaseManager firebaseManager; 
+    private string currentCarId; 
 
     void Start()
     {
+        // init inventory UI
         mineralPanelPrefab.SetActive(false);
         panelContainer.gameObject.SetActive(false);
         title.SetActive(false);
@@ -31,15 +31,14 @@ public class InventoryManager : MonoBehaviour
         prevButton.gameObject.SetActive(false);
         simulationManager = FindObjectOfType<SimulationManager>();
         firebaseManager = FindObjectOfType<FirebaseManager>();
-        currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // Initialize with the current car ID
+        currentCarId = simulationManager.roverIds[simulationManager.curIdx]; 
         materialsRef = FirebaseManager.dbReference.Child("Simulations").Child(firebaseManager.simulationId).Child("Avatars").Child(currentCarId);
 
-        // Add listeners for pagination buttons
         nextButton.onClick.AddListener(NextPage);
         prevButton.onClick.AddListener(PreviousPage);
     }
 
-    // Fetch minerals from Firebase and listen for changes
+    // fetch minerals from firebase and listen for changes
     public void FetchMinerals()
     {
         Debug.Log("Current rover:" + currentCarId);
@@ -48,20 +47,17 @@ public class InventoryManager : MonoBehaviour
             Debug.LogError("Cannot fetch minerals: Car ID is not set.");
             return;
         }
-
         panelContainer.gameObject.SetActive(true);
         title.SetActive(true);
 
-        // Remove previous listener if any
         if (materialsRef != null)
         {
             materialsRef.ValueChanged -= OnMineralsChanged;
         }
-
         materialsRef.ValueChanged += OnMineralsChanged;
     }
 
-    // Callback function for database changes (real-time)
+    // track changes in the minerals database
     private void OnMineralsChanged(object sender, ValueChangedEventArgs args)
     {
         if (args.DatabaseError != null)
@@ -69,10 +65,8 @@ public class InventoryManager : MonoBehaviour
             Debug.LogError("Database error: " + args.DatabaseError.Message);
             return;
         }
-
-
-        mineralIds.Clear();  // Clear current data to refresh UI
-        ClearPanel(); // Remove old entries
+        mineralIds.Clear(); 
+        ClearPanel();
 
         DataSnapshot snapshot = args.Snapshot;
         if (snapshot.Exists)
@@ -84,8 +78,7 @@ public class InventoryManager : MonoBehaviour
                 string positionZ = mineralEntry.Child("position").Child("z").Value.ToString();
                 mineralIds.Add((mineralId, positionX, positionZ));
             }
-
-            UpdatePagination(); // Refresh the UI with the updated minerals without changing the current page
+            UpdatePagination(); 
         }
         else
         {
@@ -93,11 +86,10 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Update the UI with the minerals for the current page
+    // update the UI with minerals for the current page
     private void UpdatePagination()
     {
-        ClearPanel(); // Clear existing entries
-
+        ClearPanel(); 
         int startIndex = currentPage * mineralsPerPage;
         int endIndex = Mathf.Min(startIndex + mineralsPerPage, mineralIds.Count);
 
@@ -105,13 +97,11 @@ public class InventoryManager : MonoBehaviour
         {
             CreateMineralEntry(mineralIds[i].id, mineralIds[i].x, mineralIds[i].z);
         }
-
-        // Enable/disable pagination buttons based on current page
         prevButton.gameObject.SetActive(currentPage > 0);
         nextButton.gameObject.SetActive(endIndex < mineralIds.Count);
     }
 
-    // Go to the next page of minerals
+    // go to next page of minerals
     public void NextPage()
     {
         if ((currentPage + 1) * mineralsPerPage < mineralIds.Count)
@@ -121,7 +111,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Go to the previous page of minerals
+    // go to previous page of minerals
     public void PreviousPage()
     {
         if (currentPage > 0)
@@ -131,7 +121,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Create a UI entry for a mineral
+    // create entry for a mineral
     private void CreateMineralEntry(string mineralId, string positionX, string positionZ)
     {
         if (mineralPanelPrefab == null)
@@ -139,7 +129,6 @@ public class InventoryManager : MonoBehaviour
             Debug.LogError("Mineral panel prefab is missing!");
             return;
         }
-
         GameObject entry = Instantiate(mineralPanelPrefab, panelContainer);
         entry.SetActive(true);
 
@@ -158,7 +147,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Close the inventory and remove listeners
+    // close the inventory and remove listeners
     public void CloseInventory()
     {
         ClearPanel();
@@ -169,11 +158,11 @@ public class InventoryManager : MonoBehaviour
 
         if (materialsRef != null)
         {
-            materialsRef.ValueChanged -= OnMineralsChanged; // Remove listener to avoid memory leaks
+            materialsRef.ValueChanged -= OnMineralsChanged; 
         }
     }
 
-    // Remove all UI elements from the panel
+    // remove all UI elements from the panel
     private void ClearPanel()
     {
         foreach (Transform child in panelContainer)
