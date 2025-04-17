@@ -68,7 +68,7 @@ public class CircleAIController : BaseAIController
         Vector3 targetPosition;
 
         // --- Gem Detection (has higher priority) ---
-        float gemRayDistance = 50f;
+        float gemRayDistance = 100f;
         float gemSphereRadius = 2f;
         int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
 
