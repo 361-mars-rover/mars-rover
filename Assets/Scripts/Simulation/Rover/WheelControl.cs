@@ -1,4 +1,5 @@
 using UnityEngine;
+// Chloe Gavrilovic 260955835
 
 public class WheelControl : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class WheelControl : MonoBehaviour
     private Quaternion rotation;
     private float currentMotorTorque;
     
+    // init wheel collider 
     private void Start()
     {
         WheelCollider = GetComponent<WheelCollider>();
@@ -29,15 +31,25 @@ public class WheelControl : MonoBehaviour
         fwdFriction.asymptoteValue = 0.5f;
         fwdFriction.stiffness = 1f;
         WheelCollider.forwardFriction = fwdFriction;
+
+        // set up side friction for better grip
+        WheelFrictionCurve sideFriction = WheelCollider.sidewaysFriction;
+        sideFriction.extremumSlip = 0.3f;
+        sideFriction.extremumValue = 1f;
+        sideFriction.asymptoteSlip = 0.5f;
+        sideFriction.asymptoteValue = 0.75f;
+        sideFriction.stiffness = 2f;
+        WheelCollider.sidewaysFriction = sideFriction;
     }
     
+    // update wheel model position and rotation 
     void Update()
     {
         WheelCollider.GetWorldPose(out position, out rotation);
         wheelModel.transform.position = position;
         wheelModel.transform.rotation = rotation;
         
-        ApplyRollingResistance();
+        ApplyRollingResistance(); // apply rolling resistance and air drag
     }
     
     // added steering input
@@ -49,6 +61,7 @@ public class WheelControl : MonoBehaviour
         }
     }
     
+    // added motor input
     public void HandleMotor(float throttleInput, float availableTorque)
     {
         if (motorized)
@@ -60,9 +73,9 @@ public class WheelControl : MonoBehaviour
         }
     }
     
+    // added braking input based on current speed
     public void HandleBraking(bool isBraking)
     {
-        // progressive braking based on current speed
         if (isBraking)
         {
             float speed = transform.parent.GetComponent<Rigidbody>().linearVelocity.magnitude;
@@ -83,11 +96,10 @@ public class WheelControl : MonoBehaviour
             Rigidbody rb = transform.parent.GetComponent<Rigidbody>();
             float speed = rb.linearVelocity.magnitude;
             
-            float resistance = rollingResistance * speed; // apply rolling resistance (proportional to velocity)
-            float drag = dragCoefficient * speed * speed; // apply air resistance (proportional to velocity squared)
+            float resistance = rollingResistance * speed; // apply rolling resistance proportional to velocity
+            float drag = dragCoefficient * speed * speed; // apply air resistance proportional to velocity squared
 
-            
-            // Convert to deceleration force
+            // convert to deceleration force
             Vector3 resistanceForce = -rb.linearVelocity.normalized * (resistance + drag);
             rb.AddForceAtPosition(resistanceForce, transform.position);
         }

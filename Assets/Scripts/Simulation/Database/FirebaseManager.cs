@@ -3,6 +3,7 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
+// Chloe Gavrilovic 260955835
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -10,20 +11,18 @@ public class FirebaseManager : MonoBehaviour
     public static DatabaseReference dbReference;
     public string simulationId;
     public bool isTerrainDataStored = false;
+
+    // init firebase
     void Start() {
-        // Get the root reference location of the database.
-        // dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-        // Debug.Log("firebase" + dbReference);
         simulationId = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     void Awake()
     {
-        // create sim id based on date
-        
     }
 
+    // store spawn terrain data
     public void StoreMarsTerrainData(string simId, float terrainWidth, float terrainLength, float spawnTileRow, float spawnTileCol) 
     {
         if (isTerrainDataStored) return; 
@@ -46,11 +45,11 @@ public class FirebaseManager : MonoBehaviour
             {"Area length", terrainLength},
             {"Area Width", terrainWidth}
         };
-
         terrainRef.SetValueAsync(terrainData);
         isTerrainDataStored = true; 
     }
 
+    // store mineral collected data based on select rover
     public void StoreMaterialData(GameObject mineral, string carId, string simId)
     {
         DatabaseReference newMineralRef = dbReference.Child("Simulations").Child(simId).Child("Avatars").Child(carId).Push(); 
@@ -95,13 +94,7 @@ public class AvatarData
 [System.Serializable]
 public class MaterialData
 {
-    // public string type;
-    // public string collected_by;
-    
     public MaterialData()
-    // public MaterialData(string type, string collected_by)
     {
-        // this.type = type;
-        // this.collected_by = collected_by;
     }
 }
