@@ -80,8 +80,8 @@ public class FirebaseManager : MonoBehaviour
         var mineralData = new Dictionary<string, object>{
             {"id", mineral.name},
             {"position", new Dictionary<string, float>{
-                {"x", calculateLong(mineral.transform.position.x)},
-                {"z", calculateLat(mineral.transform.position.z)}
+                {"longitude", calculateLong(mineral.transform.position.x)},
+                {"latitude", calculateLat(mineral.transform.position.z)}
             }}
         };
         newMineralRef.SetValueAsync(mineralData)
