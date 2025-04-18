@@ -1,175 +1,19 @@
-// using System.Collections.Generic;
-// using Firebase.Database;
-// using UnityEngine;
-
-// // public class InventoryPresenter : MonoBehaviour
-// // {
-// //     [SerializeField] private SimulationManager simulationManager;
-// //     [SerializeField] private FirebaseManager firebaseManager;
-
-// //     private InventoryModel model;
-// //     private InventoryView view;
-// //     private void Awake()
-// //     {
-// //         simulationManager = FindFirstObjectByType<SimulationManager>();
-// //         firebaseManager = FindFirstObjectByType<FirebaseManager>();
-// //         model = new InventoryModel();
-// //         view = FindFirstObjectByType<InventoryView>();
-// //         model.OnMineralCollected += HandleMineralCollected;
-// //     }
-
-// //     private void OnDestroy()
-// //     {
-// //         model.OnMineralCollected -= HandleMineralCollected;
-// //     }
-
-// //     public void CollectMineral(GameObject mineral)
-// //     {
-// //         model.CollectMineral(mineral);
-// //     }
-
-// //     private void HandleMineralCollected(InventoryModel updatedModel)
-// //     {
-// //         Debug.Log($"Mineral collected for rover: {simulationManager.roverIds[simulationManager.curIdx]}");
-// //         Debug.Log($"Total Minerals Collected: {updatedModel.NumberOfMinerals}");
-// //         Debug.Log($"View is null: {view == null}");
-// //         Debug.Log($"Model is null: {model == null}");
-// //         Debug.Log($"Model num minerals is null: {model.NumberOfMinerals == null}");
-// //         view.UpdateMineralCount(model.NumberOfMinerals);
-// //         if (firebaseManager != null)
-// //         {
-// //             firebaseManager.StoreMaterialData(
-// //                 updatedModel.Minerals[^1], // last collected mineral
-// //                 simulationManager.roverIds[simulationManager.curIdx],
-// //                 firebaseManager.simulationId
-// //             );
-// //         }
-// //     }
-
-// //     public int GetMineralCount() => model.NumberOfMinerals;
-// // }
-
-// public class InventoryPresenter : MonoBehaviour
-// {
-//     [SerializeField] private InventoryView view;
-//     [SerializeField] private FirebaseManager firebaseManager;
-//     [SerializeField] private SimulationManager simulationManager;
-
-//     private InventoryModel model;
-//     private string currentCarId;
-//     private DatabaseReference materialsRef;
-//     private List<(string id, string x, string z)> mineralEntries = new();
-//     private int currentPage = 0;
-//     private int mineralsPerPage = 5;
-
-//     private void Awake()
-//     {
-//         model = new InventoryModel();
-//         model.OnMineralCollected += HandleMineralCollected;
-//         view = FindFirstObjectByType<InventoryView>();
-//     }
-
-//     private void Start()
-//     {
-//         simulationManager = FindObjectOfType<SimulationManager>();
-//         firebaseManager = FindObjectOfType<FirebaseManager>();
-//         currentCarId = simulationManager.roverIds[simulationManager.curIdx];
-//         materialsRef = FirebaseManager.dbReference.Child("Simulations")
-//             .Child(firebaseManager.simulationId)
-//             .Child("Avatars")
-//             .Child(currentCarId);
-
-//         view.nextButton.onClick.AddListener(NextPage);
-//         view.prevButton.onClick.AddListener(PreviousPage);
-//     }
-
-//     public void CollectMineral(GameObject mineral)
-//     {
-//         model.CollectMineral(mineral);
-//         firebaseManager.StoreMaterialData(mineral, currentCarId, firebaseManager.simulationId);
-//     }
-
-//     private void HandleMineralCollected(InventoryModel model)
-//     {
-//         view.UpdateMineralCount(model.NumberOfMinerals);
-//     }
-
-//     public void OpenInventory()
-//     {
-//         view.ToggleInventoryPanel(true);
-//         FetchMineralsFromDatabase();
-//     }
-
-//     public void CloseInventory()
-//     {
-//         view.ToggleInventoryPanel(false);
-//         view.ClearPanel();
-//         materialsRef.ValueChanged -= OnMineralsChanged;
-//     }
-
-//     private void FetchMineralsFromDatabase()
-//     {
-//         materialsRef.ValueChanged += OnMineralsChanged;
-//     }
-
-//     private void OnMineralsChanged(object sender, ValueChangedEventArgs args)
-//     {
-//         if (args.DatabaseError != null)
-//         {
-//             Debug.LogError("DB Error: " + args.DatabaseError.Message);
-//             return;
-//         }
-
-//         mineralEntries.Clear();
-
-//         foreach (var mineralEntry in args.Snapshot.Children)
-//         {
-//             string id = mineralEntry.Child("id").Value.ToString();
-//             string x = mineralEntry.Child("position").Child("latitude").Value.ToString();
-//             string z = mineralEntry.Child("position").Child("longitude").Value.ToString();
-//             mineralEntries.Add((id, x, z));
-//         }
-
-//         UpdatePagination();
-//     }
-
-//     private void UpdatePagination()
-//     {
-//         view.ShowPanels(mineralEntries, currentPage, mineralsPerPage);
-//     }
-
-//     private void NextPage()
-//     {
-//         if ((currentPage + 1) * mineralsPerPage < mineralEntries.Count)
-//         {
-//             currentPage++;
-//             UpdatePagination();
-//         }
-//     }
-
-//     private void PreviousPage()
-//     {
-//         if (currentPage > 0)
-//         {
-//             currentPage--;
-//             UpdatePagination();
-//         }
-//     }
-// }
-
-using System.Collections.Generic;
-using Firebase.Extensions;
 using UnityEngine;
-
+/*
+Authors: Jikael and Chloe
+This is the presenter part of the model-view-presenter design pattern. In this design pattern, the model and view are both passive
+and the presenter modifies them both. This class also sends data to the database on mineral collection.
+*/
 public class InventoryPresenter : MonoBehaviour
 {
     [SerializeField] private SimulationManager simulationManager;
     [SerializeField] private FirebaseManager firebaseManager;
     [SerializeField] private InventoryView view;
 
-    private List<(string id, string x, string z)> mineralData = new();
     private int currentPage = 0;
     private const int mineralsPerPage = 5;
+
+    [SerializeField] private InventoryModel model;
 
     private void Awake()
     {
@@ -177,8 +21,12 @@ public class InventoryPresenter : MonoBehaviour
         firebaseManager = FindAnyObjectByType<FirebaseManager>();
         view = FindFirstObjectByType<InventoryView>();
         view.Init(this);
+        // model = GetComponent<InventoryModel>();
+        model = FindFirstObjectByType<InventoryModel>();
+
     }
 
+    // Toggles inventory on button click
     public void ToggleInventory()
     {
         if (view.IsOpen())
@@ -187,68 +35,42 @@ public class InventoryPresenter : MonoBehaviour
         }
         else
         {
-            FetchMineralsFromDatabase();
             view.Open();
+            UpdatePagination();
         }
     }
 
-    private void FetchMineralsFromDatabase()
-    {
-        string currentCarId = simulationManager.roverIds[simulationManager.curIdx];
-        var materialsRef = FirebaseManager.dbReference
-            .Child("Simulations")
-            .Child(firebaseManager.simulationId)
-            .Child("Avatars")
-            .Child(currentCarId);
-
-        materialsRef.GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted || !task.Result.Exists)
-            {
-                Debug.LogWarning("Failed to fetch minerals.");
-                return;
-            }
-
-            mineralData.Clear();
-            foreach (var mineralEntry in task.Result.Children)
-            {
-                string mineralId = mineralEntry.Child("id").Value.ToString();
-                string positionX = mineralEntry.Child("position").Child("latitude").Value.ToString();
-                string positionZ = mineralEntry.Child("position").Child("longitude").Value.ToString();
-                mineralData.Add((mineralId, positionX, positionZ));
-            }
-            currentPage = 0;
-            UpdatePagination();
-        });
-    }
-
+    // Loads data for a page in the inventory table
     private void UpdatePagination()
     {
-        view.ClearMineralEntries();
+        view.ClearMineralEntries(); // Deletes all existing visible entries
+        // Compute the start and end indices to load on this page
         int start = currentPage * mineralsPerPage;
-        int end = Mathf.Min(start + mineralsPerPage, mineralData.Count);
+        int end = Mathf.Min(start + mineralsPerPage, model.mineralData.Count);
 
+        // Create an entry for each mineral that should be displayed on this page
         for (int i = start; i < end; i++)
         {
-            var (id, x, z) = mineralData[i];
-            view.CreateMineralEntry(id, x, z);
+            var (id, x, z) = model.mineralData[i];
+            Debug.Log("Creating a mineral entry");
+            view.CreateMineralEntry(id, x.ToString(), z.ToString());
         }
-
+        // Tells view whether this page should be allowed to go back/next
         view.SetPaginationControls(
             hasPrev: currentPage > 0,
-            hasNext: end < mineralData.Count
+            hasNext: end < model.mineralData.Count
         );
     }
-
+    // Called when switching to next page. Updates mineral data
     public void OnNextPage()
     {
-        if ((currentPage + 1) * mineralsPerPage < mineralData.Count)
+        if ((currentPage + 1) * mineralsPerPage < model.mineralData.Count)
         {
             currentPage++;
             UpdatePagination();
         }
     }
-
+    // Called when switching to prev page. Updates mineral data
     public void OnPrevPage()
     {
         if (currentPage > 0)
@@ -260,20 +82,14 @@ public class InventoryPresenter : MonoBehaviour
 
     public void CollectMineral(GameObject mineral)
     {
-        string currentCarId = simulationManager.roverIds[simulationManager.curIdx];
-        firebaseManager.StoreMaterialData(mineral, currentCarId, firebaseManager.simulationId);
+        /*
+        This is called by a Minerals.cs object when the rover collides with it.
+        */
+        string currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // UID for rover
+        firebaseManager.StoreMaterialData(mineral, currentCarId, firebaseManager.simulationId); // Store data under rover's UID in firebase
+        model.CollectMineral(mineral); // Updates the model to reflect that a new mineral has been collected
+        view.UpdateMineralCount(model.mineralData.Count); // Updates the mineral count to reflect that a new mineral was collected
+        UpdatePagination(); // Updates the "pagination" of the inventory table
 
-        // Optional: if you want the collected mineral to show up immediately
-        // Extract mineral info (assuming Mineral script has a public ID + position)
-        string id = mineral.name;
-        string x = mineral.transform.position.x.ToString("F2");
-        string z = mineral.transform.position.z.ToString("F2");
-        mineralData.Add((id, x, z));
-
-        // Refresh UI if inventory is currently open
-        if (view.IsOpen())
-        {
-            UpdatePagination();
-        }
     }
 }

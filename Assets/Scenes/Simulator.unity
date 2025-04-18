@@ -1377,6 +1377,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &869312350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 869312351}
+  - component: {fileID: 869312352}
+  m_Layer: 5
+  m_Name: InventoryModelObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &869312351
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869312350}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1846484709}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &869312352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869312350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8978b19209cb4340928afbc83061e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1057071638 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
@@ -1924,9 +1972,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466872675bd76c74794ed9d5f9de8bdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 0}
-  firebaseManager: {fileID: 2099217467}
   simulationManager: {fileID: 151140505}
+  firebaseManager: {fileID: 2099217467}
+  view: {fileID: 1749207986}
+  model: {fileID: 869312352}
 --- !u!1 &1625381592 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3810417333407678335, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
@@ -1980,9 +2029,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466872675bd76c74794ed9d5f9de8bdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 0}
-  firebaseManager: {fileID: 2099217467}
   simulationManager: {fileID: 151140505}
+  firebaseManager: {fileID: 2099217467}
+  view: {fileID: 0}
+  model: {fileID: 0}
 --- !u!1 &1728920022 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8613874049420688821, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
@@ -2036,12 +2086,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c9ba02588379745b280a612ba8456f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mineralText: {fileID: 176379196883108717}
   mineralPanelPrefab: {fileID: 1515101134}
   panelContainer: {fileID: 573476487}
   title: {fileID: 999777791979989776}
   nextButton: {fileID: 1899968916}
   prevButton: {fileID: 501961612}
+  mineralText: {fileID: 176379196883108717}
 --- !u!1001 &1802428717
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2545,6 +2595,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1785589484985975754, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1578559553}
+    - targetCorrespondingSourceObject: {fileID: 1785589484985975754, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 869312351}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       insertIndex: -1

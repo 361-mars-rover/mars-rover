@@ -1,82 +1,10 @@
-// // using UnityEngine;
-// // using TMPro;
-
-// // public class InventoryView : MonoBehaviour
-// // {
-// //     [SerializeField] private TextMeshProUGUI mineralText;
-
-// //     public void UpdateMineralCount(int count)
-// //     {
-// //         if (mineralText != null)
-// //         {
-// //             Debug.Log("Mineral text found");
-
-// //             mineralText.text = $"Minerals collected: {count}";
-// //         }
-// //     }
-// // }
-
-// using System.Collections.Generic;
-// using TMPro;
-// using UnityEngine;
-// using UnityEngine.UI;
-
-// public class InventoryView : MonoBehaviour
-// {
-//     public TextMeshProUGUI mineralText;
-//     public GameObject mineralPanelPrefab;
-//     public Transform panelContainer;
-//     public GameObject title;
-//     public Button nextButton;
-//     public Button prevButton;
-
-//     public void UpdateMineralCount(int count)
-//     {
-//         if (mineralText != null)
-//             mineralText.text = $"Minerals collected: {count}";
-//     }
-
-//     public void ShowPanels(List<(string id, string x, string z)> minerals, int page, int perPage)
-//     {
-//         ClearPanel();
-
-//         int start = page * perPage;
-//         int end = Mathf.Min(start + perPage, minerals.Count);
-//         for (int i = start; i < end; i++)
-//         {
-//             var (id, x, z) = minerals[i];
-//             GameObject panel = Instantiate(mineralPanelPrefab, panelContainer);
-//             panel.SetActive(true);
-//             var text = panel.GetComponentInChildren<TextMeshProUGUI>();
-//             if (text != null)
-//                 text.text = $"Mineral at ({x}, {z})";
-//         }
-
-//         prevButton.gameObject.SetActive(page > 0);
-//         nextButton.gameObject.SetActive(end < minerals.Count);
-//     }
-
-//     public void ClearPanel()
-//     {
-//         foreach (Transform child in panelContainer)
-//         {
-//             if (child.gameObject != mineralPanelPrefab && child.gameObject != title)
-//                 Destroy(child.gameObject);
-//         }
-//     }
-
-//     public void ToggleInventoryPanel(bool visible)
-//     {
-//         panelContainer.gameObject.SetActive(visible);
-//         title.SetActive(visible);
-//         nextButton.gameObject.SetActive(visible);
-//         prevButton.gameObject.SetActive(visible);
-//     }
-// }
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+/*
+Authors: Jikael and Chloe
+This is the view part of the model-view-presenter design pattern. In this design pattern, the view is the actual UI. 
+*/
 public class InventoryView : MonoBehaviour
 {
     [SerializeField] private GameObject mineralPanelPrefab;
@@ -85,14 +13,14 @@ public class InventoryView : MonoBehaviour
     [SerializeField] private Button nextButton;
     [SerializeField] private Button prevButton;
 
-    private InventoryPresenter presenter;
+    [SerializeField] private TextMeshProUGUI mineralText;
 
     public void Init(InventoryPresenter presenter)
     {
-        this.presenter = presenter;
         nextButton.onClick.AddListener(presenter.OnNextPage);
         prevButton.onClick.AddListener(presenter.OnPrevPage);
         mineralPanelPrefab.SetActive(false);
+        mineralText.text = "Minerals collected: 0";
         Close();
     }
 
@@ -140,6 +68,12 @@ public class InventoryView : MonoBehaviour
     public bool IsOpen()
     {
         return panelContainer.gameObject.activeSelf;
+    }
+
+    // Count of minerals in top left corner
+    public void UpdateMineralCount(int count){
+        mineralText.text = $"Minerals collected: {count}";
+        Debug.Log($"Updating mineral text to: {mineralText.text}");
     }
 }
 

@@ -2,29 +2,52 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryModel
+
+/*
+Authors: Jikael and Chloe
+This is the model part of the model-view-presenter design pattern. In this design pattern, the model 
+is responsible for holding the data. In our case, the data is a list of minerals collected by the rover.
+This data is manipulated by the presenter class. It stores the number of minerals collected by a rover.
+This class has no "knowledge" of the View class.
+*/
+
+// public class InventoryModel
+// {
+//     public readonly List<(string id, string x, string z)> mineralData = new();
+
+//     // Called from the presenter when minerals are collected.
+//     public void CollectMineral(GameObject mineral)
+//     {
+//         string id = mineral.name;
+//         string x = mineral.transform.position.x.ToString("F2");
+//         string z = mineral.transform.position.z.ToString("F2");
+//         mineralData.Add((id, x, z));
+//     }
+
+//     public void Reset()
+//     {
+//         mineralData.Clear();
+//     }
+// }
+
+// using System.Collections.Generic;
+// using UnityEngine;
+
+public class InventoryModel : MonoBehaviour
 {
-    public event Action<InventoryModel> OnMineralCollected;
-
-    private List<GameObject> minerals = new List<GameObject>();
-    private int numberOfMinerals = 0;
-
-    public IReadOnlyList<GameObject> Minerals => minerals;
-    public int NumberOfMinerals => numberOfMinerals;
+    public List<(string id, float x, float z)> mineralData = new();
 
     public void CollectMineral(GameObject mineral)
     {
-        minerals.Add(mineral);
-        numberOfMinerals++;
-        // Notifies listeners for the OnMineralCollected event, if it's defined
-        OnMineralCollected?.Invoke(this);
+        string id = mineral.name;
+        float x = mineral.transform.position.x;
+        float z = mineral.transform.position.z;
+
+        mineralData.Add((id, x, z));
     }
 
-    public void Reset()
+    public void Clear()
     {
-        minerals.Clear();
-        numberOfMinerals = 0;
-        // Notifies listeners for the OnMineralCollected event, if it's defined
-        OnMineralCollected?.Invoke(this);
+        mineralData.Clear();
     }
 }
