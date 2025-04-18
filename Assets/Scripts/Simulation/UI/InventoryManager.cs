@@ -31,9 +31,10 @@ public class InventoryManager : MonoBehaviour
         prevButton.gameObject.SetActive(false);
         simulationManager = FindObjectOfType<SimulationManager>();
         firebaseManager = FindObjectOfType<FirebaseManager>();
-        currentCarId = simulationManager.roverIds[simulationManager.curIdx]; 
+        Debug.Log($"firebase manager is null: {firebaseManager == null}");
+        currentCarId = simulationManager.roverIds[simulationManager.curIdx];
         materialsRef = FirebaseManager.dbReference.Child("Simulations").Child(firebaseManager.simulationId).Child("Avatars").Child(currentCarId);
-
+        Debug.Log($"firebase materials ref is null: {materialsRef == null}"); 
         nextButton.onClick.AddListener(NextPage);
         prevButton.onClick.AddListener(PreviousPage);
     }
@@ -74,8 +75,8 @@ public class InventoryManager : MonoBehaviour
             foreach (var mineralEntry in snapshot.Children)
             {
                 string mineralId = mineralEntry.Child("id").Value.ToString();
-                string positionX = mineralEntry.Child("position").Child("x").Value.ToString();
-                string positionZ = mineralEntry.Child("position").Child("z").Value.ToString();
+                string positionX = mineralEntry.Child("position").Child("latitude").Value.ToString();
+                string positionZ = mineralEntry.Child("position").Child("longitude").Value.ToString();
                 mineralIds.Add((mineralId, positionX, positionZ));
             }
             UpdatePagination(); 
