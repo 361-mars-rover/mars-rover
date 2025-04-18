@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-// Chloe Gavrilovic 260955835
 
-// handle the collection of minerals 
 public class Minerals : MonoBehaviour
 {
-    public void OnTriggerEnter(Collider other) {
-        PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
+    // Handles collisions with Minerals
+    public void OnTriggerEnter(Collider other)
+    {
+        InventoryPresenter presenter = other.GetComponent<InventoryPresenter>();
 
-        if (playerInventory != null) {
-            playerInventory.MineralCollected(gameObject);
+        if (presenter != null)
+        {
+            // Call presenter to notify that mineral was collected
+            presenter.CollectMineral(gameObject);
             gameObject.SetActive(false);
         }
     }
