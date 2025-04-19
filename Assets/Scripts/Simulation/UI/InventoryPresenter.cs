@@ -89,7 +89,9 @@ public class InventoryPresenter : MonoBehaviour
         firebaseManager.StoreMaterialData(mineral, currentCarId, firebaseManager.simulationId); // Store data under rover's UID in firebase
         model.CollectMineral(mineral); // Updates the model to reflect that a new mineral has been collected
         view.UpdateMineralCount(model.mineralData.Count); // Updates the mineral count to reflect that a new mineral was collected
-        UpdatePagination(); // Updates the "pagination" of the inventory table
-
+        if (view.IsOpen())
+        {
+            UpdatePagination(); // only update the UI if the inventory is visible
+        }
     }
 }

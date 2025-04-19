@@ -10,14 +10,12 @@ public class SimulationManager : MonoBehaviour
     public GameObject SimulationPrefab;
 
     public Vector2Int[] TileIndices;
-    int prevIdx = 0;
 
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
-    GameObject[] sims = new GameObject[9];
+    List<GameObject> sims = new List<GameObject>();
     public int curIdx = 0;
-    public string[] roverIds = new string[9];
-    Camera cur;
+    public List<string> roverIds = new List<string>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -45,8 +43,8 @@ public class SimulationManager : MonoBehaviour
             Debug.Log($"Car control: {carControl}");
             CarColorUtils.SetCarColor(carTransform, a.rover.color);
             // sim.SetActive(true);
-            sims[i] = sim;
-            roverIds[i] = "Rover" + i + "-" + Guid.NewGuid().ToString();
+            sims.Add(sim);
+            roverIds.Add("Rover" + i + "-" + Guid.NewGuid().ToString());
         }
 
         // SetActivity(simIdx: 1, active: false);
