@@ -21,6 +21,8 @@ public class MainMenu : MonoBehaviour
     private AvatarTableManager avatarTableManager;
     private BrainTableManager brainTableManager;
     private RoverTableManager roverTableManager;
+
+    private string url = "https://console.firebase.google.com/u/0/project/mars-rover-b4a62/database/mars-rover-b4a62-default-rtdb/data";
     
     // Start is called before the first frame update
     void Start()
@@ -230,6 +232,11 @@ public class MainMenu : MonoBehaviour
         roverTableManager.ReorderTable();
         brainTableManager.ReorderTable();
         avatarTableManager.ReorderTable();
+    }
+
+    public void OpenURL()
+    {
+        Application.OpenURL(url);
     }
 
 }
