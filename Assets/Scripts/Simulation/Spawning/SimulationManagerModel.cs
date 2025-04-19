@@ -8,9 +8,6 @@ using UnityEngine.Tilemaps;
 public class SimulationManagerModel : MonoBehaviour
 {
     public List<Vector2Int> TileIndices = new List<Vector2Int>();
-
-    private int MAX_ROW = 128;
-    private int MAX_COL = 256;
     public List<GameObject> sims = new List<GameObject>();
     public int curIdx = 0;
     public List<string> roverIds = new List<string>();

@@ -9,7 +9,6 @@ public class CarControl : MonoBehaviour, IAIInput
 {
     public float motorTorque = 2f;
     public float brakeTorque = 200f;
-    public float maxSpeed = 1f;
     public float steeringRange = 30f;
     public float steeringRangeAtMaxSpeed = 10f;
     public float centreOfGravityOffset = 0f;
@@ -128,7 +127,7 @@ public class CarControl : MonoBehaviour, IAIInput
     {
         // calculate the current speed factor based on the forward speed and max speed
         float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
-        float targetSpeedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed));
+        float targetSpeedFactor = Mathf.InverseLerp(0, CarParams.MAX_SPEED, Mathf.Abs(forwardSpeed));
         currentSpeedFactor = Mathf.Lerp(currentSpeedFactor, targetSpeedFactor, Time.deltaTime / accelerationSmoothness);
         float torqueMultiplier = torqueCurve.Evaluate(currentSpeedFactor);
         float currentMotorTorque = motorTorque * torqueMultiplier;
@@ -161,7 +160,7 @@ public class CarControl : MonoBehaviour, IAIInput
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
         float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
-        float targetSpeedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed));
+        float targetSpeedFactor = Mathf.InverseLerp(0, CarParams.MAX_SPEED, Mathf.Abs(forwardSpeed));
         currentSpeedFactor = Mathf.Lerp(currentSpeedFactor, targetSpeedFactor, Time.deltaTime / accelerationSmoothness);
         float torqueMultiplier = torqueCurve.Evaluate(currentSpeedFactor);
         float currentMotorTorque = motorTorque * torqueMultiplier;

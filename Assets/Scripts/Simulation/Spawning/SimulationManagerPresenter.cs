@@ -57,9 +57,6 @@ public class SimulationManagerPresenter : MonoBehaviour
             model.roverIds.Add("Rover" + i + "-" + Guid.NewGuid().ToString());
         }
 
-        // SetActivity(simIdx: 1, active: false);
-        // sims[0].SetActive(true);
-        // SetActivity(simIdx: 0, active: true);
         model.sims[0].SetActive(true);
         UpdateUI(0);
     }
