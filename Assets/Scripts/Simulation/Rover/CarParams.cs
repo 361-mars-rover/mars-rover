@@ -3,7 +3,7 @@ using UnityEngine;
 public static class CarParams{
     public static readonly float MOTOR_TORQUE = 2f;
     public static readonly float BRAKE_TORQUE = 200f;
-    public static readonly float MAX_SPEED = 1f;
+    public static readonly float MAX_SPEED = 0.25f;
     public static readonly float STEERING_RANGE = 30f;
     public static readonly float STEERING_RANGE_AT_MAX_SPEED = 10f;
     public static readonly float CENTRE_OF_GRAVITY_OFFSET = 0f;

@@ -1,5 +1,5 @@
 namespace Loaders{
-    public abstract class LoaderMonoBehaviour : ParameterizedMonoBehaviour{
+    public abstract class LoaderMonoBehaviour : MonoBehaviourFactory{
         protected bool isLoaded = false;
         public bool getIsLoaded(){
             return isLoaded;

@@ -1,26 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
-// Chloe Gavrilovic 260955835
 
-// inventory button functionality in UI that toggles the inventory panel and fetches minerals when opened
+// toggles inventory open/closed via the Presenter
 public class InventoryButton : MonoBehaviour
 {
-    public InventoryManager inventoryManager;
-    public bool isOpen;
+    public InventoryPresenter inventoryPresenter;
+    private bool isOpen = false;
 
     void Start()
     {
-        GetComponent<Button>().onClick.AddListener(() => {
-        if (isOpen)
+        GetComponent<Button>().onClick.AddListener(() =>
         {
-            isOpen = false;
-            inventoryManager.CloseInventory();
-        }
-        else
-        {
-            isOpen = true;
-            inventoryManager.FetchMinerals();
-        }});
-        
+            isOpen = !isOpen;
+            inventoryPresenter.ToggleInventory();
+        });
     }
 }

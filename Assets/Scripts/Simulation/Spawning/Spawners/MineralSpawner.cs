@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
 
-public class MineralSpawner : MonoBehaviour
+public class MineralSpawner : Spawner
 {
     [Header("Spawning Settings")]
     public GameObject rockPrefab;
@@ -23,50 +23,7 @@ public class MineralSpawner : MonoBehaviour
         new Keyframe(1f, 1f)
     );
 
-    IEnumerator Start()
-    {
-        // Wait for terrain to initialize
-        while (Terrain.activeTerrain == null)
-            yield return null;
-
-        // Get terrain reference
-        targetTerrain = Terrain.activeTerrain;
-        terrainPosition = targetTerrain.transform.position;
-        terrainSize = targetTerrain.terrainData.size;
-
-        // Download mineral texture first
-        yield return StartCoroutine(DownloadMineralTexture());
-
-        // Start spawning
-        StartCoroutine(DelayedSpawn());
-    }
-
-    IEnumerator DownloadMineralTexture()
-    {
-        string mineralURL = "https://trek.nasa.gov/tiles/Mars/EQ/TES_Plagioclase/1.0.0/default/default028mm/0/0/1.png";
-        using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(mineralURL))
-        {
-            yield return request.SendWebRequest();
-            
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                mineralTexture = DownloadHandlerTexture.GetContent(request);
-                Debug.Log($"Loaded mineral texture: {mineralTexture.width}x{mineralTexture.height}");
-            }
-            else
-            {
-                Debug.LogError($"Failed to load mineral texture: {request.error}");
-            }
-        }
-    }
-
-    IEnumerator DelayedSpawn()
-    {
-        yield return new WaitForSeconds(spawnDelay);
-        SpawnRocks();
-    }
-
-    void SpawnRocks()
+    public override void Spawn()
     {
         if (mineralTexture == null)
         {
@@ -93,7 +50,50 @@ public class MineralSpawner : MonoBehaviour
         Debug.Log($"Spawned {spawned} rocks (attempts: {attempts})");
     }
 
-    bool CheckMineralValue(Vector3 worldPosition)
+
+    IEnumerator Start()
+    {
+        // Wait for terrain to initialize
+        while (Terrain.activeTerrain == null)
+            yield return null;
+
+        // Get terrain reference
+        targetTerrain = Terrain.activeTerrain;
+        terrainPosition = targetTerrain.transform.position;
+        terrainSize = targetTerrain.terrainData.size;
+
+        // Download mineral texture first
+        yield return StartCoroutine(DownloadMineralTexture());
+
+        // Start spawning
+        StartCoroutine(DelayedSpawn());
+    }
+
+    private IEnumerator DownloadMineralTexture()
+    {
+        string mineralURL = "https://trek.nasa.gov/tiles/Mars/EQ/TES_Plagioclase/1.0.0/default/default028mm/0/0/1.png";
+        using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(mineralURL))
+        {
+            yield return request.SendWebRequest();
+            
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                mineralTexture = DownloadHandlerTexture.GetContent(request);
+                Debug.Log($"Loaded mineral texture: {mineralTexture.width}x{mineralTexture.height}");
+            }
+            else
+            {
+                Debug.LogError($"Failed to load mineral texture: {request.error}");
+            }
+        }
+    }
+
+    private IEnumerator DelayedSpawn()
+    {
+        yield return new WaitForSeconds(spawnDelay);
+        Spawn();
+    }
+    private bool CheckMineralValue(Vector3 worldPosition)
         {
                 Vector2 uv = new Vector2(
             (worldPosition.x - terrainPosition.x) / terrainSize.x,
@@ -115,10 +115,12 @@ public class MineralSpawner : MonoBehaviour
             
         // Convert concentration to spawn probability
         float spawnProbability = Mathf.InverseLerp(0.05f, 0.2f, pyroxeneConcentration);
-        return Random.value < spawnProbability;
+        float boostFactor = 1.75f; // Increase this to boost overall spawn chance
+        float boostedProbability = Mathf.Clamp01(spawnProbability * boostFactor);
+        return Random.value < boostedProbability;
     }
 
-    void CreateRock(Vector3 position)
+    private void CreateRock(Vector3 position)
     {
         GameObject rock = Instantiate(rockPrefab, position, Quaternion.identity);
         rock.transform.SetParent(transform.parent);
@@ -126,7 +128,7 @@ public class MineralSpawner : MonoBehaviour
         rock.transform.localScale = Vector3.one * 0.2f;
     }
 
-    Vector3 GetRandomTerrainPosition()
+    private Vector3 GetRandomTerrainPosition()
     {
         float randomX = Random.Range(terrainPosition.x, terrainPosition.x + terrainSize.x);
         float randomZ = Random.Range(terrainPosition.z, terrainPosition.z + terrainSize.z);

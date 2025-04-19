@@ -14,6 +14,8 @@ public class MainMenu : MonoBehaviour
     public Button createAvatarButton;
     public Button deleteAvatarButton;
     public Button editAvatarButton;
+
+    public Button setSpawnPointsButton;
     public TMPro.TextMeshProUGUI createAvatarButtonText;
     public TMPro.TextMeshProUGUI deleteAvatarButtonText;
     public TMPro.TextMeshProUGUI editAvatarButtonText;
@@ -21,6 +23,8 @@ public class MainMenu : MonoBehaviour
     private AvatarTableManager avatarTableManager;
     private BrainTableManager brainTableManager;
     private RoverTableManager roverTableManager;
+
+    private int MAX_ROVERS = 5;
     
     // Start is called before the first frame update
     void Start()
@@ -28,6 +32,7 @@ public class MainMenu : MonoBehaviour
         createAvatarButton = transform.Find("CreateAvatarButton")?.GetComponent<Button>();
         deleteAvatarButton = transform.Find("DeleteAvatarButton")?.GetComponent<Button>();
         editAvatarButton = transform.Find("EditAvatarButton")?.GetComponent<Button>();
+        setSpawnPointsButton = transform.Find("SetSpawnPointsButton")?.GetComponent<Button>();
         
         createAvatarButtonText = createAvatarButton.GetComponentInChildren<TextMeshProUGUI>();
         deleteAvatarButtonText = deleteAvatarButton.GetComponentInChildren<TextMeshProUGUI>();  
@@ -40,6 +45,7 @@ public class MainMenu : MonoBehaviour
         InitializeButtonState(createAvatarButton);
         InitializeButtonState(deleteAvatarButton);
         InitializeButtonState(editAvatarButton);  
+        InitializeButtonState(setSpawnPointsButton);
 
     }
     public void StartSimulation()
@@ -53,7 +59,8 @@ public class MainMenu : MonoBehaviour
     public void UpdateButtons()
     {
         // --- Create Avatar Button ---
-        bool canCreate = (selectedRover != null && selectedBrain != null);
+        bool canCreate = (selectedRover != null && selectedBrain != null && 
+            AvatarTableManager.avatars.Count < MAX_ROVERS);
         createAvatarButton.interactable = canCreate;
         SetButtonTextColor(createAvatarButton, canCreate);
 
@@ -66,6 +73,11 @@ public class MainMenu : MonoBehaviour
         bool canEdit = (selectedAvatar != null && selectedBrain != null);
         editAvatarButton.interactable = canEdit;
         SetButtonTextColor(editAvatarButton, canEdit);
+
+        // --- Set Spawn Point Button ---
+        bool canSpawn = AvatarTableManager.avatars.Count > 0;
+        setSpawnPointsButton.interactable = canSpawn;
+        SetButtonTextColor(setSpawnPointsButton, canSpawn);
     }
 
     private void InitializeButtonState(Button button)
@@ -130,11 +142,12 @@ public class MainMenu : MonoBehaviour
         avatarTableManager.RefreshTable();
 
         // Consume Rover & Brain
-        roverTableManager.RemoveSelectedRover();
-        brainTableManager.RemoveSelectedBrain();
+        // TODO: 
+        // roverTableManager.RemoveSelectedRover();
+        // brainTableManager.RemoveSelectedBrain();
 
         Debug.Log($"Created new Avatar: {newAvatar.description}");
-
+        UpdateButtons();
     }
 
     public void EditSelectedAvatar()

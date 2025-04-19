@@ -4,7 +4,7 @@ public static class TerrainInfo{
     public static readonly float WMS_PIXEL_SIZE = 0.28e-3f;
 
     private static float LATERAL_SCALE_FACTOR = 0.01f;
-    private static float HEIGHT_SCALE_FACTOR = 0.001f;
+    private static float HEIGHT_SCALE_FACTOR = 0.00025f;
 
     public static readonly float MIN_ELEVATION = -8000f;
     public static readonly float MAX_ELEVATION = 21000f;

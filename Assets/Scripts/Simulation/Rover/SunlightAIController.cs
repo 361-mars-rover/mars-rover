@@ -4,7 +4,7 @@ using UnityEngine;
 public class SunlightAIController : BaseAIController
 {
     private float lastDarknessPercentage = 0f;
-    private StartupSpawner startupSpawner;
+    private SimulationStart startupSpawner;
     private float logTimer = 0f;
     private float logInterval = 1.0f;
     private bool isInitialized = false;
@@ -13,7 +13,7 @@ public class SunlightAIController : BaseAIController
 
     public void Initialize(Transform transform, float angle, float tolerance, 
                            float adjustment, float forward, float avoidThreshold,
-                           StartupSpawner spawner, IAIInput input)
+                           SimulationStart spawner, IAIInput input)
     {
         carTransform = transform;
         currentAngle = angle;
