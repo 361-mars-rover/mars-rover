@@ -38,7 +38,7 @@ public class CarControl : MonoBehaviour, IAIInput
     }
 
     // assign the AI controller to the car
-    public void PrepareAIControllers(StartupSpawner startupSpawner)
+    public void PrepareAIControllers(SimulationStart startupSpawner)
     {
         // set up home base at starting position
         Vector3 homeBasePosition = transform.position;
