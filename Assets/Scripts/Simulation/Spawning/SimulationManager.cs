@@ -13,10 +13,15 @@ public class SimulationManager : MonoBehaviour
 
     private int MAX_ROW = 128;
     private int MAX_COL = 256;
-    List<GameObject> sims = new List<GameObject>();
+    // List<GameObject> sims = new List<GameObject>();
     public int curIdx = 0;
-    public List<string> roverIds = new List<string>();
+    // public List<string> model.roverIds = new List<string>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public SimulationManagerModel model;
+    void Awake()
+    {
+        model = FindFirstObjectByType<SimulationManagerModel>();
+    }
     void Start()
     {
         Debug.Log("Printing existing avatars:...");
@@ -43,14 +48,14 @@ public class SimulationManager : MonoBehaviour
             Debug.Log($"Car control: {carControl}");
             CarColorUtils.SetCarColor(carTransform, a.rover.color);
             // sim.SetActive(true);
-            sims.Add(sim);
-            roverIds.Add("Rover" + i + "-" + Guid.NewGuid().ToString());
+            model.sims.Add(sim);
+            model.roverIds.Add("Rover" + i + "-" + Guid.NewGuid().ToString());
         }
 
         // SetActivity(simIdx: 1, active: false);
         // sims[0].SetActive(true);
         // SetActivity(simIdx: 0, active: true);
-        sims[0].SetActive(true);
+        model.sims[0].SetActive(true);
     }
 
     
@@ -76,8 +81,8 @@ public class SimulationManager : MonoBehaviour
         if (simIdx == curIdx){
             return;
         }
-        sims[curIdx].SetActive(false);
-        sims[simIdx].SetActive(true);
+        model.sims[curIdx].SetActive(false);
+        model.sims[simIdx].SetActive(true);
         curIdx = simIdx;
     }
 

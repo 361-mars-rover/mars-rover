@@ -10,6 +10,8 @@ public class InventoryPresenter : MonoBehaviour
     [SerializeField] private FirebaseManager firebaseManager;
     [SerializeField] private InventoryView view;
 
+    [SerializeField] private SimulationManagerModel simulationManagerModel;
+
     private int currentPage = 0;
     private const int mineralsPerPage = 5;
 
@@ -18,6 +20,7 @@ public class InventoryPresenter : MonoBehaviour
     private void Awake()
     {
         simulationManager = FindAnyObjectByType<SimulationManager>();
+        simulationManagerModel = FindFirstObjectByType<SimulationManagerModel>();
         firebaseManager = FindAnyObjectByType<FirebaseManager>();
         view = FindFirstObjectByType<InventoryView>();
         view.Init(this);
@@ -85,7 +88,7 @@ public class InventoryPresenter : MonoBehaviour
         /*
         This is called by a Minerals.cs object when the rover collides with it.
         */
-        string currentCarId = simulationManager.roverIds[simulationManager.curIdx]; // UID for rover
+        string currentCarId = simulationManagerModel.roverIds[simulationManager.curIdx]; // UID for rover
         firebaseManager.StoreMaterialData(mineral, currentCarId, firebaseManager.simulationId); // Store data under rover's UID in firebase
         model.CollectMineral(mineral); // Updates the model to reflect that a new mineral has been collected
         view.UpdateMineralCount(model.mineralData.Count); // Updates the mineral count to reflect that a new mineral was collected

@@ -119,6 +119,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &40926559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 40926561}
+  - component: {fileID: 40926560}
+  m_Layer: 0
+  m_Name: SimulationManagerModel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &40926560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40926559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716c3e4ddf416544aaf48d3027946ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TileIndices: []
+  sims: []
+  curIdx: 0
+  roverIds: []
+--- !u!4 &40926561
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40926559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 714.30176, y: 36.401417, z: 678.88556}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &88812920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -289,16 +337,7 @@ MonoBehaviour:
   - {x: 1, y: 3}
   - {x: 1, y: 4}
   curIdx: 0
-  roverIds:
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  model: {fileID: 40926560}
 --- !u!4 &151140506
 Transform:
   m_ObjectHideFlags: 0
@@ -4304,3 +4343,4 @@ SceneRoots:
   - {fileID: 1809056906}
   - {fileID: 176379196883108714}
   - {fileID: 151140506}
+  - {fileID: 40926561}
