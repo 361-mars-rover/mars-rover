@@ -1411,6 +1411,7 @@ MonoBehaviour:
   marsTerrain: {fileID: 445007612}
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
+  podPrefab: {fileID: 100000, guid: 8865d0e964ac05142a03c9c7f84f265a, type: 3}
   invisibleWall: {fileID: 611799222}
   invisibleWall2: {fileID: 1411949950}
   invisibleWall3: {fileID: 595534510}

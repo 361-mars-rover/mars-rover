@@ -12,6 +12,8 @@ public class StartupSpawner : MonoBehaviour
     public GameObject dustCloudPrefab;
     public Texture2D mineralTexture;
 
+    public GameObject podPrefab;
+
     // Terrain generation variables
 
     public BoxCollider invisibleWall;
@@ -91,5 +93,29 @@ public class StartupSpawner : MonoBehaviour
         car.transform.localPosition = carSpawnPosition;
 
         car.SetActive(true);
+        SpawnPodNearCar(simulationRoot, car.transform.position);
+    }
+
+    private void SpawnPodNearCar(Transform parent, Vector3 carPosition)
+    {
+        // 1. Calculate offset position (5 units to the right of the car)
+        Vector3 podPosition = carPosition + car.transform.right * 5f;
+        
+        // 2. Get terrain height at the target X/Z position
+        Terrain terrain = marsTerrain.GetComponent<Terrain>();
+        podPosition.y = terrain.SampleHeight(podPosition) + 1f; // +1 for slight elevation
+
+        // 3. Create and position the pod
+        GameObject pod = Instantiate(podPrefab, parent);
+        pod.transform.localPosition = podPosition;
+        
+        // Optional: Adjust rotation to match terrain normal
+        Vector3 terrainNormal = terrain.terrainData.GetInterpolatedNormal(
+            podPosition.x / terrain.terrainData.size.x, 
+            podPosition.z / terrain.terrainData.size.z
+        );
+        pod.transform.rotation = Quaternion.FromToRotation(Vector3.up, terrainNormal);
+        
+        pod.SetActive(true);
     }
 }
