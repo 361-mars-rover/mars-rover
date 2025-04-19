@@ -6,7 +6,7 @@ and the presenter modifies them both. This class also sends data to the database
 */
 public class InventoryPresenter : MonoBehaviour
 {
-    [SerializeField] private SimulationManager simulationManager;
+    [SerializeField] private SimulationManagerPresenter simulationManager;
     [SerializeField] private FirebaseManager firebaseManager;
     [SerializeField] private InventoryView view;
 
@@ -19,7 +19,7 @@ public class InventoryPresenter : MonoBehaviour
 
     private void Awake()
     {
-        simulationManager = FindAnyObjectByType<SimulationManager>();
+        simulationManager = FindAnyObjectByType<SimulationManagerPresenter>();
         simulationManagerModel = FindFirstObjectByType<SimulationManagerModel>();
         firebaseManager = FindAnyObjectByType<FirebaseManager>();
         view = FindFirstObjectByType<InventoryView>();

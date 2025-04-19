@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-public class SimulationManager : MonoBehaviour
+public class SimulationManagerPresenter : MonoBehaviour
 {
     public GameObject SimulationPrefab;
 

@@ -144,6 +144,7 @@ public class MainMenu : MonoBehaviour
         // brainTableManager.RemoveSelectedBrain();
 
         Debug.Log($"Created new Avatar: {newAvatar.description}");
+        UpdateButtons();
     }
 
     public void EditSelectedAvatar()
