@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 public class BrainTableManager : TableManager<Brain>
 {
     public List<Brain> brains = new List<Brain>();
@@ -14,7 +15,7 @@ public class BrainTableManager : TableManager<Brain>
 
     void AddTestBrains()
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < Enum.GetNames(typeof(AIMode)).Length; i++)
         {
             AIMode aiMode = (AIMode)i;
             brains.Add(new Brain { ID = i, name = $"{aiMode.ToString()}", description = aiMode.GetDescription(), aIMode=aiMode});

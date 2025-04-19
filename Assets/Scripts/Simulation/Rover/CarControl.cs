@@ -97,6 +97,9 @@ public class CarControl : MonoBehaviour, IAIInput
                 Debug.Log("AI set to circle");
                 aiController = circleAIController;
                 break;
+            case AIMode.Manual:
+                currentControlMode = ControlMode.Human;
+                break;
         }
     }
 
