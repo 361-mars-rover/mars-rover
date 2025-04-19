@@ -11,28 +11,6 @@ This data is manipulated by the presenter class. It stores the number of mineral
 This class has no "knowledge" of the View class.
 */
 
-// public class InventoryModel
-// {
-//     public readonly List<(string id, string x, string z)> mineralData = new();
-
-//     // Called from the presenter when minerals are collected.
-//     public void CollectMineral(GameObject mineral)
-//     {
-//         string id = mineral.name;
-//         string x = mineral.transform.position.x.ToString("F2");
-//         string z = mineral.transform.position.z.ToString("F2");
-//         mineralData.Add((id, x, z));
-//     }
-
-//     public void Reset()
-//     {
-//         mineralData.Clear();
-//     }
-// }
-
-// using System.Collections.Generic;
-// using UnityEngine;
-
 public class InventoryModel : MonoBehaviour
 {
     public List<(string id, float x, float z)> mineralData = new();
