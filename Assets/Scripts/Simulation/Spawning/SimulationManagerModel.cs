@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 public class SimulationManagerModel : MonoBehaviour
 {
-    public Vector2Int[] TileIndices;
+    public List<Vector2Int> TileIndices = new List<Vector2Int>();
 
     private int MAX_ROW = 128;
     private int MAX_COL = 256;

@@ -17,10 +17,14 @@ public class SimulationManagerPresenter : MonoBehaviour
     public int curIdx = 0;
     // public List<string> model.roverIds = new List<string>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public SimulationManagerModel model;
+    private SimulationManagerModel model;
+    private SimulationManagerView view;
+
     void Awake()
     {
         model = FindFirstObjectByType<SimulationManagerModel>();
+        view = FindFirstObjectByType<SimulationManagerView>();
+
     }
     void Start()
     {
@@ -34,6 +38,7 @@ public class SimulationManagerPresenter : MonoBehaviour
             if (!IsValidRowCol(row, col)){
                 Debug.LogError($"Row col pair {row},{col} is invalid");
             }
+            model.TileIndices.Add(new Vector2Int(row, col));
             GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
             SimulationStart startupSpawner = sim.GetComponent<SimulationStart>();
             startupSpawner.SetRowCol(row,col);
@@ -56,6 +61,7 @@ public class SimulationManagerPresenter : MonoBehaviour
         // sims[0].SetActive(true);
         // SetActivity(simIdx: 0, active: true);
         model.sims[0].SetActive(true);
+        UpdateUI(0);
     }
 
     
@@ -76,6 +82,12 @@ public class SimulationManagerPresenter : MonoBehaviour
 
     }
 
+    void UpdateUI(int idx){
+        view.SetRoverID(model.roverIds[idx]);
+        view.SetTileIndices(model.TileIndices[idx]);
+        view.SetAIMode(AvatarTableManager.avatars[idx].brain.aIMode);
+    }
+
     private void SwitchSimulation(int simIdx){
         // Don't switch if index hasnt changed
         if (simIdx == curIdx){
@@ -84,6 +96,7 @@ public class SimulationManagerPresenter : MonoBehaviour
         model.sims[curIdx].SetActive(false);
         model.sims[simIdx].SetActive(true);
         curIdx = simIdx;
+        UpdateUI(simIdx);
     }
 
     private bool IsValidRowCol(int row, int col){
