@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // https://dev.to/iamscottcab/instantiating-monobehaviours-in-unity-5c2g
-public class ParameterizedMonoBehaviour : MonoBehaviour
+public class MonoBehaviourFactory : MonoBehaviour
 {
     protected static T Create<T>(GameObject gameObject = null) where T : MonoBehaviour{
         GameObject obj = gameObject;
