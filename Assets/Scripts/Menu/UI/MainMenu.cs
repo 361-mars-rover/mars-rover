@@ -23,6 +23,8 @@ public class MainMenu : MonoBehaviour
     private AvatarTableManager avatarTableManager;
     private BrainTableManager brainTableManager;
     private RoverTableManager roverTableManager;
+
+    private int MAX_ROVERS = 5;
     
     // Start is called before the first frame update
     void Start()
@@ -57,7 +59,8 @@ public class MainMenu : MonoBehaviour
     public void UpdateButtons()
     {
         // --- Create Avatar Button ---
-        bool canCreate = (selectedRover != null && selectedBrain != null);
+        bool canCreate = (selectedRover != null && selectedBrain != null && 
+            AvatarTableManager.avatars.Count < MAX_ROVERS);
         createAvatarButton.interactable = canCreate;
         SetButtonTextColor(createAvatarButton, canCreate);
 
