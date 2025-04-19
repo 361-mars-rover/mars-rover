@@ -1533,6 +1533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   car: {fileID: 1625381592}
+  podPrefab: {fileID: 100000, guid: 8865d0e964ac05142a03c9c7f84f265a, type: 3}
   marsTerrain: {fileID: 445007612}
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
@@ -3219,6 +3220,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6643609917398174226, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: car
+      value: 
+      objectReference: {fileID: 1625381592}
     - target: {fileID: 7753910607208213492, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_Name
       value: MineralCountText
