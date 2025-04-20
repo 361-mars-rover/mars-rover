@@ -211,18 +211,18 @@ public class MainMenu : MonoBehaviour
 
     public void ClearAvatarsAndRestoreComponents()
     {
-        List<Avatar> avatarsToRestore = new List<Avatar>(AvatarTableManager.avatars);
+        // List<Avatar> avatarsToRestore = new List<Avatar>(AvatarTableManager.avatars);
 
         // Clear avatar table
         AvatarTableManager.avatars.Clear();
         //avatarTableManager.RefreshTable();
 
         // Re-add rovers and brains
-        foreach (Avatar avatar in avatarsToRestore)
-        {
-            roverTableManager.AddRover(avatar.rover);
-            brainTableManager.AddBrain(avatar.brain);
-        }
+        // foreach (Avatar avatar in avatarsToRestore)
+        // {
+        //     roverTableManager.AddRover(avatar.rover);
+        //     brainTableManager.AddBrain(avatar.brain);
+        // }
 
         // Clear any selected state
         setSelectedAvatar(null);
@@ -232,7 +232,7 @@ public class MainMenu : MonoBehaviour
         UpdateButtons();
         ReorderTables();
 
-        Debug.Log($"Restarted simulation: {avatarsToRestore.Count} avatars cleared, rovers and brains restored.");
+        // Debug.Log($"Restarted simulation: {avatarsToRestore.Count} avatars cleared, rovers and brains restored.");
     }
 
     public void ReAddBrainAndRover(Brain brain, Rover rover)

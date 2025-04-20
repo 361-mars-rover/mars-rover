@@ -101,6 +101,10 @@ using Loaders;
 public class SimulationStart : MonoBehaviour
 {
     public GameObject car;
+
+    public GameObject podPrefab;
+
+    public GameObject rockPrefab;
     // public GameObject camera;
     public GameObject marsTerrain;
     public GameObject dustCloudPrefab;
@@ -184,5 +188,32 @@ public class SimulationStart : MonoBehaviour
         car.transform.localPosition = carSpawnPosition;
 
         car.SetActive(true);
+        SpawnPodNearCar(simulationRoot, car.transform.position);
+    }
+
+    private void SpawnPodNearCar(Transform parent, Vector3 carPosition)
+    {
+        Vector3 podPosition = carPosition + car.transform.right * 15f + car.transform.forward * 30f;
+        
+        Terrain terrain = marsTerrain.GetComponent<Terrain>();
+        podPosition.y = terrain.SampleHeight(podPosition);
+
+        GameObject pod = Instantiate(podPrefab, parent);
+        pod.transform.localPosition = podPosition;
+        
+        Vector3 terrainNormal = terrain.terrainData.GetInterpolatedNormal(
+            podPosition.x / terrain.terrainData.size.x, 
+            podPosition.z / terrain.terrainData.size.z
+        );
+        pod.transform.rotation = Quaternion.FromToRotation(Vector3.up, terrainNormal);
+
+        if (rockPrefab != null)
+        {
+            GameObject rock = Instantiate(rockPrefab, pod.transform);
+            rock.transform.localPosition = Vector3.zero;
+            rock.transform.localRotation = Quaternion.identity;
+        }
+        
+        pod.SetActive(true);
     }
 }

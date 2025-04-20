@@ -80,18 +80,28 @@ using System.Collections;
 
 class RockSpawner : Spawner
 {
-    public GameObject rockPrefab;  
+    public GameObject rockPrefab; 
+    public GameObject car;
+    private float exclusionRadius = 50f; 
     private int numberOfRocks = 500; 
     private float spawnRadius = 2000f;
     private float spawnDelay = 1f; 
 
     public override void Spawn()
     {
+        Vector3 carPosition = car.transform.position;
+
         for (int i = 0; i < numberOfRocks; i++)
         {
             Vector3 randomPosition = GetRandomPositionNearTerrain();
             if (randomPosition != Vector3.zero)
             {
+                if (Vector3.Distance(randomPosition, carPosition) < exclusionRadius)
+                {
+                    i--; 
+                    continue;
+                }
+
                 GameObject rock = Instantiate(rockPrefab, randomPosition, Quaternion.identity);
                 rock.transform.SetParent(transform.parent);    
 
