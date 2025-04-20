@@ -1681,6 +1681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   car: {fileID: 1625381592}
   podPrefab: {fileID: 100000, guid: 8865d0e964ac05142a03c9c7f84f265a, type: 3}
+  rockPrefab: {fileID: 176379196883108715}
   marsTerrain: {fileID: 445007612}
   dustCloudPrefab: {fileID: 1728920022}
   mineralTexture: {fileID: 0}
@@ -3588,6 +3589,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1625381597}
   m_SourcePrefab: {fileID: 100100000, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+--- !u!1 &176379196883108715 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 788181229640247767, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+  m_PrefabInstance: {fileID: 176379196883108714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &176379196883108717 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4515504261769031550, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
