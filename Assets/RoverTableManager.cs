@@ -14,12 +14,13 @@ public class RoverTableManager : TableManager<Rover>
 
     void AddTestRovers()
     {
-        Color [] colors = {Color.red, Color.blue, Color.yellow, Color.black, Color.gray};
-        string [] colorNames = {"red", "blue", "yellow", "black", "gray"};
+        Color [] colors = {Color.red, Color.blue, Color.yellow, Color.black, Color.gray, Color.cyan, Color.magenta, Color.white};
+        string [] colorNames = {"red", "blue", "yellow", "black", "gray", "cyan", "magenta", "white"};
+        string [] roverNames = {"Ralph", "Brenda", "Yan", "Borris", "Gertrude", "Craig", "Margaret", "Whitney"};
         for (int i = 0; i < colors.Length; i++)
         {
             Color color = colors[i];
-            rovers.Add(new Rover { ID = i, name = $"Rover {i}", description = colorNames[i], color=color});
+            rovers.Add(new Rover { ID = i, name = roverNames[i], description = $"A {colorNames[i]} rover.", color=color});
         }
     }
 
