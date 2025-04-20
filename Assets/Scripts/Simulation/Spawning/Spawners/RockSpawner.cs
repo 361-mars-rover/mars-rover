@@ -82,7 +82,7 @@ class RockSpawner : Spawner
 {
     public GameObject rockPrefab; 
     public GameObject car;
-    public float exclusionRadius = 2f; 
+    private float exclusionRadius = 50f; 
     private int numberOfRocks = 500; 
     private float spawnRadius = 2000f;
     private float spawnDelay = 1f; 
