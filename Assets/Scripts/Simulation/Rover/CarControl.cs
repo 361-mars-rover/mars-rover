@@ -122,6 +122,16 @@ public class CarControl : MonoBehaviour, IAIInput
         }
     }
 
+    void FixedUpdate()
+    {
+        float currentSpeed = rigidBody.linearVelocity.magnitude;
+        if (currentSpeed > CarParams.MAX_SPEED)
+        {
+            rigidBody.linearVelocity = rigidBody.linearVelocity.normalized * CarParams.MAX_SPEED;
+        }
+    }
+    
+
     public void SetControls(float throttle, float steer)
     {
         ApplyControlsToWheels(throttle, steer);
@@ -157,6 +167,7 @@ public class CarControl : MonoBehaviour, IAIInput
                 wheel.HandleBraking(false);
             }
         }
+        
     }
 
     public void ManualControl()
