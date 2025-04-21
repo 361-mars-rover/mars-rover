@@ -115,7 +115,7 @@ public class MineralSpawner : Spawner
             
         // Convert concentration to spawn probability
         float spawnProbability = Mathf.InverseLerp(0.05f, 0.2f, pyroxeneConcentration);
-        float boostFactor = 1.75f; // Increase this to boost overall spawn chance
+        float boostFactor = 4f; // Increase this to boost overall spawn chance
         float boostedProbability = Mathf.Clamp01(spawnProbability * boostFactor);
         return Random.value < boostedProbability;
     }
