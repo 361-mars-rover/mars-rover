@@ -106,7 +106,6 @@ public class CircleAIController : BaseAIController
         int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
 
         RaycastHit gemHit;
-
         // --- Wall Detection (highest priority) ---
         if (!avoidingWall && CheckForWallProximity())
         {
@@ -190,11 +189,14 @@ public class CircleAIController : BaseAIController
         else if (!avoidingRock)
         {
             Vector3 rockAvoidanceOffset = CheckForRockAvoidance();
+            float patrolRadius = innerCircleMode 
+            ? currentRadius 
+            : maxRadius;
             float angleRad = currentAngle * Mathf.Deg2Rad;
             targetPosition = homeBasePosition + new Vector3(
-                Mathf.Sin(angleRad) * currentRadius,
+                Mathf.Sin(angleRad) * patrolRadius,
                 0f,
-                Mathf.Cos(angleRad) * currentRadius
+                Mathf.Cos(angleRad) * patrolRadius
             );
             if (rockAvoidanceOffset != Vector3.zero)
             {
@@ -214,7 +216,7 @@ public class CircleAIController : BaseAIController
         }
 
         // --- Update angle and radius based on laps and mode ---
-        currentAngle += circleSpeed * Time.deltaTime;
+        currentAngle += circleSpeed * 360f * Time.deltaTime;
         if (currentAngle >= 360f)
         {
             currentAngle = 0f;
