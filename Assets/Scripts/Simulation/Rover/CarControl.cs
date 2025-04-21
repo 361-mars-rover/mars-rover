@@ -26,8 +26,7 @@ public class CarControl : MonoBehaviour, IAIInput
     private CircleAIController circleAIController;
     private SunlightAIController sunlightAIController;
     public IAIController aiController;
-
-    public AIMode currentAI = AIMode.CircleAI;
+    public AIMode currentAI = AIMode.CircleAI; // Allows you to switch from manual to ai in game
 
     void Awake()
     {
@@ -80,7 +79,7 @@ public class CarControl : MonoBehaviour, IAIInput
                 this
             );
         }
-        aiController = circleAIController;
+        aiController = circleAIController; // Allows you to switch from manual to ai in game
         Debug.Log("AI controllers are prepared and ready.");
     }
 
