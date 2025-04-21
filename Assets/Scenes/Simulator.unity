@@ -1330,7 +1330,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: -6478536213147159724, guid: 6e7e99712c0ae4004b61d579fc319303, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1351,7 +1351,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 3
+  m_Time: 5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -2371,25 +2371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c017525c596104cf989d37aa3bc501c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Minerals: []
-  NumberOfMinerals: 0
-  OnMineralCollected:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
-        m_MethodName: UpdateMineralText
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  simulationManager: {fileID: 0}
-  firebaseManager: {fileID: 0}
 --- !u!114 &1625381597
 MonoBehaviour:
   m_ObjectHideFlags: 0

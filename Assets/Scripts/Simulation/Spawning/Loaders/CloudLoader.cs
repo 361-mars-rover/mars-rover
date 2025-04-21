@@ -202,7 +202,9 @@ class CloudLoader : Loader
             return;
         }
 
-        Material cloudMat = new Material(Shader.Find("Unlit/Transparent"));
+        // Material cloudMat = new Material(Shader.Find("Unlit/Transparent"));
+        // Fixed null error in build
+        Material cloudMat = new Material(Resources.Load<Material>("DummyMaterial"));
         cloudMat.mainTexture = DustTexture;
         DustTexture.wrapMode = TextureWrapMode.Repeat;
         renderer.material = cloudMat;
