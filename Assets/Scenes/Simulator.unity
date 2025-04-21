@@ -2086,8 +2086,6 @@ GameObject:
   - component: {fileID: 1504693231}
   - component: {fileID: 1504693235}
   - component: {fileID: 1504693236}
-  - component: {fileID: 1504693237}
-  - component: {fileID: 1504693238}
   m_Layer: 0
   m_Name: CarCamera
   m_TagString: Untagged
@@ -2261,31 +2259,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1625381595}
   switchKey: 99
---- !u!114 &1504693237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504693230}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72dc6f7986fa91341a25e078e82ca4be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugMode: 1
---- !u!114 &1504693238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504693230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a81c521f7f85743aef651f86cac327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1515101134 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2534070097972337412, guid: b9d508d7986e94510afffd7d618d9bcb, type: 3}

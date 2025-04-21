@@ -27,6 +27,8 @@ public class CarControl : MonoBehaviour, IAIInput
     private SunlightAIController sunlightAIController;
     public IAIController aiController;
 
+    public AIMode currentAI = AIMode.CircleAI;
+
     void Awake()
     {
         Time.fixedDeltaTime = 0.01f;
@@ -78,6 +80,7 @@ public class CarControl : MonoBehaviour, IAIInput
                 this
             );
         }
+        aiController = circleAIController;
         Debug.Log("AI controllers are prepared and ready.");
     }
 
