@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+// #if UNITY_EDITOR
+// using UnityEditor;
+// #endif
 
 public class WelcomeScreen : MonoBehaviour
 {
@@ -17,10 +17,11 @@ public class WelcomeScreen : MonoBehaviour
     {
         //Debug.Log("Quit button pressed!");
 
-        #if UNITY_EDITOR
-            EditorApplication.isPlaying = false; //when simulating in Unity Editor, will stop playing/simulates quiting application
-        #else
-            Application.Quit(); //will quit in build
-        #endif
+        // #if UNITY_EDITOR
+        //     EditorApplication.isPlaying = false; //when simulating in Unity Editor, will stop playing/simulates quiting application
+        // #else
+        //     //will quit in build
+        // #endif
+        Application.Quit();
     }
 }
