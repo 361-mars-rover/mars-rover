@@ -58,7 +58,7 @@ public abstract class BaseAIController : MonoBehaviour, IAIController
     protected IEnumerator ReverseManeuver()
     {
         inReverseManeuver = true;
-        float reverseDuration = 1f;
+        float reverseDuration = 2f;
         float timer = 0f;
         while (timer < reverseDuration)
         {
@@ -86,12 +86,12 @@ public abstract class BaseAIController : MonoBehaviour, IAIController
     protected IEnumerator RecoveryManeuver()
     {
         inRecovery = true;
-        float firstRecoveryTime = 2.5f;
+        float firstRecoveryTime = 3f;
         float timer = 0f;
         while (timer < firstRecoveryTime)
         {
             float reverseThrottle = -0.5f;
-            aiInput.SetControls(reverseThrottle, 0.2f);
+            aiInput.SetControls(reverseThrottle, 0f);
             timer += Time.deltaTime;
             yield return null;
         }

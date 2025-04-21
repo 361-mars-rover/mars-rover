@@ -78,6 +78,9 @@ public class CircleAIController : BaseAIController
             lookingForGem = true;
             targetPosition = gemHit.collider.transform.position;
             Debug.Log("Gem detected via sphere cast. Moving toward gem.");
+            if (!innerCircleMode){
+                TriggerInnerCircleScan();
+            }
         }
         // --- Rock avoidance and normal circle logic ---
         else if (!avoidingRock)
@@ -93,7 +96,7 @@ public class CircleAIController : BaseAIController
             {
                 avoidingRock = true;
                 avoidanceTarget = carTransform.position + rockAvoidanceOffset;
-                Debug.Log("Rock detected. Switching to avoidance mode.");
+                Debug.Log("Rock detected. Switching to avoidance mode!");
             }
         }
         else
@@ -180,5 +183,16 @@ public class CircleAIController : BaseAIController
         {
             aiInput.SetControls(throttle, steer);
         }
+    }
+    void TriggerInnerCircleScan()
+    {
+        normalHomeBase       = homeBasePosition;
+        normalRadius         = currentRadius;
+        homeBasePosition     = carTransform.position;
+        currentRadius        = maxRadius * innerCircleFactor;
+        currentAngle         = 0f;
+        innerCircleMode      = true;
+        innerCircleLapsCompleted = 0;
+        Debug.Log("Inner circle scan triggered");
     }
 }
