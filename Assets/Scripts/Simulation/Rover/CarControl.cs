@@ -79,7 +79,6 @@ public class CarControl : MonoBehaviour, IAIInput
                 this
             );
         }
-        
         aiController = circleAIController; // Allows you to switch from manual to ai in game
         Debug.Log("AI controllers are prepared and ready.");
     }
