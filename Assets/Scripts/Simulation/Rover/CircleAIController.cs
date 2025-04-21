@@ -18,6 +18,17 @@ public class CircleAIController : BaseAIController
     private int totalInnerCircleLaps = 10;
     private float innerCircleFactor = 0.1f;
 
+    // Wall detection and avoidance variables
+    private bool avoidingWall = false;
+    private float wallDetectionDistance = 2f; // Distance to detect walls (changed from 20 to 2)
+    private float wallAvoidanceTimeout = 5f; // Time to spend in avoidance mode
+    private float wallAvoidanceTimer = 0f;
+    // States for wall avoidance sequence
+    private enum WallAvoidanceState { Reversing, Turning, Resuming }
+    private WallAvoidanceState wallAvoidanceState = WallAvoidanceState.Reversing;
+    private float reverseTime = 5.0f; // Time to spend reversing
+
+
     /// <summary>
     /// Initializes the circle AI with its parameters and a reference to the CarControl input.
     /// </summary>
@@ -63,17 +74,110 @@ public class CircleAIController : BaseAIController
         avoidanceTarget = avoidTarget;
     }
 
+    private bool CheckForWallProximity()
+    {
+        // Use a spherecast to detect nearby walls
+        int wallLayerMask = 1 << LayerMask.NameToLayer("Default");
+        Collider[] hitColliders = Physics.OverlapSphere(carTransform.position, wallDetectionDistance, wallLayerMask);
+        
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("InvisibleWall"))
+            {
+                Vector3 directionToWall = hitCollider.ClosestPoint(carTransform.position) - carTransform.position;
+                float distanceToWall = directionToWall.magnitude;
+                
+                if (distanceToWall < wallDetectionDistance)
+                {
+                    Debug.Log("Wall detected at distance: " + distanceToWall);
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
     public override void UpdateRover()
     {
-        Vector3 targetPosition;
-
-        // --- Gem Detection (has higher priority) ---
+        Vector3 targetPosition = carTransform.position; // Initialize
         float gemRayDistance = 100f;
         float gemSphereRadius = 2f;
         int gemLayerMask = 1 << LayerMask.NameToLayer("SphereGem");
 
         RaycastHit gemHit;
-        if (Physics.SphereCast(carTransform.position, gemSphereRadius, carTransform.forward, out gemHit, gemRayDistance, gemLayerMask))
+
+        // --- Wall Detection (highest priority) ---
+        if (!avoidingWall && CheckForWallProximity())
+        {
+            avoidingWall = true;
+            wallAvoidanceTimer = 0f;
+            wallAvoidanceState = WallAvoidanceState.Reversing; // Start with reversing
+            
+            // Set a target behind the rover for the reverse step
+            Vector3 reverseDirection = -carTransform.forward;
+            avoidanceTarget = carTransform.position + (reverseDirection * 10f);
+            Debug.Log("Wall detected. Starting reverse maneuver.");
+        }
+
+        // --- Handle ongoing wall avoidance ---
+        if (avoidingWall)
+        {
+            wallAvoidanceTimer += Time.deltaTime;
+            
+            switch (wallAvoidanceState)
+            {
+                case WallAvoidanceState.Reversing:
+                    // Apply reverse controls
+                    if (aiInput != null)
+                    {
+                        aiInput.SetControls(-1f, 0f); // Reverse at half speed
+                    }
+                    
+                    // After sufficient reversing time, switch to turning
+                    if (wallAvoidanceTimer >= reverseTime)
+                    {
+                        wallAvoidanceState = WallAvoidanceState.Turning;
+                        wallAvoidanceTimer = 0f;
+                        
+                        // Set a target 90 degrees to the right or left
+                        // Randomize direction to avoid getting stuck in patterns
+                        float turnDirection = (UnityEngine.Random.value > 0.5f) ? 1f : -1f;
+                        Vector3 turnVector = (carTransform.right * turnDirection) + (carTransform.forward * 0.5f);
+                        avoidanceTarget = carTransform.position + (turnVector.normalized * 15f);
+                        Debug.Log("Finished reversing, now turning.");
+                    }
+                    break;
+                    
+                case WallAvoidanceState.Turning:
+                    // Let the regular targeting system handle the turn
+                    targetPosition = avoidanceTarget;
+                    
+                    // If we've reached our turn target or spent enough time turning
+                    if (Vector3.Distance(carTransform.position, avoidanceTarget) < 5f || 
+                        wallAvoidanceTimer >= wallAvoidanceTimeout)
+                    {
+                        wallAvoidanceState = WallAvoidanceState.Resuming;
+                        wallAvoidanceTimer = 0f;
+                        Debug.Log("Finished turning, now resuming normal path.");
+                    }
+                    break;
+                    
+                case WallAvoidanceState.Resuming:
+                    // Just give a little time before completely returning to normal
+                    targetPosition = carTransform.position + carTransform.forward * 10f;
+                    
+                    if (wallAvoidanceTimer >= 1.0f) // Brief pause before resuming
+                    {
+                        avoidingWall = false;
+                        Debug.Log("Wall avoidance complete. Resuming normal path.");
+                    }
+                    break;
+            }
+        }
+
+        // --- Gem Detection (has higher priority) ---
+        else if (Physics.SphereCast(carTransform.position, gemSphereRadius, carTransform.forward, out gemHit, gemRayDistance, gemLayerMask))
         {
             lookingForGem = true;
             targetPosition = gemHit.collider.transform.position;
