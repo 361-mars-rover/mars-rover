@@ -27,7 +27,10 @@ public class CarControl : MonoBehaviour, IAIInput
     private SunlightAIController sunlightAIController;
     public IAIController aiController;
 
+ wall-fix
     // DELETE
+
+ main
     public AIMode currentAI = AIMode.CircleAI;
 
     void Awake()
@@ -81,9 +84,13 @@ public class CarControl : MonoBehaviour, IAIInput
                 this
             );
         }
+ wall-fix
         // DELETE
         aiController = circleAIController;
         // END DELETE
+
+        aiController = circleAIController;
+ main
         Debug.Log("AI controllers are prepared and ready.");
     }
 
