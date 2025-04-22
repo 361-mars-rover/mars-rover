@@ -42,6 +42,12 @@ public class SimulationManagerPresenter : MonoBehaviour
             GameObject sim = Instantiate(SimulationPrefab, new Vector3(0,0,0), Quaternion.identity);
             SimulationStart startupSpawner = sim.GetComponent<SimulationStart>();
             startupSpawner.SetRowCol(row,col);
+            var mineralSpawner = sim.GetComponentInChildren<MineralSpawner>();
+            if (mineralSpawner == null) {
+                Debug.LogError("[SimulationManagerPresenter] MineralSpawner component not found on prefab!");
+            } else {
+                mineralSpawner.Init(row, col);
+            }
 
                         // Get the "car" child object
             Transform carTransform = sim.transform.Find("car");
