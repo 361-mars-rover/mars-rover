@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Loaders;
+using System;
 
 public class SimulationStart : MonoBehaviour
 {
@@ -21,8 +22,8 @@ public class SimulationStart : MonoBehaviour
     public BoxCollider invisibleWall3;
     public BoxCollider invisibleWall4;
 
-    private int spawnTileRow = 10;
-    private int spawnTileCol = 10;
+    public int spawnTileRow;
+    public int spawnTileCol;
 
     // This is our local "root" for the entire simulation
     public FirebaseManager firebaseManager; // Reference to the Firebase manager
