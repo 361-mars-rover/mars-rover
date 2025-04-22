@@ -15,7 +15,7 @@ public class MineralSpawner : Spawner
 
     [Header("Spawning Settings")]
     public GameObject rockPrefab;
-    public int numberOfRocks = 1000;
+    private int numberOfRocks = 10000;
     public float spawnRadius = 500f;
     public float spawnDelay = 1f;
 
@@ -144,11 +144,13 @@ public class MineralSpawner : Spawner
 
         bool isEquatorialLowAlbedo = albedoMask > 0.7f;
         bool aboveDetectionLimit = plagioclaseConcentration >= 0.05f;
-        if (!isEquatorialLowAlbedo || !aboveDetectionLimit)
+        if (!isEquatorialLowAlbedo || !aboveDetectionLimit){
+            // Debug.Log($"Low albedo: ${isEquatorialLowAlbedo}. Above detection limit: ${aboveDetectionLimit}");
             return false;
+        }
 
         float spawnProbability = Mathf.InverseLerp(0.05f, 0.2f, plagioclaseConcentration);
-        float boostedProbability = Mathf.Clamp01(spawnProbability * 4f);
+        float boostedProbability = Mathf.Clamp01(spawnProbability * 100f);
         return Random.value < boostedProbability;
     }
 
