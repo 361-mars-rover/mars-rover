@@ -1954,8 +1954,6 @@ MonoBehaviour:
   invisibleWall2: {fileID: 1411949950}
   invisibleWall3: {fileID: 595534510}
   invisibleWall4: {fileID: 234963107}
-  spawnTileRow: 0
-  spawnTileCol: 0
   firebaseManager: {fileID: 2099217467}
 --- !u!114 &1057071641
 MonoBehaviour:
@@ -1970,7 +1968,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rockPrefab: {fileID: 176379196883108716}
-  numberOfRocks: 1000
   spawnRadius: 500
   spawnDelay: 1
   mineralTexture: {fileID: 0}
@@ -3703,6 +3700,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 940267072127527456, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 989988153057699554, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -3873,9 +3874,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3810417333407678335, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1625381597}
-    - targetCorrespondingSourceObject: {fileID: 3115567565874063193, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 176379196883108720}
   m_SourcePrefab: {fileID: 100100000, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
 --- !u!1 &176379196883108715 stripped
 GameObject:
@@ -3898,108 +3896,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &176379196883108719 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3115567565874063193, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
-  m_PrefabInstance: {fileID: 176379196883108714}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &176379196883108720
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176379196883108719}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6acbab66c12f76043aaa3de02217fe23, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6acbab66c12f76043aaa3de02217fe23, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 0
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!224 &424970471047878847
 RectTransform:
   m_ObjectHideFlags: 0
