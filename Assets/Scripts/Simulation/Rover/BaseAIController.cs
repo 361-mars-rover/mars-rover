@@ -90,7 +90,7 @@ public abstract class BaseAIController : MonoBehaviour, IAIController
         float timer = 0f;
         while (timer < firstRecoveryTime)
         {
-            float reverseThrottle = -0.5f;
+            float reverseThrottle = -2.5f;
             aiInput.SetControls(reverseThrottle, 0f);
             timer += Time.deltaTime;
             yield return null;
