@@ -22,8 +22,8 @@ public class SimulationStart : MonoBehaviour
     public BoxCollider invisibleWall3;
     public BoxCollider invisibleWall4;
 
-    public int spawnTileRow;
-    public int spawnTileCol;
+    private int spawnTileRow = -1;
+    private int spawnTileCol = -1;
 
     // This is our local "root" for the entire simulation
     public FirebaseManager firebaseManager; // Reference to the Firebase manager
