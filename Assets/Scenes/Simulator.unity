@@ -1954,7 +1954,59 @@ MonoBehaviour:
   invisibleWall2: {fileID: 1411949950}
   invisibleWall3: {fileID: 595534510}
   invisibleWall4: {fileID: 234963107}
+  spawnTileRow: 0
+  spawnTileCol: 0
   firebaseManager: {fileID: 2099217467}
+--- !u!114 &1057071641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057071638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d97430879bab6d40a664b3db837fc76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rockPrefab: {fileID: 176379196883108716}
+  numberOfRocks: 1000
+  spawnRadius: 500
+  spawnDelay: 1
+  mineralTexture: {fileID: 0}
+  spawnProbabilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1157530308
 GameObject:
   m_ObjectHideFlags: 0
@@ -3647,6 +3699,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 788181229640247767, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 989988153057699554, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -3808,6 +3864,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1057071640}
+    - targetCorrespondingSourceObject: {fileID: 3201952502774391745, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1057071641}
     - targetCorrespondingSourceObject: {fileID: 3810417333407678335, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1625381596}
@@ -3821,6 +3880,11 @@ PrefabInstance:
 --- !u!1 &176379196883108715 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 788181229640247767, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+  m_PrefabInstance: {fileID: 176379196883108714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &176379196883108716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3115567565874063193, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
   m_PrefabInstance: {fileID: 176379196883108714}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &176379196883108717 stripped
