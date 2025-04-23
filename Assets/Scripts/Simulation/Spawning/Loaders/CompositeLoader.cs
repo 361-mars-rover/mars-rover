@@ -1,7 +1,11 @@
 using System.Collections.Generic;
-using Loaders;
 using UnityEngine;
 
+/*
+JIKAEL
+A class that composes various loaders into a single loader to allow for multiple objects to 
+be loaded in one call.
+*/
 class CompositeLoader : Loader
 {
     private List<Loader> loaders = new List<Loader>();

@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using Loaders;
 using System;
 
+/*
+JIKAEL + JAN
+Loads all the objects needed to start a simulation, including terrain, clouds, walls, pod and car.
+*/
 public class SimulationStart : MonoBehaviour
 {
     public GameObject car;

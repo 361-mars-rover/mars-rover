@@ -1,8 +1,10 @@
+/*
+JIKAEL
+An interface implemented by all AI that defines an UpdateRover method
+that uses IAIInput + extra logic on each frame update to manipulate the rover.
+*/
+
 public interface IAIController
 {
-    /// <summary>
-    /// Called by CarControl to update the rover.
-    /// The controller is responsible for computing the desired controls and then calling IAIInput.SetControls.
-    /// </summary>
     void UpdateRover();
 }

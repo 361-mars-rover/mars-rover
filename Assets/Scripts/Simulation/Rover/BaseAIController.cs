@@ -1,6 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
+/*
+JIKAEL + DOV + SAL
+Defines rock avoidance behaviour. This is inherited by all AI classes.
+*/
+
 public abstract class BaseAIController : MonoBehaviour, IAIController
 {
     protected Transform carTransform;

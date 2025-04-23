@@ -5,6 +5,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
+/*
+JIKAEL
+Creates simulations from the list of avatars and spawnpoints and sets them as the model data. Also
+handles switching between simulations and making UI updates.
+*/
 public class SimulationManagerPresenter : MonoBehaviour
 {
     public GameObject SimulationPrefab;

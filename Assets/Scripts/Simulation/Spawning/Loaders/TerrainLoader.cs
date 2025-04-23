@@ -1,8 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using Loaders;
 
+/*
+JIKAEL + JAN + ARYAN
+
+This class inherits from Loader to load terrain.
+*/
 class TerrainLoader : Loader
 {
     private string heightbaseURL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MOLA_blend200ppx_HRSC_Shade_clon0dd_200mpp_lzw/1.0.0/default/default028mm";
@@ -13,6 +17,7 @@ class TerrainLoader : Loader
     private int row;
     private int col;
 
+    // The transform of the simulation prefab. All object's positions in the simulation are relative to this
     private Transform simulationRoot;
 
     public class Factory : MonoBehaviourFactory{

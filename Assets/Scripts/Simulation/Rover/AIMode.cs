@@ -1,3 +1,10 @@
+/*
+JIKAEL + DOV
+Defines an enum representing the current strategy for updating the rover physics.
+Also defined extensions to the enum to get descriptions via GetDescription(mode)
+which are used to fill out menu info.
+*/
+
 public enum AIMode
 {
     CircleAI,

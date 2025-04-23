@@ -1,5 +1,10 @@
 using TMPro;
 using UnityEngine;
+
+/*
+JIKAEL
+GUI information about the rover ID, tile indices, and AI mode. This is managed by SimulationPresenter
+*/
 class SimulationManagerView : MonoBehaviour{
     [SerializeField] private TextMeshProUGUI roverIDTextMesh;
     [SerializeField] private TextMeshProUGUI indicesTextMesh;

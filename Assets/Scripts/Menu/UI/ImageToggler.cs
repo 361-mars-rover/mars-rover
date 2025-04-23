@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+JIKAEL
+A class to toggle the mineral data on the map
+*/
 public class ImageToggler : MonoBehaviour
 {
     [SerializeField] private Sprite marsImage;

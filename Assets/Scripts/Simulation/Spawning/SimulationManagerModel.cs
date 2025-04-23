@@ -5,6 +5,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
+/*
+JIKAEL
+Models the data for all existing simulations. This includes their tile indices, simulation game objects, 
+and rovers, alongside the index of the current simulation.
+*/
 public class SimulationManagerModel : MonoBehaviour
 {
     public List<Vector2Int> TileIndices = new List<Vector2Int>();

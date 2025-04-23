@@ -1,5 +1,8 @@
 using UnityEngine;
-
+/*
+JIKAEL
+Recursively sets the colours of each car part to a given colour
+*/
 public static class CarColorUtils
 {
     public static void SetCarColor(Transform carRoot, Color color)

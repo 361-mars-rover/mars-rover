@@ -1,8 +1,15 @@
+/*
+JIKAEL
+A class representing various constants related to the terrain
+*/
 public static class TerrainInfo{
-    public static readonly float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
-    public static readonly float TILE_WIDTH = 256f;
-    public static readonly float WMS_PIXEL_SIZE = 0.28e-3f;
 
+    // Convert pixel size to real-world distance
+    public static readonly float SCALE_DENOMINATOR = 2.1814659085787088E+06f;
+    // Width/length of a tile
+    public static readonly float TILE_WIDTH = 256f;
+    // Physical size of a pixel
+    public static readonly float WMS_PIXEL_SIZE = 0.28e-3f;
     private static float LATERAL_SCALE_FACTOR = 0.01f;
     private static float HEIGHT_SCALE_FACTOR = 0.0007f;
 
@@ -14,6 +21,7 @@ public static class TerrainInfo{
     public static readonly float TERRAIN_LENGTH;
 
     public static readonly int HEIGHTMAP_RESOLUTION = 257;
+    // used in the URL
     public static readonly int TILE_MATRIX_SET = 7;
 
     static TerrainInfo(){
