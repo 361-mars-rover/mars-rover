@@ -38,7 +38,7 @@ public class MapClickUI : MonoBehaviour, IPointerClickHandler
             if (currentAvatarIndex < avatars.Count) {
                 avatars[currentAvatarIndex].SpawnRowCol = new Vector2Int(-1, -1); // Reset to invalid position
             }
-            SetTopText($"Select spawn point for rover {currentAvatarIndex}");
+            SetTopText($"Select spawn point for Avatar {currentAvatarIndex}");
         }
     }
 
