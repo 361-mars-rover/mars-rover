@@ -20,6 +20,9 @@ public class SimulationManagerPresenter : MonoBehaviour
     private SimulationManagerModel model;
     private SimulationManagerView view;
 
+    public float keyCooldown = 0.5f; // time in seconds between allowed presses
+    private float nextAllowedPressTime = 0f;
+
     void Awake()
     {
         model = FindFirstObjectByType<SimulationManagerModel>();
@@ -70,17 +73,25 @@ public class SimulationManagerPresenter : MonoBehaviour
     void Update()
     {
         int simIdx;
-        if (Input.GetKeyDown(KeyCode.K))
+
+        if (Time.time >= nextAllowedPressTime)
         {
-            simIdx = Math.Max(curIdx-1, 0);
-            SwitchSimulation(simIdx);
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                simIdx = Math.Max(curIdx-1, 0);
+                SwitchSimulation(simIdx);
+                nextAllowedPressTime = Time.time + keyCooldown;
+
+            }
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                simIdx = Math.Min(curIdx+1, AvatarTableManager.avatars.Count - 1);
+                Debug.Log($"sim index set to {simIdx}");
+                SwitchSimulation(simIdx);
+                nextAllowedPressTime = Time.time + keyCooldown;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
-            simIdx = Math.Min(curIdx+1, AvatarTableManager.avatars.Count - 1);
-            Debug.Log($"sim index set to {simIdx}");
-            SwitchSimulation(simIdx);
-        }
+        
 
     }
 
