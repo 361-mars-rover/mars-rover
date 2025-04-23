@@ -20,8 +20,11 @@ public class SimulationManagerPresenter : MonoBehaviour
     private SimulationManagerModel model;
     private SimulationManagerView view;
 
-    public float keyCooldown = 0.5f; // time in seconds between allowed presses
+    public float keyCooldown = 0.1f; // time in seconds between allowed presses
     private float nextAllowedPressTime = 0f;
+    public float loadCooldown = 3f;
+
+    private bool[] hasBeenLoaded = new bool[AvatarTableManager.avatars.Count];
 
     void Awake()
     {
@@ -51,6 +54,7 @@ public class SimulationManagerPresenter : MonoBehaviour
             } else {
                 mineralSpawner.Init(row, col);
             }
+            hasBeenLoaded[i] = false;
 
                         // Get the "car" child object
             Transform carTransform = sim.transform.Find("car");
@@ -74,21 +78,39 @@ public class SimulationManagerPresenter : MonoBehaviour
     {
         int simIdx;
 
+        // Make sure car is on the ground before being allowed to switch
+        if (!model.sims[curIdx].GetComponent<SimulationStart>().carIsGrounded){
+            return;
+        }
+        else{
+            hasBeenLoaded[curIdx] = true;
+        }
+
         if (Time.time >= nextAllowedPressTime)
         {
             if (Input.GetKeyDown(KeyCode.K))
             {
                 simIdx = Math.Max(curIdx-1, 0);
                 SwitchSimulation(simIdx);
-                nextAllowedPressTime = Time.time + keyCooldown;
-
+                if (!hasBeenLoaded[simIdx]){
+                    nextAllowedPressTime = Time.time + loadCooldown;
+                }
+                else{
+                    nextAllowedPressTime = Time.time + keyCooldown;
+                }
+                
             }
             else if (Input.GetKeyDown(KeyCode.L))
             {
                 simIdx = Math.Min(curIdx+1, AvatarTableManager.avatars.Count - 1);
                 Debug.Log($"sim index set to {simIdx}");
                 SwitchSimulation(simIdx);
-                nextAllowedPressTime = Time.time + keyCooldown;
+                if (!hasBeenLoaded[simIdx]){
+                    nextAllowedPressTime = Time.time + loadCooldown;
+                }
+                else{
+                    nextAllowedPressTime = Time.time + keyCooldown;
+                }
             }
         }
         

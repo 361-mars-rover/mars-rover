@@ -24,6 +24,8 @@ public class MainMenu : MonoBehaviour
     private BrainTableManager brainTableManager;
     private RoverTableManager roverTableManager;
 
+    public GameObject tutorialPopup;
+
 
     private int MAX_ROVERS = 5;
     private string url = "https://console.firebase.google.com/u/0/project/mars-rover-b4a62/database/mars-rover-b4a62-default-rtdb/data";
@@ -56,8 +58,18 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    void Update() {
-
+    void Update()
+    {
+        // Check for spacebar press
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            RemovePopUp();
+        }
+    }
+    
+    private void RemovePopUp()
+    {
+        tutorialPopup.SetActive(false);
     }
     public void UpdateButtons()
     {

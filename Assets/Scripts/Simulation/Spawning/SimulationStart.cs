@@ -33,6 +33,8 @@ public class SimulationStart : MonoBehaviour
 
     private Loader compositeLoader;
 
+    public bool carIsGrounded = false;
+
     private InvisibleWallLoader iwl;
     public void SetRowCol(int row, int col){
         spawnTileRow = row;
@@ -59,6 +61,7 @@ public class SimulationStart : MonoBehaviour
 
     void Update()
     {
+        carIsGrounded = IsGrounded();
         // Example: sampling a pixel color from dustTexture based on the car’s local pos
         Vector3 localPos = car.transform.localPosition;
         // You’d need valid bounds checking here; this is just a placeholder example
@@ -94,6 +97,12 @@ public class SimulationStart : MonoBehaviour
 
         car.SetActive(true);
         SpawnPodNearCar(simulationRoot, car.transform.position);
+    }
+
+    bool IsGrounded()
+    {
+        float distanceToGround = 0.1f;
+        return Physics.Raycast(car.transform.position, Vector3.down, distanceToGround + 0.1f);
     }
 
     private void SpawnPodNearCar(Transform parent, Vector3 carPosition)

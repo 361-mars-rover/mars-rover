@@ -337,6 +337,8 @@ MonoBehaviour:
   - {x: 1, y: 3}
   - {x: 1, y: 4}
   curIdx: 0
+  keyCooldown: 0.1
+  loadCooldown: 3
 --- !u!4 &151140506
 Transform:
   m_ObjectHideFlags: 0
@@ -1955,6 +1957,7 @@ MonoBehaviour:
   invisibleWall3: {fileID: 595534510}
   invisibleWall4: {fileID: 234963107}
   firebaseManager: {fileID: 2099217467}
+  carIsGrounded: 0
 --- !u!114 &1057071641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2518,13 +2521,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504693230}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.2668364, y: 0.000000030428165, z: 0.00000000842481, w: 0.96374184}
-  m_LocalPosition: {x: 1136.2688, y: 4072.0178, z: 1083.2866}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 1000, y: 10000, z: 1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1057071639}
-  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
 --- !u!114 &1504693235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3774,6 +3777,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4436604557295738717, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587622986494846405, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587622986494846405, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587622986494846405, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6233307838597108725, guid: 5c1e650b18c13e348b5d2321867a3816, type: 3}
